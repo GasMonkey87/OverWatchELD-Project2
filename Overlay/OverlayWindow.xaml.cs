@@ -197,32 +197,13 @@ namespace OverWatchELD.Overlay
 
             try
             {
-                var snapshot = BuildSnapshot();
+                var snapshot = OverlayDataBridge.Build();
                 ApplySnapshot(snapshot);
             }
             catch
             {
                 // Never let overlay refresh errors crash the main ELD.
             }
-        }
-
-        private OverlaySnapshot BuildSnapshot()
-        {
-            var app = Application.Current as App;
-
-            return new OverlaySnapshot
-            {
-                DutyStatus = "ON DUTY",
-                HosRemaining = DateTime.Now.ToString("HH:mm"),
-                DriverName = "OverWatch Driver",
-                LoadName = "OverWatch ELD Ready",
-                Route = "Waiting for active load / ATS telemetry",
-                Speed = "0 MPH",
-                Fuel = "--",
-                Maintenance = app?.Telemetry != null ? "READY" : "OFFLINE",
-                StatusLine = "F9 now collapses to a small SHOW tab so the overlay can always come back.",
-                UpdatedAt = DateTime.Now
-            };
         }
 
         private void ApplySnapshot(OverlaySnapshot snapshot)
