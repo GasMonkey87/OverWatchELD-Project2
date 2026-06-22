@@ -11,37 +11,113 @@ namespace OverWatchELD.Overlay
         {
             var app = Application.Current as App;
             var telemetry = app?.Telemetry;
+            var live = ReadValue(telemetry, "LastSnapshot");
             var dutyMachine = app?.DutyMachine;
+
+            var speed = FormatSpeed(live);
+            var fuel = FormatFuel(live);
+            var maintenance = FormatMaintenance(live);
+            var route = BuildRoute(live, telemetry, app?.Session, app?.SessionState);
+            var loadName = FirstText(live, telemetry, app?.Session, app?.SessionState, "CargoName", "CurrentLoad", "ActiveLoad", "LoadName", "Cargo") ?? "No active load";
+            var connected = ReadBool(live, "Connected");
 
             var snapshot = new OverlaySnapshot
             {
-                DutyStatus = FirstText(dutyMachine, telemetry, "CurrentDutyStatus", "DutyStatus", "Status", "CurrentStatus") ?? "ON DUTY",
-                HosRemaining = FirstTimeText(dutyMachine, telemetry, "DriveRemaining", "DriveTimeRemaining", "RemainingDriveTime", "HosRemaining", "HoursRemaining") ?? DateTime.Now.ToString("HH:mm"),
-                DriverName = FirstText(app?.Session, app?.SessionState, telemetry, "DriverName", "CurrentDriver", "Username", "Name") ?? "OverWatch Driver",
-                LoadName = FirstText(telemetry, app?.Session, app?.SessionState, "CurrentLoad", "ActiveLoad", "LoadName", "Cargo", "CargoName") ?? "No active load",
-                Route = BuildRoute(telemetry, app?.Session, app?.SessionState),
-                Speed = FirstNumberText(" MPH", telemetry, "SpeedMph", "CurrentSpeedMph", "Speed", "TruckSpeed", "SpeedMPH") ?? "0 MPH",
-                Fuel = FirstNumberText(" gal", telemetry, "FuelGallons", "Fuel", "FuelAmount", "FuelLevel", "TruckFuel") ?? "--",
-                Maintenance = FirstText(telemetry, app?.Session, app?.SessionState, "MaintenanceStatus", "TruckStatus", "DamageStatus") ?? "READY",
+                DutyStatus = FirstText(dutyMachine, app?.Session, app?.SessionState, "CurrentDutyStatus", "DutyStatus", "Status", "CurrentStatus") ?? (connected == true ? "DRIVING" : "OFFLINE"),
+                HosRemaining = FirstTimeText(dutyMachine, "DriveRemaining", "DriveTimeRemaining", "RemainingDriveTime", "HosRemaining", "HoursRemaining") ?? "--:--",
+                DriverName = FirstText(live, app?.Session, app?.SessionState, "DriverName", "CurrentDriver", "Username", "Name") ?? "Unknown Driver",
+                LoadName = loadName,
+                Route = route,
+                Speed = speed,
+                Fuel = fuel,
+                Maintenance = maintenance,
                 UpdatedAt = DateTime.Now
             };
 
-            snapshot.StatusLine = telemetry == null
-                ? "Telemetry service not available yet."
-                : "Live bridge active. Showing real values when matching ELD/ATS fields are available.";
+            if (live == null)
+                snapshot.StatusLine = "Waiting for Telemetry.LastSnapshot. Start ATS/telemetry service.";
+            else if (connected == false)
+                snapshot.StatusLine = "Telemetry service online, but ATS is not connected.";
+            else
+                snapshot.StatusLine = "Live ATS telemetry connected.";
 
             return snapshot;
         }
 
+        private static string FormatSpeed(object? live)
+        {
+            var speedMps = ReadDouble(live, "SpeedMps");
+            if (speedMps.HasValue)
+                return $"{Math.Abs(speedMps.Value * 2.23694):0} MPH";
+
+            var speedMph = ReadDouble(live, "SpeedMph") ?? ReadDouble(live, "SpeedMPH");
+            if (speedMph.HasValue)
+                return $"{Math.Abs(speedMph.Value):0} MPH";
+
+            return "0 MPH";
+        }
+
+        private static string FormatFuel(object? live)
+        {
+            var gallons = ReadDouble(live, "FuelGallons");
+            var pct = ReadDouble(live, "FuelPct");
+
+            if (gallons.HasValue && pct.HasValue)
+                return $"{gallons.Value:0} gal ({pct.Value:0}%)";
+
+            if (gallons.HasValue)
+                return $"{gallons.Value:0} gal";
+
+            if (pct.HasValue)
+                return $"{pct.Value:0}%";
+
+            return "--";
+        }
+
+        private static string FormatMaintenance(object? live)
+        {
+            var damage = ReadDouble(live, "DamagePct");
+            var trailerDamage = ReadDouble(live, "TrailerDamagePct");
+
+            if (damage.HasValue || trailerDamage.HasValue)
+            {
+                var worst = Math.Max(damage ?? 0, trailerDamage ?? 0);
+                return worst <= 0.5 ? "OK" : $"{worst:0}% DMG";
+            }
+
+            return FirstText(live, "MaintenanceStatus", "TruckStatus", "DamageStatus") ?? "READY";
+        }
+
         private static string BuildRoute(params object?[] sources)
         {
-            var pickup = FirstText(sources, "Pickup", "PickupCity", "Origin", "SourceCity", "From");
-            var delivery = FirstText(sources, "Delivery", "DeliveryCity", "Destination", "DestinationCity", "To");
+            var pickupCity = FirstText(sources, "SourceCity", "PickupCity", "Pickup", "Origin", "From");
+            var pickupCompany = FirstText(sources, "SourceCompany", "PickupCompany", "OriginCompany");
+            var deliveryCity = FirstText(sources, "DestinationCity", "DeliveryCity", "Delivery", "Destination", "To");
+            var deliveryCompany = FirstText(sources, "DestinationCompany", "DeliveryCompany");
+            var remainingMiles = ReadDouble(sources.Length > 0 ? sources[0] : null, "RemainingMiles");
 
-            if (!string.IsNullOrWhiteSpace(pickup) || !string.IsNullOrWhiteSpace(delivery))
-                return $"{pickup ?? "Pickup"} → {delivery ?? "Delivery"}";
+            var pickup = CombineLocation(pickupCompany, pickupCity, "Pickup");
+            var delivery = CombineLocation(deliveryCompany, deliveryCity, "Delivery");
+            var route = $"{pickup} → {delivery}";
 
-            return "Waiting for active load / route data";
+            if (remainingMiles.HasValue)
+                route += $" • {remainingMiles.Value:0} mi left";
+
+            return route;
+        }
+
+        private static string CombineLocation(string? company, string? city, string fallback)
+        {
+            if (!string.IsNullOrWhiteSpace(company) && !string.IsNullOrWhiteSpace(city))
+                return $"{company} / {city}";
+
+            if (!string.IsNullOrWhiteSpace(city))
+                return city;
+
+            if (!string.IsNullOrWhiteSpace(company))
+                return company;
+
+            return fallback;
         }
 
         private static string? FirstText(params object?[] sourcesAndNames)
@@ -79,29 +155,7 @@ namespace OverWatchELD.Overlay
             return null;
         }
 
-        private static string? FirstTimeText(object? source1, object? source2, params string[] names)
-        {
-            foreach (var source in new[] { source1, source2 })
-            {
-                foreach (var name in names)
-                {
-                    var value = ReadValue(source, name);
-                    if (value == null)
-                        continue;
-
-                    if (value is TimeSpan timeSpan)
-                        return $"{(int)timeSpan.TotalHours:00}:{timeSpan.Minutes:00}";
-
-                    var text = Convert.ToString(value, CultureInfo.InvariantCulture);
-                    if (!string.IsNullOrWhiteSpace(text))
-                        return text;
-                }
-            }
-
-            return null;
-        }
-
-        private static string? FirstNumberText(string suffix, object? source, params string[] names)
+        private static string? FirstTimeText(object? source, params string[] names)
         {
             foreach (var name in names)
             {
@@ -109,13 +163,43 @@ namespace OverWatchELD.Overlay
                 if (value == null)
                     continue;
 
-                if (double.TryParse(Convert.ToString(value, CultureInfo.InvariantCulture), NumberStyles.Any, CultureInfo.InvariantCulture, out var number))
-                    return $"{number:0}{suffix}";
+                if (value is TimeSpan timeSpan)
+                    return $"{(int)timeSpan.TotalHours:00}:{timeSpan.Minutes:00}";
 
                 var text = Convert.ToString(value, CultureInfo.InvariantCulture);
                 if (!string.IsNullOrWhiteSpace(text))
                     return text;
             }
+
+            return null;
+        }
+
+        private static bool? ReadBool(object? source, string name)
+        {
+            var value = ReadValue(source, name);
+            if (value is bool b)
+                return b;
+
+            if (bool.TryParse(Convert.ToString(value, CultureInfo.InvariantCulture), out var parsed))
+                return parsed;
+
+            return null;
+        }
+
+        private static double? ReadDouble(object? source, string name)
+        {
+            var value = ReadValue(source, name);
+            if (value == null)
+                return null;
+
+            if (value is double d) return d;
+            if (value is float f) return f;
+            if (value is int i) return i;
+            if (value is long l) return l;
+            if (value is decimal m) return (double)m;
+
+            if (double.TryParse(Convert.ToString(value, CultureInfo.InvariantCulture), NumberStyles.Any, CultureInfo.InvariantCulture, out var number))
+                return number;
 
             return null;
         }
