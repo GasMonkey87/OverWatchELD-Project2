@@ -1,0 +1,85 @@
+﻿<Window x:Class="OverWatchELD.Views.DriverScoreWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Driver Score"
+        Height="620"
+        Width="900"
+        WindowStartupLocation="CenterOwner"
+        Background="#111315">
+
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="16"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="12"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" Background="#1B1F24" CornerRadius="10" Padding="16">
+            <StackPanel>
+                <TextBlock Text="{Binding DriverName}" FontSize="24" FontWeight="Bold" Foreground="White"/>
+                <TextBlock Text="{Binding ScoreDisplay, StringFormat=Score: {0}}" Margin="0,8,0,0" FontSize="18" FontWeight="SemiBold" Foreground="#7FD38A"/>
+                <TextBlock Text="{Binding MilesDisplay}" Margin="0,10,0,0" Foreground="#D0D7DE"/>
+                <TextBlock Text="{Binding LoadsDisplay}" Margin="0,6,0,0" Foreground="#D0D7DE"/>
+                <TextBlock Text="{Binding BehaviorDisplay}" Margin="0,6,0,0" Foreground="#D0D7DE"/>
+            </StackPanel>
+        </Border>
+
+        <UniformGrid Grid.Row="2" Columns="4">
+            <Border Margin="0,0,8,0" Background="#1B1F24" CornerRadius="10" Padding="12">
+                <StackPanel>
+                    <TextBlock Text="Miles Week" Foreground="#9AA4AF"/>
+                    <TextBlock Text="{Binding Perf.MilesWeek, StringFormat={}{0:N1}}" FontSize="22" Foreground="White"/>
+                </StackPanel>
+            </Border>
+            <Border Margin="0,0,8,0" Background="#1B1F24" CornerRadius="10" Padding="12">
+                <StackPanel>
+                    <TextBlock Text="Loads Week" Foreground="#9AA4AF"/>
+                    <TextBlock Text="{Binding Perf.LoadsWeek}" FontSize="22" Foreground="White"/>
+                </StackPanel>
+            </Border>
+            <Border Margin="0,0,8,0" Background="#1B1F24" CornerRadius="10" Padding="12">
+                <StackPanel>
+                    <TextBlock Text="Hard Brakes" Foreground="#9AA4AF"/>
+                    <TextBlock Text="{Binding Perf.HardBrakes}" FontSize="22" Foreground="White"/>
+                </StackPanel>
+            </Border>
+            <Border Background="#1B1F24" CornerRadius="10" Padding="12">
+                <StackPanel>
+                    <TextBlock Text="Overspeed" Foreground="#9AA4AF"/>
+                    <TextBlock Text="{Binding Perf.OverspeedEvents}" FontSize="22" Foreground="White"/>
+                </StackPanel>
+            </Border>
+        </UniformGrid>
+
+        <Border Grid.Row="4" Background="#1B1F24" CornerRadius="10" Padding="12">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="8"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Text="Recent History" FontSize="18" FontWeight="SemiBold" Foreground="White"/>
+
+                <ListBox Grid.Row="2"
+                         ItemsSource="{Binding RecentHistory}"
+                         Background="#111315"
+                         BorderBrush="#2A2F36"
+                         Foreground="White">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Border Margin="0,0,0,8" Background="#161A1F" CornerRadius="8" Padding="10">
+                                <TextBlock Text="{Binding DisplayLine}" TextWrapping="Wrap" Foreground="#D0D7DE"/>
+                            </Border>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

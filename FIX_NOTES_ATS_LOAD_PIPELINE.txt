@@ -1,0 +1,31 @@
+ATS load pipeline fix applied
+
+Changed files:
+- Services/TelemetryService.cs
+- Services/FleetAutoLoggerService.cs
+- Services/LoadTrackerService.cs
+- Services/LoadBoard/LoadBoardTelemetryService.cs
+- Services/LoadBoard/LoadBoardStore.cs
+- Views/LoadBoardWindow.xaml
+- Views/LoadBoardWindow.xaml.cs
+
+Fixes:
+1. TelemetryService now feeds every live telemetry tick into:
+   - Fleet active truck sync
+   - root FleetAutoLoggerService for mileage/fuel/damage spike stats
+   - Fleet.FleetAutoLoggerService for fleet maintenance/truck state
+   - LoadTrackerService for pickup/completed load Discord routes
+   - LoadBoardTelemetryService for Load Board UI state
+
+2. Removed the NotImplementedException from root FleetAutoLoggerService.OnTelemetry and redirected it to ProcessTelemetrySnapshot.
+
+3. Damage spikes now trigger dashboard malfunction toast notifications when damage increases by the configured threshold.
+
+4. LoadTrackerService now carries ATS telemetry revenue, planned miles, truck damage, and trailer damage through pickup/completed Discord payloads.
+
+5. LoadBoardTelemetryService now captures revenue from ATS telemetry and saves it onto LoadBoardLoad while the load is active and when delivered.
+
+6. Load Board UI now shows a Revenue column and preserves saved telemetry revenue when editing/manual marking loads.
+
+Note:
+The container used here does not have dotnet installed, so I could not run a local dotnet build. The patch is source-level and avoids changing the locked dashboard clock/UI logic.

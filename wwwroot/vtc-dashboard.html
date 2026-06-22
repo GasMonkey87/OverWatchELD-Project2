@@ -1,0 +1,109 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>OverWatch ELD — VTC Dashboard</title>
+    <style>
+        body {
+            font-family: system-ui,Segoe UI,Arial;
+            margin: 16px;
+            background: #0b0f14;
+            color: #e7eef7
+        }
+
+        .muted {
+            opacity: .7
+        }
+
+        .row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap
+        }
+
+        .card {
+            background: #111826;
+            border: 1px solid #1f2a3a;
+            border-radius: 14px;
+            padding: 12px;
+            min-width: 280px;
+            flex: 1
+        }
+
+        h2 {
+            margin: 0 0 6px 0
+        }
+
+        pre {
+            background: #0b0f14;
+            border: 1px solid #1f2a3a;
+            padding: 10px;
+            border-radius: 12px;
+            overflow: auto
+        }
+
+        .kpi {
+            font-size: 24px;
+            font-weight: 700
+        }
+    </style>
+</head>
+<body>
+    <h2>VTC Dashboard</h2>
+    <div class="muted" id="statusLine">Loading…</div>
+
+    <div class="row" style="margin-top:12px">
+        <div class="card">
+            <b>VTC State</b>
+            <div class="muted" id="vtcState">—</div>
+        </div>
+        <div class="card">
+            <b>Driver Performance Snapshot</b>
+            <div class="kpi" id="perfTop">—</div>
+            <div class="muted" id="perfMore">—</div>
+        </div>
+    </div>
+
+    <div class="card" style="margin-top:12px">
+        <b>Raw JSON</b>
+        <pre id="raw">—</pre>
+    </div>
+
+    <script>
+        async function jget(url){
+        const r = await fetch(url, { cache: "no-store" });
+        return await r.json();
+        }
+        function set(id, txt){ document.getElementById(id).textContent = txt; }
+
+        function summarizePerf(p){
+        if(!p) return { top:"No data", more:"" };
+        // Best-effort generic summary (since snapshot shape may vary)
+        const keys = Object.keys(p);
+        const top = keys.length ? `Fields: ${keys.length}` : "No fields";
+        return { top, more: keys.slice(0,8).join(", ") };
+        }
+
+        async function refresh(){
+        const [dash, perf] = await Promise.all([
+        jget("/api/vtc/dashboard"),
+        jget("/api/vtc/performance")
+        ]);
+
+        const d = dash?.data || {};
+        const p = perf?.data || {};
+        const s = summarizePerf(p);
+
+        set("statusLine", `Updated: ${new Date().toLocaleTimeString()}`);
+        set("vtcState", JSON.stringify(d, null, 2).replace(/\n/g,' '));
+        set("perfTop", s.top);
+        set("perfMore", s.more);
+        set("raw", JSON.stringify({dashboard:dash, performance:perf}, null, 2));
+        }
+
+        refresh();
+        setInterval(refresh, 2000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,200 @@
+﻿{
+    "features":  [
+                     {
+                         "properties":  {
+                                            "name":  "Chicago",
+                                            "type":  "city",
+                                            "state":  "IL"
+                                        },
+                         "type":  "Feature",
+                         "geometry":  {
+                                          "coordinates":  [
+                                                              -87.6298,
+                                                              41.8781
+                                                          ],
+                                          "type":  "Point"
+                                      }
+                     },
+                     {
+                         "properties":  {
+                                            "name":  "Springfield",
+                                            "type":  "city",
+                                            "state":  "IL"
+                                        },
+                         "type":  "Feature",
+                         "geometry":  {
+                                          "coordinates":  [
+                                                              -89.6501,
+                                                              39.7817
+                                                          ],
+                                          "type":  "Point"
+                                      }
+                     },
+                     {
+                         "properties":  {
+                                            "name":  "Rockford",
+                                            "type":  "city",
+                                            "state":  "IL"
+                                        },
+                         "type":  "Feature",
+                         "geometry":  {
+                                          "coordinates":  [
+                                                              -89.0937,
+                                                              42.2711
+                                                          ],
+                                          "type":  "Point"
+                                      }
+                     },
+                     {
+                         "properties":  {
+                                            "name":  "Peoria",
+                                            "type":  "city",
+                                            "state":  "IL"
+                                        },
+                         "type":  "Feature",
+                         "geometry":  {
+                                          "coordinates":  [
+                                                              -89.589,
+                                                              40.6936
+                                                          ],
+                                          "type":  "Point"
+                                      }
+                     },
+                     {
+                         "properties":  {
+                                            "name":  "Champaign",
+                                            "type":  "city",
+                                            "state":  "IL"
+                                        },
+                         "type":  "Feature",
+                         "geometry":  {
+                                          "coordinates":  [
+                                                              -88.2434,
+                                                              40.1164
+                                                          ],
+                                          "type":  "Point"
+                                      }
+                     },
+                     {
+                         "properties":  {
+                                            "name":  "Bloomington",
+                                            "type":  "city",
+                                            "state":  "IL"
+                                        },
+                         "type":  "Feature",
+                         "geometry":  {
+                                          "coordinates":  [
+                                                              -88.9937,
+                                                              40.4842
+                                                          ],
+                                          "type":  "Point"
+                                      }
+                     },
+                     {
+                         "properties":  {
+                                            "name":  "Moline",
+                                            "type":  "city",
+                                            "state":  "IL"
+                                        },
+                         "type":  "Feature",
+                         "geometry":  {
+                                          "coordinates":  [
+                                                              -90.5151,
+                                                              41.5067
+                                                          ],
+                                          "type":  "Point"
+                                      }
+                     },
+                     {
+                         "properties":  {
+                                            "name":  "Quincy",
+                                            "type":  "city",
+                                            "state":  "IL"
+                                        },
+                         "type":  "Feature",
+                         "geometry":  {
+                                          "coordinates":  [
+                                                              -91.4099,
+                                                              39.9356
+                                                          ],
+                                          "type":  "Point"
+                                      }
+                     },
+                     {
+                         "properties":  {
+                                            "name":  "Effingham",
+                                            "type":  "city",
+                                            "state":  "IL"
+                                        },
+                         "type":  "Feature",
+                         "geometry":  {
+                                          "coordinates":  [
+                                                              -88.5434,
+                                                              39.12
+                                                          ],
+                                          "type":  "Point"
+                                      }
+                     },
+                     {
+                         "properties":  {
+                                            "name":  "Marion",
+                                            "type":  "city",
+                                            "state":  "IL"
+                                        },
+                         "type":  "Feature",
+                         "geometry":  {
+                                          "coordinates":  [
+                                                              -88.9331,
+                                                              37.7306
+                                                          ],
+                                          "type":  "Point"
+                                      }
+                     },
+                     {
+                         "properties":  {
+                                            "name":  "East St. Louis",
+                                            "type":  "city",
+                                            "state":  "IL"
+                                        },
+                         "type":  "Feature",
+                         "geometry":  {
+                                          "coordinates":  [
+                                                              -90.1509,
+                                                              38.6245
+                                                          ],
+                                          "type":  "Point"
+                                      }
+                     },
+                     {
+                         "properties":  {
+                                            "name":  "Joliet",
+                                            "type":  "city",
+                                            "state":  "IL"
+                                        },
+                         "type":  "Feature",
+                         "geometry":  {
+                                          "coordinates":  [
+                                                              -88.0817,
+                                                              41.525
+                                                          ],
+                                          "type":  "Point"
+                                      }
+                     },
+                     {
+                         "properties":  {
+                                            "name":  "Decatur",
+                                            "type":  "city",
+                                            "state":  "IL"
+                                        },
+                         "type":  "Feature",
+                         "geometry":  {
+                                          "coordinates":  [
+                                                              -88.9548,
+                                                              39.8403
+                                                          ],
+                                          "type":  "Point"
+                                      }
+                     }
+                 ],
+    "type":  "FeatureCollection"
+}

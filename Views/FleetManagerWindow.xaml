@@ -1,0 +1,96 @@
+<Window x:Class="OverWatchELD.Views.FleetManagerWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Fleet Manager"
+        Height="600" Width="980"
+        WindowStartupLocation="CenterOwner"
+        Background="#FF0B1220">
+
+    <Grid Margin="18">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="12"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="12"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <DockPanel Grid.Row="0">
+            <TextBlock Text="Fleet Manager"
+                       FontSize="22"
+                       FontWeight="SemiBold"
+                       Foreground="#FFE5E7EB"
+                       DockPanel.Dock="Left"/>
+
+            <TextBlock x:Name="StatusText"
+                       Text="Ready"
+                       Foreground="#FF9CA3AF"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Right"/>
+        </DockPanel>
+
+        <!-- Filters -->
+        <Border Grid.Row="2"
+                Background="#FF111827"
+                BorderBrush="#22314A"
+                BorderThickness="1"
+                CornerRadius="14"
+                Padding="12">
+            <DockPanel LastChildFill="False">
+                <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
+                    <TextBlock Text="Range:" Foreground="#FFCBD5E1" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                    <ComboBox x:Name="RangeCombo" Width="160" Height="30" SelectedIndex="1">
+                        <ComboBoxItem Content="Today"/>
+                        <ComboBoxItem Content="Last 7 days"/>
+                        <ComboBoxItem Content="Last 30 days"/>
+                        <ComboBoxItem Content="All time"/>
+                    </ComboBox>
+                </StackPanel>
+
+                <Button Content="Refresh"
+                        Width="110" Height="30"
+                        Margin="12,0,0,0"
+                        Click="Refresh_Click"/>
+            </DockPanel>
+        </Border>
+
+        <!-- Grid -->
+        <Border Grid.Row="4"
+                Background="#FF111827"
+                BorderBrush="#22314A"
+                BorderThickness="1"
+                CornerRadius="14"
+                Padding="12">
+
+            <DataGrid x:Name="GridDrivers"
+                      AutoGenerateColumns="False"
+                      CanUserAddRows="False"
+                      IsReadOnly="True"
+                      HeadersVisibility="Column"
+                      GridLinesVisibility="None"
+                      RowBackground="#0E1628"
+                      AlternatingRowBackground="#101B31"
+                      Foreground="#FFE5E7EB"
+                      Background="#00000000">
+
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Driver" Binding="{Binding DriverName}" Width="220"/>
+                    <DataGridTextColumn Header="Miles" Binding="{Binding Miles, StringFormat={}{0:N1}}" Width="90"/>
+                    <DataGridTextColumn Header="Gallons" Binding="{Binding Gallons, StringFormat={}{0:N1}}" Width="90"/>
+                    <DataGridTextColumn Header="MPG" Binding="{Binding Mpg, StringFormat={}{0:N2}}" Width="70"/>
+                    <DataGridTextColumn Header="Trucks Used" Binding="{Binding TrucksUsed}" Width="95"/>
+                    <DataGridTextColumn Header="Incidents" Binding="{Binding Incidents}" Width="80"/>
+                    <DataGridTextColumn Header="Max Damage %" Binding="{Binding MaxDamagePercent, StringFormat={}{0:N1}}" Width="105"/>
+                    <DataGridTextColumn Header="Damage Cost" Binding="{Binding DamageCost, StringFormat={}{0:C0}}" Width="105"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Border>
+
+        <!-- Footer -->
+        <StackPanel Grid.Row="5" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,14,0,0">
+            <Button Content="Close" Width="110" Height="36" Click="Close_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>

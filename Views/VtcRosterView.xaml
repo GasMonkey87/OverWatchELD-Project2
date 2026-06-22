@@ -1,0 +1,387 @@
+<UserControl x:Class="OverWatchELD.Views.VtcRosterView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             Background="Transparent">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="10"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid Margin="14,14,14,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel>
+                <TextBlock Text="VTC Roster"
+                           Foreground="White"
+                           FontSize="18"
+                           FontWeight="SemiBold"/>
+                <TextBlock Text="Ranks, Discord names, stats, achievements, recent history, and member actions"
+                           Foreground="#9E9E9E"
+                           Margin="0,4,0,0"/>
+            </StackPanel>
+
+            <StackPanel Grid.Column="1"
+                        Orientation="Horizontal"
+                        VerticalAlignment="Center">
+                <TextBox x:Name="SearchBox"
+                         Width="220"
+                         Height="32"
+                         Margin="0,0,10,0"
+                         VerticalContentAlignment="Center"
+                         Padding="8,4"
+                         Background="#141414"
+                         Foreground="White"
+                         BorderBrush="#2A2A2A"
+                         TextChanged="SearchBox_TextChanged"/>
+                <Button Content="Refresh"
+                        Padding="12,6"
+                        Click="Refresh_Click"/>
+            </StackPanel>
+        </Grid>
+
+        <Grid Grid.Row="2"
+              Margin="14,0,14,14">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2.1*"/>
+                <ColumnDefinition Width="12"/>
+                <ColumnDefinition Width="1.2*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- LEFT: ROSTER LIST -->
+            <Border Grid.Column="0"
+                    Background="#141414"
+                    BorderBrush="#2A2A2A"
+                    BorderThickness="1"
+                    CornerRadius="10"
+                    Padding="10">
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="8"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <Border Grid.Row="0"
+                            Background="#1B1B1B"
+                            CornerRadius="8"
+                            Padding="10">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="56"/>
+                                <ColumnDefinition Width="2.0*"/>
+                                <ColumnDefinition Width="1.1*"/>
+                                <ColumnDefinition Width="1.0*"/>
+                                <ColumnDefinition Width="1.0*"/>
+                                <ColumnDefinition Width="1.0*"/>
+                                <ColumnDefinition Width="1.6*"/>
+                                <ColumnDefinition Width="46"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Column="1"
+                                       Text="Driver"
+                                       Foreground="#A9A9A9"
+                                       FontWeight="SemiBold"/>
+                            <TextBlock Grid.Column="2"
+                                       Text="Rank"
+                                       Foreground="#A9A9A9"
+                                       FontWeight="SemiBold"/>
+                            <TextBlock Grid.Column="3"
+                                       Text="Status"
+                                       Foreground="#A9A9A9"
+                                       FontWeight="SemiBold"/>
+                            <TextBlock Grid.Column="4"
+                                       Text="Distance"
+                                       Foreground="#A9A9A9"
+                                       FontWeight="SemiBold"/>
+                            <TextBlock Grid.Column="5"
+                                       Text="Mass"
+                                       Foreground="#A9A9A9"
+                                       FontWeight="SemiBold"/>
+                            <TextBlock Grid.Column="6"
+                                       Text="Performance"
+                                       Foreground="#A9A9A9"
+                                       FontWeight="SemiBold"/>
+                        </Grid>
+                    </Border>
+
+                    <ListBox Grid.Row="2"
+                             x:Name="RosterList"
+                             ItemsSource="{Binding FilteredDrivers}"
+                             SelectedItem="{Binding SelectedDriver, Mode=TwoWay}"
+                             Background="Transparent"
+                             BorderThickness="0"
+                             ScrollViewer.VerticalScrollBarVisibility="Auto"
+                             HorizontalContentAlignment="Stretch">
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="Padding" Value="0"/>
+                                <Setter Property="Margin" Value="0,0,0,8"/>
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="BorderThickness" Value="0"/>
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="#181818"
+                                        MouseLeftButtonDown="RosterRow_DoubleClick"
+                                        BorderBrush="#2A2A2A"
+                                        BorderThickness="1"
+                                        CornerRadius="8"
+                                        Padding="10">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="56"/>
+                                            <ColumnDefinition Width="2.0*"/>
+                                            <ColumnDefinition Width="1.1*"/>
+                                            <ColumnDefinition Width="1.0*"/>
+                                            <ColumnDefinition Width="1.0*"/>
+                                            <ColumnDefinition Width="1.0*"/>
+                                            <ColumnDefinition Width="1.6*"/>
+                                            <ColumnDefinition Width="46"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <Grid Width="40"
+                                              Height="40"
+                                              VerticalAlignment="Center"
+                                              HorizontalAlignment="Left">
+                                            <Border CornerRadius="20"
+                                                    Background="#2A3B52"/>
+
+                                            <Ellipse Width="40"
+                                                     Height="40"
+                                                     Stroke="#44607F"
+                                                     StrokeThickness="1"/>
+
+                                            <Ellipse Width="40"
+                                                     Height="40"
+                                                     Visibility="Collapsed"
+                                                     Stroke="#5F7EA0"
+                                                     StrokeThickness="1"
+                                                     Loaded="RosterAvatarImage_Loaded"
+                                                     Tag="{Binding}"/>
+
+                                            <TextBlock Text="{Binding Initials}"
+                                                       Foreground="White"
+                                                       FontWeight="Bold"
+                                                       HorizontalAlignment="Center"
+                                                       VerticalAlignment="Center"
+                                                       Loaded="RosterAvatarInitials_Loaded"
+                                                       Tag="{Binding}"/>
+                                        </Grid>
+
+                                        <StackPanel Grid.Column="1"
+                                                    Margin="6,0,10,0"
+                                                    VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding Driver}"
+                                                       Foreground="White"
+                                                       FontWeight="SemiBold"
+                                                       FontSize="14"/>
+                                            <TextBlock Text="{Binding DiscordNameDisplay}"
+                                                       Foreground="#9E9E9E"
+                                                       FontSize="12"
+                                                       Margin="0,3,0,0"/>
+                                            <TextBlock Text="{Binding TruckLocationDisplay}"
+                                                       Foreground="#7E7E7E"
+                                                       FontSize="11"
+                                                       Margin="0,3,0,0"
+                                                       TextWrapping="Wrap"/>
+                                        </StackPanel>
+
+                                        <Border Grid.Column="2"
+                                                Background="{Binding RoleBadgeBrush}"
+                                                CornerRadius="8"
+                                                Padding="8,4"
+                                                VerticalAlignment="Center"
+                                                HorizontalAlignment="Left">
+                                            <TextBlock Text="{Binding RoleDisplay}"
+                                                       Foreground="White"
+                                                       FontWeight="SemiBold"/>
+                                        </Border>
+
+                                        <StackPanel Grid.Column="3"
+                                                    Orientation="Horizontal"
+                                                    VerticalAlignment="Center">
+                                            <Ellipse Width="10"
+                                                     Height="10"
+                                                     Fill="{Binding StatusBrush}"
+                                                     Margin="0,0,8,0"/>
+                                            <TextBlock Text="{Binding StatusDisplay}"
+                                                       Foreground="White"
+                                                       VerticalAlignment="Center"/>
+                                        </StackPanel>
+
+                                        <TextBlock Grid.Column="4"
+                                                   Text="{Binding TotalDistanceDisplay}"
+                                                   Foreground="White"
+                                                   FontWeight="SemiBold"
+                                                   VerticalAlignment="Center"/>
+
+                                        <TextBlock Grid.Column="5"
+                                                   Text="{Binding TotalMassDisplay}"
+                                                   Foreground="White"
+                                                   FontWeight="SemiBold"
+                                                   VerticalAlignment="Center"/>
+
+                                        <StackPanel Grid.Column="6"
+                                                    Orientation="Vertical"
+                                                    Margin="0,0,8,0"
+                                                    VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding PerformanceDisplay}"
+                                                       Foreground="White"
+                                                       FontSize="11"
+                                                       TextWrapping="Wrap"
+                                                       Margin="0,0,0,4"/>
+
+                                            <TextBlock Text="{Binding AwardCountDisplay}"
+                                                       Foreground="#DADADA"
+                                                       FontSize="13"
+                                                       Margin="0,0,0,2"/>
+
+                                            <TextBlock Text="{Binding AchievementsSummary}"
+                                                       Foreground="#B8B8B8"
+                                                       FontSize="10"
+                                                       TextWrapping="Wrap"/>
+                                        </StackPanel>
+
+                                        <Button Grid.Column="7"
+                                                Width="30"
+                                                Height="30"
+                                                Content="⋮"
+                                                FontSize="16"
+                                                FontWeight="Bold"
+                                                Background="#202020"
+                                                Foreground="White"
+                                                BorderBrush="#323232"
+                                                Tag="{Binding}"
+                                                Click="MemberMenuButton_Click"
+                                                VerticalAlignment="Center"
+                                                HorizontalAlignment="Center"/>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+            </Border>
+
+            <!-- RIGHT: PROFILE PANEL -->
+            <Border Grid.Column="2"
+                    Background="#141414"
+                    BorderBrush="#2A2A2A"
+                    BorderThickness="1"
+                    CornerRadius="10"
+                    Padding="12">
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="10"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="10"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="10"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0"
+                               Text="{Binding ActiveProfileDriver.Driver, FallbackValue=Double-click a driver to open profile}"
+                               Foreground="White"
+                               FontSize="22"
+                               FontWeight="Bold"/>
+
+                    <Border Grid.Row="2"
+                            Background="#1B1B1B"
+                            CornerRadius="8"
+                            Padding="12">
+                        <StackPanel>
+                            <TextBlock Text="{Binding SelectedDriver.DiscordNameDisplay}"
+                                       Foreground="#D0D7DE"
+                                       FontSize="13"/>
+
+                            <TextBlock Text="{Binding ActiveProfileDriver.RoleDisplay}"
+                                       Foreground="#D0D7DE"
+                                       FontSize="13"
+                                       Margin="0,6,0,0"/>
+
+                            <TextBlock Text="{Binding SelectedDriver.TruckLocationDisplay}"
+                                       Foreground="#D0D7DE"
+                                       FontSize="13"
+                                       Margin="0,6,0,0"
+                                       TextWrapping="Wrap"/>
+
+                            <TextBlock Text="{Binding SelectedDriverScoreDisplay}"
+                                       Foreground="#D0D7DE"
+                                       FontSize="13"
+                                       Margin="0,6,0,0"
+                                       TextWrapping="Wrap"/>
+
+                            <TextBlock Text="{Binding ActiveProfileScoreDisplay}"
+                                       Foreground="#7FD38A"
+                                       FontSize="15"
+                                       FontWeight="SemiBold"
+                                       Margin="0,8,0,0"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Button Grid.Row="4"
+                            Content="Performance"
+                            Width="130"
+                            Height="34"
+                            HorizontalAlignment="Left"
+                            Command="{Binding OpenSelectedDriverScoreCommand}"/>
+
+                    <Border Grid.Row="6"
+                            Background="#1B1B1B"
+                            CornerRadius="8"
+                            Padding="10">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="8"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Grid.Row="0"
+                                       Text="{Binding ActiveProfileRecentHistoryTitle}"
+                                       Foreground="White"
+                                       FontSize="16"
+                                       FontWeight="SemiBold"/>
+
+                            <ListBox Grid.Row="2"
+                                     ItemsSource="{Binding SelectedDriverHistory}"
+                                     Background="#111315"
+                                     BorderBrush="#2A2F36"
+                                     Foreground="White"
+                                     ScrollViewer.VerticalScrollBarVisibility="Auto">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Margin="0,0,0,8"
+                                                Background="#161A1F"
+                                                CornerRadius="8"
+                                                Padding="10">
+                                            <TextBlock Text="{Binding DisplayLine}"
+                                                       TextWrapping="Wrap"
+                                                       Foreground="#D0D7DE"/>
+                                        </Border>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>

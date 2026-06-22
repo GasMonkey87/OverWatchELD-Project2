@@ -1,0 +1,11 @@
+Fast-login patch applied:
+
+1. MainWindow.Window_Loaded no longer waits for slow online checks before showing the dashboard.
+   Before: awaited PollVtcAsync, RefreshCompanionStatusAsync, and CheckForUpdateLightAsync before NavigateTo("dashboard").
+   After: dashboard opens first, then those checks run fire-and-forget in the background.
+
+2. Companion local host startup is moved to DispatcherPriority.Background so it does not block the first dashboard render.
+
+3. VTC HttpClient now has a 4-second timeout. Previously it had the default infinite timeout, so a slow Railway/API call could make login/loading appear stuck.
+
+This keeps ATS mod loading in the existing background service and does not change dashboard clock/graph rendering.

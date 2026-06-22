@@ -1,0 +1,843 @@
+<Window x:Class="OverWatchELD.Views.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="OverWatch ELD Settings"
+        Height="760"
+        Width="1080"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="CanResize"
+        Background="#111111"
+        MinWidth="980"
+        MinHeight="680">
+
+    <Window.Resources>
+        <Style x:Key="SettingsSectionTitleStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Margin" Value="0,0,0,10"/>
+        </Style>
+
+        <Style x:Key="SettingsLabelStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#BEBEBE"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0,0,8,0"/>
+        </Style>
+
+        <Style x:Key="SettingsInfoStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#BEBEBE"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="Margin" Value="0,0,0,10"/>
+        </Style>
+
+        <Style x:Key="SettingsCardStyle" TargetType="Border">
+            <Setter Property="Background" Value="#111827"/>
+            <Setter Property="CornerRadius" Value="10"/>
+            <Setter Property="Padding" Value="12"/>
+            <Setter Property="Margin" Value="0,0,0,12"/>
+        </Style>
+
+        <Style x:Key="DocHeaderStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Margin" Value="0,0,0,8"/>
+        </Style>
+
+        <Style x:Key="DocBodyStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#C7D2E0"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="Margin" Value="0,0,0,10"/>
+        </Style>
+
+        <Style x:Key="SettingsTabItemStyle" TargetType="TabItem">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Background" Value="#1A1A1A"/>
+            <Setter Property="BorderBrush" Value="#2F2F2F"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Margin" Value="0,0,0,8"/>
+            <Setter Property="Padding" Value="16,12"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TabItem">
+                        <Border x:Name="TabBorder"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="10"
+                                Padding="{TemplateBinding Padding}"
+                                Margin="{TemplateBinding Margin}">
+                            <ContentPresenter HorizontalAlignment="Left"
+                                              VerticalAlignment="Center"
+                                              ContentSource="Header"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="TabBorder" Property="Background" Value="#2563EB"/>
+                                <Setter TargetName="TabBorder" Property="BorderBrush" Value="#3B82F6"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="TabBorder" Property="Background" Value="#232323"/>
+                            </Trigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsSelected" Value="True"/>
+                                    <Condition Property="IsMouseOver" Value="True"/>
+                                </MultiTrigger.Conditions>
+                                <Setter TargetName="TabBorder" Property="Background" Value="#2563EB"/>
+                            </MultiTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SettingsTabControlStyle" TargetType="TabControl">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="0"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="OverWatch ELD Settings"
+                   Foreground="White"
+                   FontSize="24"
+                   FontWeight="SemiBold"/>
+
+        <Border Grid.Row="1"
+                Margin="0,14,0,14"
+                Background="#1C1C1C"
+                CornerRadius="12"
+                Padding="12">
+            <TabControl Style="{StaticResource SettingsTabControlStyle}"
+                        TabStripPlacement="Left">
+
+                <TabItem Header="General / Time"
+                         Style="{StaticResource SettingsTabItemStyle}">
+                    <Border Background="#1C1C1C" Padding="18">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <StackPanel>
+                                <TextBlock Text="ELD Time"
+                                           Style="{StaticResource SettingsSectionTitleStyle}"/>
+
+                                <Border Style="{StaticResource SettingsCardStyle}">
+                                    <StackPanel>
+                                        <TextBlock Text="OverWatch ELD now runs on ATS in-game telemetry time only. Real computer time is not used for HOS clocks, duty events, or log timestamps."
+                                                   Foreground="White"
+                                                   FontWeight="SemiBold"
+                                                   TextWrapping="Wrap"/>
+                                        <TextBlock Text="When ATS telemetry is inactive, the ELD clock is frozen/off. If the driver is active in-game and forgets to go Off Duty, clocks continue to run from game time until depleted."
+                                                   Margin="0,8,0,0"
+                                                   Foreground="#9CA3AF"
+                                                   TextWrapping="Wrap"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <TextBlock Text="Startup &amp; Behavior"
+                                           Style="{StaticResource SettingsSectionTitleStyle}"
+                                           Margin="0,10,0,10"/>
+
+                                <Border Style="{StaticResource SettingsCardStyle}">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="260"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+
+                                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Open last page on launch" Style="{StaticResource SettingsLabelStyle}"/>
+                                        <CheckBox Grid.Row="0" Grid.Column="1" x:Name="OpenLastPageCheckBox" Foreground="White" Content="Enabled"/>
+
+                                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Default startup page" Style="{StaticResource SettingsLabelStyle}" Margin="0,10,8,0"/>
+                                        <ComboBox Grid.Row="1" Grid.Column="1" x:Name="StartupPageComboBox" Margin="0,10,0,0">
+                                            <ComboBoxItem Content="Dashboard"/>
+                                            <ComboBoxItem Content="Logs"/>
+                                            <ComboBoxItem Content="Fleet"/>
+                                            <ComboBoxItem Content="Dispatch"/>
+                                            <ComboBoxItem Content="Live Map"/>
+                                        </ComboBox>
+
+                                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Reduce animations" Style="{StaticResource SettingsLabelStyle}" Margin="0,10,8,0"/>
+                                        <CheckBox Grid.Row="2" Grid.Column="1" x:Name="ReduceAnimationsCheckBox" Foreground="White" Content="Enabled" Margin="0,10,0,0"/>
+
+                                        <TextBlock Grid.Row="3" Grid.Column="0" Text="Compact mode" Style="{StaticResource SettingsLabelStyle}" Margin="0,10,8,0"/>
+                                        <CheckBox Grid.Row="3" Grid.Column="1" x:Name="CompactModeCheckBox" Foreground="White" Content="Enabled" Margin="0,10,0,0"/>
+                                    </Grid>
+                                </Border>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </Border>
+                </TabItem>
+
+                <TabItem Header="Linked Discord / VTC"
+                         Style="{StaticResource SettingsTabItemStyle}">
+                    <Border Background="#1C1C1C" Padding="18">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <StackPanel>
+                                <TextBlock Text="Linked Discord / VTC"
+                                           Style="{StaticResource SettingsSectionTitleStyle}"/>
+
+                                <Border Style="{StaticResource SettingsCardStyle}">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="190"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+
+                                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Status" Style="{StaticResource SettingsLabelStyle}"/>
+                                        <TextBlock Grid.Row="0" Grid.Column="1" x:Name="ConnectedStatusText" Foreground="White" FontWeight="SemiBold"/>
+
+                                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Connected VTC" Style="{StaticResource SettingsLabelStyle}" Margin="0,10,8,0"/>
+                                        <TextBlock Grid.Row="1" Grid.Column="1" x:Name="ConnectedVtcText" Foreground="White" Margin="0,10,0,0"/>
+
+                                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Linked User" Style="{StaticResource SettingsLabelStyle}" Margin="0,10,8,0"/>
+                                        <TextBlock Grid.Row="2" Grid.Column="1" x:Name="LinkedUserText" Foreground="White" Margin="0,10,0,0"/>
+
+                                        <TextBlock Grid.Row="3" Grid.Column="0" Text="Bot API Base URL" Style="{StaticResource SettingsLabelStyle}" Margin="0,10,8,0"/>
+                                        <TextBox Grid.Row="3" Grid.Column="1"
+                                                 x:Name="BotApiBaseUrlTextBox"
+                                                 Margin="0,10,0,0"
+                                                 IsReadOnly="True"
+                                                 IsTabStop="False"
+                                                 Background="#0B1220"
+                                                 Foreground="#CBD5E1"
+                                                 ToolTip="Bot API Base URL is managed by the app/VTC config and cannot be edited here."/>
+                                    </Grid>
+                                </Border>
+
+                                <Border Background="#1F2937"
+                                        CornerRadius="10"
+                                        Padding="10"
+                                        Margin="0,10,0,0">
+                                    <StackPanel>
+                                        <TextBlock Text="Bot-managed items"
+                                                   Foreground="White"
+                                                   FontWeight="SemiBold"/>
+                                        <TextBlock Margin="0,6,0,0"
+                                                   TextWrapping="Wrap"
+                                                   Foreground="#BEBEBE"
+                                                   Text="Guild/VTC connection is automatically applied after !link succeeds. Announcement reading Discord → ELD uses the configured announcement channel, not an inbound webhook."/>
+
+                                        <Button Content="Relink Discord"
+                                                Height="36"
+                                                Width="160"
+                                                HorizontalAlignment="Left"
+                                                Margin="0,12,0,0"
+                                                Click="RelinkDiscord_Click"/>
+
+                                        <TextBlock x:Name="RelinkCodeText"
+                                                   Margin="0,10,0,0"
+                                                   TextWrapping="Wrap"
+                                                   Foreground="#93C5FD"/>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </Border>
+                </TabItem>
+
+               
+
+                <TabItem Header="Channel IDs"
+                         Visibility="Collapsed"
+                         Style="{StaticResource SettingsTabItemStyle}">
+                    <Border Background="#1C1C1C" Padding="18">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <StackPanel>
+                                <TextBlock Text="Channel IDs"
+                           Style="{StaticResource SettingsSectionTitleStyle}"/>
+
+                                <TextBlock Text="Only enter the channel IDs you want the bot to use for this linked VTC."
+                           Style="{StaticResource SettingsInfoStyle}"/>
+
+                                <Border Style="{StaticResource SettingsCardStyle}">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="190"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+
+                                        <TextBlock Grid.Row="0" Grid.Column="0"
+                                   Text="Dispatch Channel ID"
+                                   Style="{StaticResource SettingsLabelStyle}"/>
+                                        <TextBox Grid.Row="0" Grid.Column="1"
+                                 x:Name="DispatchChannelTextBox"
+                                 Margin="0,0,0,8"/>
+
+                                        <TextBlock Grid.Row="1" Grid.Column="0"
+                                   Text="Logs Channel ID"
+                                   Style="{StaticResource SettingsLabelStyle}"/>
+                                        <TextBox Grid.Row="1" Grid.Column="1"
+                                 x:Name="LogsChannelTextBox"
+                                 Margin="0,0,0,8"/>
+
+                                        <TextBlock Grid.Row="2" Grid.Column="0"
+                                   Text="Inspections Channel ID"
+                                   Style="{StaticResource SettingsLabelStyle}"/>
+                                        <TextBox Grid.Row="2" Grid.Column="1"
+                                 x:Name="InspectionsChannelTextBox"
+                                 Margin="0,0,0,8"/>
+
+                                        <TextBlock Grid.Row="3" Grid.Column="0"
+                                   Text="Announcements Channel ID"
+                                   Style="{StaticResource SettingsLabelStyle}"/>
+                                        <TextBox Grid.Row="3" Grid.Column="1"
+                                 x:Name="AnnouncementsChannelTextBox"
+                                 Margin="0,0,0,8"/>
+
+                                        <TextBlock Grid.Row="4" Grid.Column="0"
+                                   Text="Loadboard Channel ID"
+                                   Style="{StaticResource SettingsLabelStyle}"/>
+                                        <TextBox Grid.Row="4" Grid.Column="1"
+                                 x:Name="LoadboardChannelTextBox"
+                                 Margin="0,0,0,8"/>
+
+                                        <TextBlock Grid.Row="5" Grid.Column="0"
+                                   Text="Use Load Threads"
+                                   Style="{StaticResource SettingsLabelStyle}"/>
+                                        <CheckBox Grid.Row="5" Grid.Column="1"
+                                  x:Name="UseLoadThreadsCheckBox"
+                                  Content="Create one thread per load"
+                                  Foreground="White"
+                                  Margin="0,0,0,8"/>
+
+                                        <TextBlock Grid.Row="6" Grid.Column="0"
+                                   Text="Auto Archive Completed"
+                                   Style="{StaticResource SettingsLabelStyle}"/>
+                                        <CheckBox Grid.Row="6" Grid.Column="1"
+                                  x:Name="AutoArchiveCompletedLoadsCheckBox"
+                                  Content="Archive completed load threads automatically"
+                                  Foreground="White"/>
+                                    </Grid>
+                                </Border>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </Border>
+                </TabItem>
+
+                <TabItem Header="Fleet / Dispatch"
+                         Style="{StaticResource SettingsTabItemStyle}">
+                    <Border Background="#1C1C1C" Padding="18">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <StackPanel>
+                                <TextBlock Text="Fleet / Dispatch"
+                                           Style="{StaticResource SettingsSectionTitleStyle}"/>
+
+                                <Border Style="{StaticResource SettingsCardStyle}">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="260"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+
+                                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Enable Auto Fleet Sync" Style="{StaticResource SettingsLabelStyle}"/>
+                                        <CheckBox Grid.Row="0" Grid.Column="1" x:Name="AutoFleetSyncCheckBox" Foreground="White" Content="Enabled"/>
+
+                                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Default assigned load status" Style="{StaticResource SettingsLabelStyle}" Margin="0,10,8,0"/>
+                                        <ComboBox Grid.Row="1" Grid.Column="1" x:Name="DefaultAssignedStatusComboBox" Margin="0,10,0,0">
+                                            <ComboBoxItem Content="Assigned"/>
+                                            <ComboBoxItem Content="Assigned Load"/>
+                                            <ComboBoxItem Content="In Transit"/>
+                                        </ComboBox>
+
+                                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Auto clear load on delivery" Style="{StaticResource SettingsLabelStyle}" Margin="0,10,8,0"/>
+                                        <CheckBox Grid.Row="2" Grid.Column="1" x:Name="AutoClearLoadCheckBox" Foreground="White" Content="Enabled" Margin="0,10,0,0"/>
+
+                                        <TextBlock Grid.Row="3" Grid.Column="0" Text="Require truck selection before send" Style="{StaticResource SettingsLabelStyle}" Margin="0,10,8,0"/>
+                                        <CheckBox Grid.Row="3" Grid.Column="1" x:Name="RequireTruckSelectionCheckBox" Foreground="White" Content="Enabled" Margin="0,10,0,0"/>
+
+                                        <TextBlock Grid.Row="4" Grid.Column="0" Text="Auto generate load numbers" Style="{StaticResource SettingsLabelStyle}" Margin="0,10,8,0"/>
+                                        <CheckBox Grid.Row="4" Grid.Column="1" x:Name="AutoGenerateLoadNumbersCheckBox" Foreground="White" Content="Enabled" Margin="0,10,0,0"/>
+
+                                        <TextBlock Grid.Row="5" Grid.Column="0" Text="Load number prefix" Style="{StaticResource SettingsLabelStyle}" Margin="0,10,8,0"/>
+                                        <TextBox Grid.Row="5" Grid.Column="1" x:Name="LoadNumberPrefixTextBox" Margin="0,10,0,0"/>
+
+                                        <TextBlock Grid.Row="6" Grid.Column="0" Text="Random malfunctions policy" Style="{StaticResource SettingsLabelStyle}" Margin="0,14,8,0"/>
+                                        <StackPanel Grid.Row="6" Grid.Column="1" Margin="0,14,0,0">
+                                            <TextBlock x:Name="RandomMalfunctionPolicyStatusText"
+                                                       Text="VTC policy not loaded"
+                                                       Foreground="#9CA3AF"
+                                                       TextWrapping="Wrap"
+                                                       Margin="0,0,0,8"/>
+                                            <CheckBox x:Name="AdminEnableRandomMalfunctionsCheckBox"
+                                                      Content="Admin/Owner: Enable random vehicle malfunctions for this VTC"
+                                                      Foreground="White"
+                                                      Margin="0,0,0,6"/>
+                                            <CheckBox x:Name="AdminAllowDriverMalfunctionOverrideCheckBox"
+                                                      Content="Admin/Owner: Allow drivers to turn random malfunctions on/off"
+                                                      Foreground="White"
+                                                      Margin="0,0,0,6"/>
+                                        </StackPanel>
+
+                                        <TextBlock Grid.Row="7" Grid.Column="0" Text="Driver random malfunctions" Style="{StaticResource SettingsLabelStyle}" Margin="0,14,8,0"/>
+                                        <StackPanel Grid.Row="7" Grid.Column="1" Margin="0,14,0,0">
+                                            <CheckBox x:Name="EnableRandomMalfunctionsCheckBox"
+                                                      Foreground="White"
+                                                      Content="Enable random vehicle malfunctions for me"/>
+                                            <TextBlock x:Name="DriverRandomMalfunctionHelpText"
+                                                       Text="Drivers can only change this when management allows driver control."
+                                                       Foreground="#9CA3AF"
+                                                       TextWrapping="Wrap"
+                                                       Margin="0,6,0,0"/>
+                                        </StackPanel>
+
+                                        <TextBlock Grid.Row="8" Grid.Column="0" Text="Malfunction intensity" Style="{StaticResource SettingsLabelStyle}" Margin="0,14,8,0"/>
+                                        <Grid Grid.Row="8" Grid.Column="1" Margin="0,14,0,0">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="140"/>
+                                                <ColumnDefinition Width="12"/>
+                                                <ColumnDefinition Width="140"/>
+                                                <ColumnDefinition Width="12"/>
+                                                <ColumnDefinition Width="140"/>
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel Grid.Column="0">
+                                                <TextBlock Text="Chance %" Foreground="#9CA3AF"/>
+                                                <TextBox x:Name="RandomMalfunctionChanceTextBox" Text="3" Margin="0,6,0,0"/>
+                                            </StackPanel>
+                                            <StackPanel Grid.Column="2">
+                                                <TextBlock Text="Interval min" Foreground="#9CA3AF"/>
+                                                <TextBox x:Name="RandomMalfunctionIntervalTextBox" Text="15" Margin="0,6,0,0"/>
+                                            </StackPanel>
+                                            <StackPanel Grid.Column="4">
+                                                <TextBlock Text="Cooldown min" Foreground="#9CA3AF"/>
+                                                <TextBox x:Name="RandomMalfunctionCooldownTextBox" Text="30" Margin="0,6,0,0"/>
+                                            </StackPanel>
+                                        </Grid>
+
+                                        <TextBlock Grid.Row="9" Grid.Column="0" Text="Malfunction limits" Style="{StaticResource SettingsLabelStyle}" Margin="0,14,8,0"/>
+                                        <StackPanel Grid.Row="9" Grid.Column="1" Margin="0,14,0,0">
+                                            <CheckBox x:Name="RandomMalfunctionsOnlyWhileDrivingCheckBox"
+                                                      Content="Only trigger while driving"
+                                                      Foreground="White"
+                                                      Margin="0,0,0,6"/>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="Minimum speed mph"
+                                                           Foreground="#9CA3AF"
+                                                           VerticalAlignment="Center"
+                                                           Margin="0,0,10,0"/>
+                                                <TextBox x:Name="RandomMalfunctionMinSpeedTextBox"
+                                                         Width="90"
+                                                         Text="5"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </Border>
+                </TabItem>
+
+                <TabItem Header="Live Map / UI"
+                         Style="{StaticResource SettingsTabItemStyle}">
+                    <Border Background="#1C1C1C" Padding="18">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <StackPanel>
+                                <TextBlock Text="Live Map / UI"
+                                           Style="{StaticResource SettingsSectionTitleStyle}"/>
+
+                                <Border Style="{StaticResource SettingsCardStyle}">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="260"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+
+                                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Show driver names" Style="{StaticResource SettingsLabelStyle}"/>
+                                        <CheckBox Grid.Row="0" Grid.Column="1" x:Name="ShowDriverNamesCheckBox" Foreground="White" Content="Enabled"/>
+
+                                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Show truck IDs" Style="{StaticResource SettingsLabelStyle}" Margin="0,10,8,0"/>
+                                        <CheckBox Grid.Row="1" Grid.Column="1" x:Name="ShowTruckIdsCheckBox" Foreground="White" Content="Enabled" Margin="0,10,0,0"/>
+
+                                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Show load numbers on map" Style="{StaticResource SettingsLabelStyle}" Margin="0,10,8,0"/>
+                                        <CheckBox Grid.Row="2" Grid.Column="1" x:Name="ShowLoadNumbersOnMapCheckBox" Foreground="White" Content="Enabled" Margin="0,10,0,0"/>
+
+                                        <TextBlock Grid.Row="3" Grid.Column="0" Text="Show city names" Style="{StaticResource SettingsLabelStyle}" Margin="0,10,8,0"/>
+                                        <CheckBox Grid.Row="3" Grid.Column="1" x:Name="ShowCityNamesCheckBox" Foreground="White" Content="Enabled" Margin="0,10,0,0"/>
+
+                                        <TextBlock Grid.Row="4" Grid.Column="0" Text="Show state names" Style="{StaticResource SettingsLabelStyle}" Margin="0,10,8,0"/>
+                                        <CheckBox Grid.Row="4" Grid.Column="1" x:Name="ShowStateNamesCheckBox" Foreground="White" Content="Enabled" Margin="0,10,0,0"/>
+
+                                        <TextBlock Grid.Row="5" Grid.Column="0" Text="Map refresh interval" Style="{StaticResource SettingsLabelStyle}" Margin="0,10,8,0"/>
+                                        <ComboBox Grid.Row="5" Grid.Column="1" x:Name="MapRefreshIntervalComboBox" Margin="0,10,0,0">
+                                            <ComboBoxItem Content="5 seconds"/>
+                                            <ComboBoxItem Content="10 seconds"/>
+                                            <ComboBoxItem Content="15 seconds"/>
+                                            <ComboBoxItem Content="30 seconds"/>
+                                        </ComboBox>
+                                    </Grid>
+                                </Border>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </Border>
+                </TabItem>
+
+                <TabItem Header="VTC Branding"
+         Style="{StaticResource SettingsTabItemStyle}">
+                    <Border Background="#1C1C1C" Padding="18">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <StackPanel>
+                                <TextBlock Text="VTC Branding"
+                           Style="{StaticResource SettingsSectionTitleStyle}"/>
+
+                                <TextBlock Text="Upload or remove the linked VTC banner and icon from Settings. These images update the VTC home header branding and the MainWindow VTC badge icon."
+                           Style="{StaticResource SettingsInfoStyle}"/>
+
+                                <Border Style="{StaticResource SettingsCardStyle}">
+                                    <StackPanel>
+                                        <TextBlock Text="Current VTC"
+                                   Style="{StaticResource DocHeaderStyle}"/>
+                                        <TextBlock x:Name="BrandingGuildText"
+                                   Text="Guild: -"
+                                   Style="{StaticResource DocBodyStyle}"/>
+
+                                        <Grid Margin="0,6,0,0">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="24"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <StackPanel Grid.Column="0">
+                                                <TextBlock Text="Banner"
+                                           Style="{StaticResource DocHeaderStyle}"/>
+
+                                                <TextBlock Text="Recommended size: 1600 x 400. Supported formats: PNG, JPG, JPEG, WebP, BMP."
+                                           Foreground="#94A3B8"
+                                           TextWrapping="Wrap"
+                                           Margin="0,0,0,8"/>
+
+                                                <Border Height="120"
+                                        Background="#0F172A"
+                                        CornerRadius="10"
+                                        BorderBrush="#334155"
+                                        BorderThickness="1"
+                                        Margin="0,0,0,10">
+                                                    <Grid>
+                                                        <Border x:Name="SettingsBannerFallback"
+                                                Background="#1E293B"
+                                                CornerRadius="10">
+                                                            <TextBlock Text="No banner uploaded"
+                                                       Foreground="#CBD5E1"
+                                                       HorizontalAlignment="Center"
+                                                       VerticalAlignment="Center"
+                                                       FontWeight="SemiBold"/>
+                                                        </Border>
+                                                        <Image x:Name="SettingsBannerImage"
+                                               Stretch="UniformToFill"
+                                               Visibility="Collapsed"/>
+                                                    </Grid>
+                                                </Border>
+
+                                                <WrapPanel>
+                                                    <Button x:Name="UploadBannerButton"
+                                            Content="Upload Banner"
+                                            Padding="12,6"
+                                            Margin="0,0,10,10"
+                                            Click="UploadBanner_Click"/>
+                                                    <Button x:Name="RemoveBannerButton"
+                                            Content="Remove Banner"
+                                            Padding="12,6"
+                                            Margin="0,0,0,10"
+                                            Click="RemoveBanner_Click"/>
+                                                </WrapPanel>
+                                            </StackPanel>
+
+                                            <StackPanel Grid.Column="2">
+                                                <TextBlock Text="Icon"
+                                           Style="{StaticResource DocHeaderStyle}"/>
+
+                                                <TextBlock Text="Recommended size: 512 x 512 square. Supported formats: PNG, JPG, JPEG, WebP, BMP."
+                                           Foreground="#94A3B8"
+                                           TextWrapping="Wrap"
+                                           Margin="0,0,0,8"/>
+
+                                                <Border Width="120"
+                                        Height="120"
+                                        Background="#0F172A"
+                                        CornerRadius="16"
+                                        BorderBrush="#334155"
+                                        BorderThickness="1"
+                                        Margin="0,0,0,10">
+                                                    <Grid>
+                                                        <Border x:Name="SettingsIconFallback"
+                                                Background="#1E293B"
+                                                CornerRadius="16">
+                                                            <TextBlock Text="No icon"
+                                                       Foreground="#CBD5E1"
+                                                       HorizontalAlignment="Center"
+                                                       VerticalAlignment="Center"
+                                                       FontWeight="SemiBold"/>
+                                                        </Border>
+                                                        <Image x:Name="SettingsIconImage"
+                                               Stretch="UniformToFill"
+                                               Visibility="Collapsed"/>
+                                                    </Grid>
+                                                </Border>
+
+                                                <WrapPanel>
+                                                    <Button x:Name="UploadIconButton"
+                                            Content="Upload Icon"
+                                            Padding="12,6"
+                                            Margin="0,0,10,10"
+                                            Click="UploadIcon_Click"/>
+                                                    <Button x:Name="RemoveIconButton"
+                                            Content="Remove Icon"
+                                            Padding="12,6"
+                                            Margin="0,0,0,10"
+                                            Click="RemoveIcon_Click"/>
+                                                </WrapPanel>
+                                            </StackPanel>
+                                        </Grid>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </Border>
+                </TabItem>
+
+                <TabItem Header="Documents"
+                         Style="{StaticResource SettingsTabItemStyle}">
+                    <Border Background="#1C1C1C" Padding="18">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <StackPanel>
+                                <TextBlock Text="ELD User Guide"
+                                           Style="{StaticResource SettingsSectionTitleStyle}"/>
+
+                                <Border Style="{StaticResource SettingsCardStyle}">
+                                    <StackPanel>
+                                        <TextBlock Text="What an ELD does"
+                                                   Style="{StaticResource DocHeaderStyle}"/>
+                                        <TextBlock Text="An Electronic Logging Device tracks driver duty status, time entries, driving activity, and log history. In OverWatch ELD, it also connects dispatch, fleet, inspections, and live map features into one system."
+                                                   Style="{StaticResource DocBodyStyle}"/>
+
+                                        <TextBlock Text="Main Dashboard"
+                                                   Style="{StaticResource DocHeaderStyle}"/>
+                                        <TextBlock Text="The dashboard is your main control screen. It gives quick access to driver activity, status information, current duty flow, and linked systems like fleet, dispatch, and map tools."
+                                                   Style="{StaticResource DocBodyStyle}"/>
+
+                                        <TextBlock Text="Duty Status / Logs"
+                                                   Style="{StaticResource DocHeaderStyle}"/>
+                                        <TextBlock Text="Use the logs area to record and review status changes such as Off Duty, Sleeper Berth, Driving, and On Duty. Log timestamps can use real system time or ATS in-game time depending on your setting."
+                                                   Style="{StaticResource DocBodyStyle}"/>
+
+                                        <TextBlock Text="Inspections"
+                                                   Style="{StaticResource DocHeaderStyle}"/>
+                                        <TextBlock Text="The inspections section is used for pre-trip and post-trip style entries. These can be exported and optionally sent through Discord integrations when channel IDs or webhooks are configured."
+                                                   Style="{StaticResource DocBodyStyle}"/>
+
+                                        <TextBlock Text="Dispatch"
+                                                   Style="{StaticResource DocHeaderStyle}"/>
+                                        <TextBlock Text="Dispatch is used to create, assign, and manage loads. Loads can include origin, destination, cargo, trailer, miles, driver, truck, and notes. When Fleet Sync is enabled, assigned loads can automatically update the linked truck in Fleet Command."
+                                                   Style="{StaticResource DocBodyStyle}"/>
+
+                                        <TextBlock Text="Fleet Command"
+                                                   Style="{StaticResource DocHeaderStyle}"/>
+                                        <TextBlock Text="Fleet Command tracks truck assignments, load numbers, condition, service state, and activity. It is intended to serve as the main fleet operations center for VTC management."
+                                                   Style="{StaticResource DocBodyStyle}"/>
+
+                                        <TextBlock Text="Live Map"
+                                                   Style="{StaticResource DocHeaderStyle}"/>
+                                        <TextBlock Text="The live map shows drivers and fleet activity visually. Depending on enabled settings, it can show driver names, truck IDs, load numbers, cities, and states."
+                                                   Style="{StaticResource DocBodyStyle}"/>
+
+                                        <TextBlock Text="Discord / VTC Linking"
+                                                   Style="{StaticResource DocHeaderStyle}"/>
+                                        <TextBlock Text="When linked to a VTC bot, the ELD can use channel IDs and webhooks for dispatch, logs, inspections, and announcements. Bot-managed items are handled automatically after the VTC is linked."
+                                                   Style="{StaticResource DocBodyStyle}"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <Border Style="{StaticResource SettingsCardStyle}">
+                                    <StackPanel>
+                                        <TextBlock Text="Quick Start"
+                                                   Style="{StaticResource DocHeaderStyle}"/>
+                                        <TextBlock Text="1. Link your Discord / VTC connection." Style="{StaticResource DocBodyStyle}"/>
+                                        <TextBlock Text="2. Set your preferred time source." Style="{StaticResource DocBodyStyle}"/>
+                                        <TextBlock Text="3. Configure channel IDs and webhooks if needed." Style="{StaticResource DocBodyStyle}"/>
+                                        <TextBlock Text="4. Create or assign dispatch loads." Style="{StaticResource DocBodyStyle}"/>
+                                        <TextBlock Text="5. Use Fleet Command to track trucks, drivers, and load numbers." Style="{StaticResource DocBodyStyle}"/>
+                                        <TextBlock Text="6. Review logs, inspections, and live map as needed." Style="{StaticResource DocBodyStyle}"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <Border Style="{StaticResource SettingsCardStyle}">
+                                    <StackPanel>
+                                        <TextBlock Text="Important Tips"
+                                                   Style="{StaticResource DocHeaderStyle}"/>
+                                        <TextBlock Text="• Use real time if you want timestamps based on your PC clock." Style="{StaticResource DocBodyStyle}"/>
+                                        <TextBlock Text="• Use game time if you want ATS telemetry-based timing." Style="{StaticResource DocBodyStyle}"/>
+                                        <TextBlock Text="• Save your settings after changing URLs, channels, or sync options." Style="{StaticResource DocBodyStyle}"/>
+                                        <TextBlock Text="• If a load is not appearing in fleet tracking, make sure the truck, driver, and load assignment were saved together." Style="{StaticResource DocBodyStyle}"/>
+                                        <TextBlock Text="• Test webhooks after configuration to confirm outbound posting works." Style="{StaticResource DocBodyStyle}"/>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </Border>
+                </TabItem>
+
+                <TabItem Header="About"
+                         Style="{StaticResource SettingsTabItemStyle}">
+                    <Border Background="#1C1C1C" Padding="18">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <StackPanel>
+                                <TextBlock Text="About OverWatch ELD"
+                                           Style="{StaticResource SettingsSectionTitleStyle}"/>
+
+                                <Border Style="{StaticResource SettingsCardStyle}">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="180"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+
+                                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Program" Style="{StaticResource SettingsLabelStyle}"/>
+                                        <TextBlock Grid.Row="0" Grid.Column="1" Text="OverWatch ELD" Foreground="White" FontWeight="SemiBold"/>
+
+                                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Version" Style="{StaticResource SettingsLabelStyle}" Margin="0,10,8,0"/>
+                                        <TextBlock Grid.Row="1" Grid.Column="1" x:Name="AboutVersionText" Foreground="White" Margin="0,10,0,0"/>
+
+                                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Created By" Style="{StaticResource SettingsLabelStyle}" Margin="0,10,8,0"/>
+                                        <TextBlock Grid.Row="2" Grid.Column="1" x:Name="AboutAuthorText" Foreground="White" Margin="0,10,0,0"/>
+
+                                        <TextBlock Grid.Row="3" Grid.Column="0" Text="Copyright" Style="{StaticResource SettingsLabelStyle}" Margin="0,10,8,0"/>
+                                        <TextBlock Grid.Row="3" Grid.Column="1" x:Name="AboutCopyrightText" Foreground="White" Margin="0,10,0,0"/>
+
+                                        <TextBlock Grid.Row="4" Grid.Column="0" Text="Build Info" Style="{StaticResource SettingsLabelStyle}" Margin="0,10,8,0"/>
+                                        <TextBlock Grid.Row="4" Grid.Column="1" x:Name="AboutBuildText" Foreground="#BEBEBE" Margin="0,10,0,0" TextWrapping="Wrap"/>
+                                    </Grid>
+                                </Border>
+
+                                <Border Style="{StaticResource SettingsCardStyle}">
+                                    <StackPanel>
+                                        <TextBlock Text="Program Overview"
+                                                   Style="{StaticResource DocHeaderStyle}"/>
+                                        <TextBlock Text="OverWatch ELD is a trucking operations companion designed for ATS/ETS-style workflows. It combines logs, inspections, dispatch tools, live fleet visibility, map features, and VTC Discord integration into one desktop application."
+                                                   Style="{StaticResource DocBodyStyle}"/>
+                                        <TextBlock Text="The goal of the program is to act as a central operations hub for drivers, dispatchers, fleet managers, and VTC leadership."
+                                                   Style="{StaticResource DocBodyStyle}"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <Border Style="{StaticResource SettingsCardStyle}">
+                                    <StackPanel>
+                                        <TextBlock Text="Key Features"
+                                                   Style="{StaticResource DocHeaderStyle}"/>
+                                        <TextBlock Text="• Driver log tracking and duty status management" Style="{StaticResource DocBodyStyle}"/>
+                                        <TextBlock Text="• Pre-trip and post-trip inspections" Style="{StaticResource DocBodyStyle}"/>
+                                        <TextBlock Text="• Dispatch load creation and assignment" Style="{StaticResource DocBodyStyle}"/>
+                                        <TextBlock Text="• Fleet Command truck/load/driver tracking" Style="{StaticResource DocBodyStyle}"/>
+                                        <TextBlock Text="• Live map monitoring and visibility controls" Style="{StaticResource DocBodyStyle}"/>
+                                        <TextBlock Text="• Discord / VTC bot integration for workflow automation" Style="{StaticResource DocBodyStyle}"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <Border Style="{StaticResource SettingsCardStyle}">
+                                    <StackPanel>
+                                        <TextBlock Text="Credits"
+                                                   Style="{StaticResource DocHeaderStyle}"/>
+                                        <TextBlock Text="Created by GasMonkey." Style="{StaticResource DocBodyStyle}"/>
+                                        <TextBlock Text="Designed for expanded VTC operations, public-release safe builds, and integrated trucking management workflows." Style="{StaticResource DocBodyStyle}"/>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </Border>
+                </TabItem>
+
+            </TabControl>
+        </Border>
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock x:Name="SaveStatus"
+                       Grid.Column="0"
+                       Foreground="#BEBEBE"
+                       VerticalAlignment="Center"
+                       Margin="0,0,12,0"
+                       TextWrapping="Wrap"/>
+
+            <StackPanel Grid.Column="1"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Right">
+                <Button x:Name="OpenGuideBtn"
+                        Content="User Guide"
+                        Width="120"
+                        Margin="0,0,10,0"
+                        Click="OpenGuide_Click"/>
+                <Button x:Name="TestWebhookBtn"
+                        Content="Test Webhook"
+                        Width="140"
+                        Margin="0,0,10,0"
+                        Click="TestWebhook_Click"/>
+                <Button x:Name="SaveBtn"
+                        Content="Save"
+                        Width="120"
+                        Margin="0,0,10,0"
+                        Click="Save_Click"/>
+                <Button Content="Close"
+                        Width="120"
+                        Click="Close_Click"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>

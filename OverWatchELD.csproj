@@ -1,0 +1,153 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+		<GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
+		<StartupObject>OverWatchELD.Program</StartupObject>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net8.0-windows</TargetFramework>
+		<UseWPF>true</UseWPF>
+		<UseWindowsForms>true</UseWindowsForms>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>disable</ImplicitUsings>
+
+		<AssemblyName>OverWatchELD</AssemblyName>
+		<RootNamespace>OverWatchELD</RootNamespace>
+
+		<Product>OverWatch ELD</Product>
+		<Description>The ELD you can count on.</Description>
+		<Company>Gas Monkey Creations</Company>
+		<Authors>GasMonkey</Authors>
+
+		<ApplicationIcon>Assets\OverWatchELD.ico</ApplicationIcon>
+
+		<Version>2.2.2</Version>
+		<AssemblyVersion>2.2.2.0</AssemblyVersion>
+		<FileVersion>2.2.2.0</FileVersion>
+		<InformationalVersion>2.2.2</InformationalVersion>
+		<Title>OverWatch ELD</Title>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+		<PackageReference Include="Dapper" Version="2.1.35" />
+		<PackageReference Include="Microsoft.AspNetCore.Cors" Version="2.3.9" />
+		<PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.3.9" />
+		<PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="2.3.9" />
+		<PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.2" />
+		<PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3800.47" />
+		<PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
+		<PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.0" />
+		<PackageReference Include="QRCoder" Version="1.7.0" />
+		<PackageReference Include="QuestPDF" Version="2026.6.0" />
+		<PackageReference Include="System.Data.SQLite.Core" Version="1.0.119" />
+		<PackageReference Include="System.Drawing.Common" Version="8.0.0" />
+		<PackageReference Include="Velopack" Version="0.0.1298" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Remove="MainWindow.MessagingBadge.cs" />
+		<Compile Remove="MainWindow.Navigation.partial.cs" />
+		<Compile Remove="ViewModels\DashboardCompositeViewModel.cs" />
+		<Compile Remove="ViewModels\DriverAvailability.cs" />
+		<Compile Remove="ViewModels\ShiftDebugViewModel.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Resource Include="Assets\OverWatchELD.ico">
+			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
+		</Resource>
+		<Resource Include="Assets\splash.png">
+			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
+		</Resource>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Remove="**\SupportDiagnosticsService.cs" />
+		<Compile Include="Services\SupportDiagnosticsService.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Include="LiveMap\index.html">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="LiveMap\data\**\*.*">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="LiveMap\assets\**\*.*">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="wwwroot\companion\map.html">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="wwwroot\vtc.html">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="map\**\*.*">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Remove="Services\CompanionBootstrap*.cs" />
+		<Compile Include="Services\CompanionBootstrap_SAFE.cs" />
+		<Compile Remove="ViewModels\LoginViewModel.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Remove="OverWatchELD.VtcBot\**\*.cs" />
+		<None Remove="OverWatchELD.VtcBot\**\*" />
+		<Content Remove="OverWatchELD.VtcBot\**\*" />
+		<EmbeddedResource Remove="OverWatchELD.VtcBot\**\*" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Remove="OverWatchELD.Tools.AtsMapExtract\**\*.cs" />
+		<None Remove="OverWatchELD.Tools.AtsMapExtract\**\*" />
+		<Content Remove="OverWatchELD.Tools.AtsMapExtract\**\*" />
+		<EmbeddedResource Remove="OverWatchELD.Tools.AtsMapExtract\**\*" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Folder Include="Commands\" />
+		<Folder Include="LiveMap\data\" />
+		<Folder Include="Threads\" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Remove="IntegratedDispatcher\App.xaml.cs" />
+		<Page Remove="IntegratedDispatcher\**\*.xaml" />
+		<Compile Remove="IntegratedDispatcher\**\*Window.xaml.cs" />
+		<Compile Remove="IntegratedDispatcher\Services\DiscordBotService.cs" />
+		<Compile Remove="IntegratedDispatcher\Services\DiscordService.cs" />
+		<Compile Remove="IntegratedDispatcher\Services\WebServerService.cs" />
+		<Compile Remove="IntegratedDispatcher\Services\TelemetryService.cs" />
+		<Compile Remove="IntegratedDispatcher\Services\ActiveDriverService.cs" />
+		<Compile Remove="IntegratedDispatcher\Services\DriverServices.cs" />
+		<Compile Remove="IntegratedDispatcher\Services\CustomLoadService.cs" />
+		<Compile Remove="IntegratedDispatcher\Services\DataProviderService.cs" />
+		<Compile Remove="IntegratedDispatcher\Services\VtcService.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Remove="Assets\splash.png" />
+		<None Remove="wwwroot\map.html" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Page Update="Views\SplashWindow.xaml">
+			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
+		</Page>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Include="Docs\OverWatch_ELD_Help_Center_Guide.docx">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+
+</Project>

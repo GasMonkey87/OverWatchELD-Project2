@@ -1,0 +1,638 @@
+<Window x:Class="OverWatchELD.Views.CreateLoadWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Create / Edit Load"
+        Height="1040"
+        Width="820"
+        WindowStartupLocation="CenterOwner"
+        Background="#FF0B1220">
+
+    <Window.Resources>
+        <SolidColorBrush x:Key="FieldBackgroundBrush" Color="#162133"/>
+        <SolidColorBrush x:Key="FieldBorderBrush" Color="#30445F"/>
+        <SolidColorBrush x:Key="FieldForegroundBrush" Color="#F8FAFC"/>
+        <SolidColorBrush x:Key="FieldMutedBrush" Color="#CBD5E1"/>
+        <SolidColorBrush x:Key="DropDownBackgroundBrush" Color="#162133"/>
+        <SolidColorBrush x:Key="DropDownHoverBrush" Color="#24415F"/>
+        <SolidColorBrush x:Key="DropDownSelectedBrush" Color="#2E5B8A"/>
+        <SolidColorBrush x:Key="DropDownBorderBrush" Color="#3A5678"/>
+        <SolidColorBrush x:Key="ButtonBackgroundBrush" Color="#1A2940"/>
+        <SolidColorBrush x:Key="ButtonBorderBrush" Color="#31455F"/>
+
+        <Style TargetType="TextBox">
+            <Setter Property="Background" Value="{StaticResource FieldBackgroundBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource FieldForegroundBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource FieldBorderBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="8,6"/>
+            <Setter Property="CaretBrush" Value="White"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="SelectionBrush" Value="#40638A"/>
+            <Setter Property="SelectionTextBrush" Value="White"/>
+            <Setter Property="Height" Value="30"/>
+        </Style>
+
+        <Style x:Key="MultiLineTextBoxStyle" TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
+            <Setter Property="Padding" Value="8"/>
+            <Setter Property="Height" Value="100"/>
+            <Setter Property="VerticalContentAlignment" Value="Top"/>
+        </Style>
+
+        <Style x:Key="ReadableComboBoxItemStyle" TargetType="ComboBoxItem">
+            <Setter Property="Foreground" Value="{StaticResource FieldForegroundBrush}"/>
+            <Setter Property="Background" Value="{StaticResource DropDownBackgroundBrush}"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="8,6"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBoxItem">
+                        <Border x:Name="ItemBorder"
+                                Background="{TemplateBinding Background}"
+                                SnapsToDevicePixels="True"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsHighlighted" Value="True">
+                                <Setter TargetName="ItemBorder" Property="Background" Value="{StaticResource DropDownHoverBrush}"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="ItemBorder" Property="Background" Value="{StaticResource DropDownSelectedBrush}"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Foreground" Value="#7E8EA3"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <ControlTemplate x:Key="ReadableComboBoxToggleButton" TargetType="ToggleButton">
+            <Border x:Name="ToggleBorder"
+                    Background="{StaticResource FieldBackgroundBrush}"
+                    BorderBrush="{StaticResource FieldBorderBrush}"
+                    BorderThickness="1"
+                    SnapsToDevicePixels="True">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="30"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Border Grid.Column="1"
+                            Background="#1A2940"
+                            BorderBrush="{StaticResource FieldBorderBrush}"
+                            BorderThickness="1,0,0,0"/>
+
+                    <Path Grid.Column="1"
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Center"
+                          Fill="White"
+                          Data="M 0 0 L 4 4 L 8 0 Z"/>
+
+                    <ContentPresenter Grid.Column="0"
+                                      Margin="8,0,4,0"
+                                      VerticalAlignment="Center"
+                                      HorizontalAlignment="Left"/>
+                </Grid>
+            </Border>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter TargetName="ToggleBorder" Property="BorderBrush" Value="{StaticResource DropDownBorderBrush}"/>
+                </Trigger>
+                <Trigger Property="IsChecked" Value="True">
+                    <Setter TargetName="ToggleBorder" Property="BorderBrush" Value="{StaticResource DropDownSelectedBrush}"/>
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter TargetName="ToggleBorder" Property="Opacity" Value="0.75"/>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+
+        <Style TargetType="ComboBox">
+            <Setter Property="Foreground" Value="{StaticResource FieldForegroundBrush}"/>
+            <Setter Property="Background" Value="{StaticResource FieldBackgroundBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource FieldBorderBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="6,4"/>
+            <Setter Property="ItemContainerStyle" Value="{StaticResource ReadableComboBoxItemStyle}"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="ScrollViewer.CanContentScroll" Value="True"/>
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
+            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBox">
+                        <Grid>
+                            <ToggleButton x:Name="ToggleButton"
+                                          Template="{StaticResource ReadableComboBoxToggleButton}"
+                                          Focusable="False"
+                                          IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                          ClickMode="Press"/>
+
+                            <ContentPresenter x:Name="ContentSite"
+                                              IsHitTestVisible="False"
+                                              Margin="10,0,34,0"
+                                              VerticalAlignment="Center"
+                                              HorizontalAlignment="Left"
+                                              Content="{TemplateBinding SelectionBoxItem}"
+                                              ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                              ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"/>
+
+                            <TextBox x:Name="PART_EditableTextBox"
+                                     Margin="10,0,34,0"
+                                     Background="Transparent"
+                                     BorderThickness="0"
+                                     Foreground="{StaticResource FieldForegroundBrush}"
+                                     CaretBrush="White"
+                                     SelectionBrush="#40638A"
+                                     SelectionTextBrush="White"
+                                     VerticalContentAlignment="Center"
+                                     HorizontalContentAlignment="Left"
+                                     Visibility="Hidden"
+                                     Focusable="True"/>
+
+                            <Popup x:Name="Popup"
+                                   Placement="Bottom"
+                                   IsOpen="{TemplateBinding IsDropDownOpen}"
+                                   AllowsTransparency="True"
+                                   Focusable="False"
+                                   PopupAnimation="Slide">
+                                <Border x:Name="DropDownBorder"
+                                        Margin="0,2,0,0"
+                                        MinWidth="{Binding ActualWidth, RelativeSource={RelativeSource TemplatedParent}}"
+                                        MaxHeight="{TemplateBinding MaxDropDownHeight}"
+                                        Background="{StaticResource DropDownBackgroundBrush}"
+                                        BorderBrush="{StaticResource DropDownBorderBrush}"
+                                        BorderThickness="1"
+                                        CornerRadius="2">
+                                    <ScrollViewer SnapsToDevicePixels="True">
+                                        <StackPanel IsItemsHost="True"
+                                                    KeyboardNavigation.DirectionalNavigation="Contained"/>
+                                    </ScrollViewer>
+                                </Border>
+                            </Popup>
+                        </Grid>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="HasItems" Value="False">
+                                <Setter TargetName="DropDownBorder" Property="MinHeight" Value="30"/>
+                            </Trigger>
+
+                            <Trigger Property="IsEditable" Value="True">
+                                <Setter Property="IsTabStop" Value="False"/>
+                                <Setter TargetName="PART_EditableTextBox" Property="Visibility" Value="Visible"/>
+                                <Setter TargetName="ContentSite" Property="Visibility" Value="Hidden"/>
+                            </Trigger>
+
+                            <Trigger Property="IsEditable" Value="False">
+                                <Setter TargetName="PART_EditableTextBox" Property="Visibility" Value="Hidden"/>
+                                <Setter TargetName="ContentSite" Property="Visibility" Value="Visible"/>
+                            </Trigger>
+
+                            <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                                <Setter TargetName="DropDownBorder" Property="BorderBrush" Value="{StaticResource DropDownSelectedBrush}"/>
+                            </Trigger>
+
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.7"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="DatePicker">
+            <Setter Property="Foreground" Value="{StaticResource FieldForegroundBrush}"/>
+            <Setter Property="Background" Value="{StaticResource FieldBackgroundBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource FieldBorderBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Height" Value="30"/>
+        </Style>
+
+        <Style TargetType="CheckBox">
+            <Setter Property="Foreground" Value="{StaticResource FieldForegroundBrush}"/>
+            <Setter Property="Margin" Value="0,4,0,4"/>
+        </Style>
+
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource ButtonBackgroundBrush}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="{StaticResource ButtonBorderBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="12,6"/>
+            <Setter Property="Height" Value="36"/>
+        </Style>
+    </Window.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <Grid Margin="14">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="140"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="100"/>
+
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="180"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Row="0"
+                       Grid.ColumnSpan="2"
+                       Text="Load Details"
+                       Foreground="#E5E7EB"
+                       FontSize="20"
+                       FontWeight="SemiBold"
+                       Margin="0,0,0,14"/>
+
+            <TextBlock Grid.Row="1"
+                       Grid.ColumnSpan="2"
+                       Text="ATS Mod Sources"
+                       Foreground="#E5E7EB"
+                       FontSize="15"
+                       FontWeight="SemiBold"
+                       Margin="0,0,0,8"/>
+
+            <TextBlock Grid.Row="2"
+                       Grid.ColumnSpan="2"
+                       Text="Choose which unpacked folders or .scs/.zip mods should be used for LoadBoard cargo, trailer, and company data. If none are selected, all discovered sources will be used."
+                       Foreground="{StaticResource FieldMutedBrush}"
+                       TextWrapping="Wrap"
+                       Margin="0,0,0,8"/>
+
+            <ListBox x:Name="ModSourcesList"
+                     Grid.Row="3"
+                     Grid.ColumnSpan="2"
+                     Height="130"
+                     Margin="0,0,0,8"
+                     SelectionMode="Extended"
+                     Background="{StaticResource FieldBackgroundBrush}"
+                     Foreground="{StaticResource FieldForegroundBrush}"
+                     BorderBrush="{StaticResource FieldBorderBrush}"
+                     BorderThickness="1"/>
+
+            <StackPanel Grid.Row="4"
+                        Grid.ColumnSpan="2"
+                        Orientation="Horizontal"
+                        Margin="0,0,0,12">
+                <Button x:Name="RefreshModsButton"
+                        Content="Refresh Mods"
+                        Width="110"
+                        Margin="0,0,8,0"
+                        Click="RefreshModsButton_Click"/>
+
+                <Button x:Name="UseAllModsButton"
+                        Content="Use All"
+                        Width="90"
+                        Margin="0,0,8,0"
+                        Click="UseAllModsButton_Click"/>
+
+                <Button x:Name="ClearModsButton"
+                        Content="Clear"
+                        Width="90"
+                        Margin="0,0,8,0"
+                        Click="ClearModsButton_Click"/>
+
+                <Button x:Name="ApplyModsButton"
+                        Content="Apply Selection"
+                        Width="130"
+                        Margin="0,0,8,0"
+                        Click="ApplyModsButton_Click"/>
+
+                <Button x:Name="OpenModsFolderButton"
+                        Content="Open Mod Folder"
+                        Width="130"
+                        Margin="0,0,8,0"
+                        Click="OpenModsFolderButton_Click"/>
+
+                <Button x:Name="OpenScannerFolderButton"
+                        Content="Open Scanner Folder"
+                        Width="145"
+                        Click="OpenScannerFolderButton_Click"/>
+            </StackPanel>
+
+            <TextBlock Grid.Row="5"
+                       Text="Selected / Scanner Status"
+                       Foreground="{StaticResource FieldMutedBrush}"
+                       Margin="0,0,8,8"/>
+            <TextBlock x:Name="ModStatusText"
+                       Grid.Row="5"
+                       Grid.Column="1"
+                       Foreground="{StaticResource FieldForegroundBrush}"
+                       TextWrapping="Wrap"
+                       Margin="0,0,0,8"/>
+
+            <TextBlock Grid.Row="6"
+                       Text="Scanner Warnings"
+                       Foreground="{StaticResource FieldMutedBrush}"
+                       Margin="0,0,8,8"/>
+            <TextBox x:Name="ModWarningsBox"
+                     Grid.Row="6"
+                     Grid.Column="1"
+                     Style="{StaticResource MultiLineTextBoxStyle}"
+                     IsReadOnly="True"
+                     TextWrapping="Wrap"
+                     VerticalScrollBarVisibility="Auto"
+                     Margin="0,0,0,8"/>
+
+            <TextBlock Grid.Row="7"
+                       Text="Load Number"
+                       Foreground="{StaticResource FieldMutedBrush}"
+                       Margin="0,0,8,8"/>
+            <TextBox x:Name="LoadNumberBox"
+                     Grid.Row="7"
+                     Grid.Column="1"
+                     Margin="0,0,0,8"/>
+
+            <TextBlock Grid.Row="8"
+                       Text="Cargo Mod"
+                       Foreground="{StaticResource FieldMutedBrush}"
+                       Margin="0,0,8,8"/>
+            <ComboBox x:Name="CargoSourceBox"
+                      Grid.Row="8"
+                      Grid.Column="1"
+                      Margin="0,0,0,8"
+                      IsEditable="False"/>
+
+            <TextBlock Grid.Row="9"
+                       Text="Cargo"
+                       Foreground="{StaticResource FieldMutedBrush}"
+                       Margin="0,0,8,8"/>
+            <ComboBox x:Name="CargoBox"
+                      Grid.Row="9"
+                      Grid.Column="1"
+                      Margin="0,0,0,8"
+                      IsEditable="False"/>
+
+            <TextBlock Grid.Row="10"
+                       Text="Trailer Mod"
+                       Foreground="{StaticResource FieldMutedBrush}"
+                       Margin="0,0,8,8"/>
+            <ComboBox x:Name="TrailerSourceBox"
+                      Grid.Row="10"
+                      Grid.Column="1"
+                      Margin="0,0,0,8"
+                      IsEditable="False"/>
+
+            <TextBlock Grid.Row="11"
+                       Text="Trailer"
+                       Foreground="{StaticResource FieldMutedBrush}"
+                       Margin="0,0,8,8"/>
+            <ComboBox x:Name="TrailerBox"
+                      Grid.Row="11"
+                      Grid.Column="1"
+                      Margin="0,0,0,8"
+                      IsEditable="False"/>
+
+            <TextBlock Grid.Row="12"
+                       Text="Company Mod"
+                       Foreground="{StaticResource FieldMutedBrush}"
+                       Margin="0,0,8,8"/>
+            <ComboBox x:Name="CompanySourceBox"
+                      Grid.Row="12"
+                      Grid.Column="1"
+                      Margin="0,0,0,8"
+                      IsEditable="False"/>
+
+            <TextBlock Grid.Row="13"
+                       Text="Company"
+                       Foreground="{StaticResource FieldMutedBrush}"
+                       Margin="0,0,8,8"/>
+            <ComboBox x:Name="CompanyBox"
+                      Grid.Row="13"
+                      Grid.Column="1"
+                      Margin="0,0,0,8"
+                      IsEditable="False"/>
+
+            <TextBlock Grid.Row="14"
+                       Text="Origin City"
+                       Foreground="{StaticResource FieldMutedBrush}"
+                       Margin="0,0,8,8"/>
+            <ComboBox x:Name="OriginCityBox"
+                      Grid.Row="14"
+                      Grid.Column="1"
+                      Margin="0,0,0,8"
+                      IsEditable="False"/>
+
+            <TextBlock Grid.Row="15"
+                       Text="Origin State"
+                       Foreground="{StaticResource FieldMutedBrush}"
+                       Margin="0,0,8,8"/>
+            <ComboBox x:Name="OriginStateBox"
+                      Grid.Row="15"
+                      Grid.Column="1"
+                      Margin="0,0,0,8"
+                      IsEditable="False"/>
+
+            <TextBlock Grid.Row="16"
+                       Text="Destination City"
+                       Foreground="{StaticResource FieldMutedBrush}"
+                       Margin="0,0,8,8"/>
+            <ComboBox x:Name="DestinationCityBox"
+                      Grid.Row="16"
+                      Grid.Column="1"
+                      Margin="0,0,0,8"
+                      IsEditable="False"/>
+
+            <TextBlock Grid.Row="17"
+                       Text="Destination State"
+                       Foreground="{StaticResource FieldMutedBrush}"
+                       Margin="0,0,8,8"/>
+            <ComboBox x:Name="DestinationStateBox"
+                      Grid.Row="17"
+                      Grid.Column="1"
+                      Margin="0,0,0,8"
+                      IsEditable="False"/>
+
+            <TextBlock Grid.Row="18"
+                       Text="Miles"
+                       Foreground="{StaticResource FieldMutedBrush}"
+                       Margin="0,0,8,8"/>
+            <TextBox x:Name="MilesBox"
+                     Grid.Row="18"
+                     Grid.Column="1"
+                     Margin="0,0,0,8"/>
+
+            <TextBlock Grid.Row="19"
+                       Text="Assigned Driver"
+                       Foreground="{StaticResource FieldMutedBrush}"
+                       Margin="0,0,8,8"/>
+            <ComboBox x:Name="DriverBox"
+                      Grid.Row="19"
+                      Grid.Column="1"
+                      Margin="0,0,0,8"
+                      IsEditable="False"/>
+
+            <TextBlock Grid.Row="20"
+                       Text="Assigned Truck"
+                       Foreground="{StaticResource FieldMutedBrush}"
+                       Margin="0,0,8,8"/>
+            <ComboBox x:Name="TruckBox"
+                      Grid.Row="20"
+                      Grid.Column="1"
+                      Margin="0,0,0,8"
+                      IsEditable="False"/>
+
+            <TextBlock Grid.Row="21"
+                       Text="Status"
+                       Foreground="{StaticResource FieldMutedBrush}"
+                       Margin="0,0,8,8"/>
+            <ComboBox x:Name="StatusBox"
+                      Grid.Row="21"
+                      Grid.Column="1"
+                      Margin="0,0,0,8"
+                      IsEditable="False">
+                <ComboBoxItem Content="Available"/>
+                <ComboBoxItem Content="Assigned"/>
+                <ComboBoxItem Content="Assigned Load"/>
+                <ComboBoxItem Content="In Transit"/>
+                <ComboBoxItem Content="Delivered"/>
+                <ComboBoxItem Content="Cancelled"/>
+            </ComboBox>
+
+            <TextBlock Grid.Row="22"
+                       Text="Pickup Date"
+                       Foreground="{StaticResource FieldMutedBrush}"
+                       Margin="0,0,8,8"/>
+            <DatePicker x:Name="PickupDateBox"
+                        Grid.Row="22"
+                        Grid.Column="1"
+                        Margin="0,0,0,8"/>
+
+            <TextBlock Grid.Row="23"
+                       Text="Delivery Deadline"
+                       Foreground="{StaticResource FieldMutedBrush}"
+                       Margin="0,0,8,8"/>
+            <DatePicker x:Name="DeliveryDateBox"
+                        Grid.Row="23"
+                        Grid.Column="1"
+                        Margin="0,0,0,8"/>
+
+            <TextBlock Grid.Row="24"
+                       Text="Cargo Weight (lbs)"
+                       Foreground="{StaticResource FieldMutedBrush}"
+                       Margin="0,0,8,8"/>
+            <TextBox x:Name="WeightBox"
+                     Grid.Row="24"
+                     Grid.Column="1"
+                     Margin="0,0,0,8"/>
+
+            <TextBlock Grid.Row="25"
+                       Text="Payout"
+                       Foreground="{StaticResource FieldMutedBrush}"
+                       Margin="0,0,8,8"/>
+            <TextBox x:Name="PayoutBox"
+                     Grid.Row="25"
+                     Grid.Column="1"
+                     Margin="0,0,0,8"/>
+
+            <TextBlock Grid.Row="26"
+                       Text="Priority"
+                       Foreground="{StaticResource FieldMutedBrush}"
+                       Margin="0,0,8,8"/>
+            <ComboBox x:Name="PriorityBox"
+                      Grid.Row="26"
+                      Grid.Column="1"
+                      Margin="0,0,0,8"
+                      IsEditable="False">
+                <ComboBoxItem Content="Normal"/>
+                <ComboBoxItem Content="High"/>
+                <ComboBoxItem Content="Urgent"/>
+            </ComboBox>
+
+            <TextBlock Grid.Row="27"
+                       Text="Convoy Options"
+                       Foreground="{StaticResource FieldMutedBrush}"
+                       Margin="0,4,8,8"/>
+            <StackPanel Grid.Row="27"
+                        Grid.Column="1"
+                        Margin="0,0,0,8">
+                <CheckBox x:Name="ConvoyLoadCheckBox"
+                          Content="Convoy Load"/>
+                <CheckBox x:Name="AutoFleetSyncCheckBox"
+                          Content="Auto Sync To Fleet Command"
+                          IsChecked="True"/>
+            </StackPanel>
+
+            <TextBlock Grid.Row="28"
+                       Text="Convoy Name"
+                       Foreground="{StaticResource FieldMutedBrush}"
+                       Margin="0,0,8,8"/>
+            <TextBox x:Name="ConvoyNameBox"
+                     Grid.Row="28"
+                     Grid.Column="1"
+                     Margin="0,0,0,8"/>
+
+            <TextBlock Grid.Row="29"
+                       Text="Notes"
+                       Foreground="{StaticResource FieldMutedBrush}"
+                       Margin="0,0,8,8"/>
+            <TextBox x:Name="NotesBox"
+                     Style="{StaticResource MultiLineTextBoxStyle}"
+                     Grid.Row="29"
+                     Grid.Column="1"
+                     AcceptsReturn="True"
+                     TextWrapping="Wrap"
+                     VerticalScrollBarVisibility="Auto"
+                     Margin="0,0,0,8"/>
+
+            <StackPanel Grid.Row="30"
+                        Grid.ColumnSpan="2"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Right"
+                        Margin="0,16,0,0">
+                <Button Content="Cancel"
+                        Width="110"
+                        Margin="0,0,8,0"
+                        Click="Cancel_Click"/>
+                <Button Content="Save Load"
+                        Width="110"
+                        Click="Save_Click"/>
+            </StackPanel>
+        </Grid>
+    </ScrollViewer>
+</Window>

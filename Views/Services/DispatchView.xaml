@@ -1,0 +1,277 @@
+<UserControl x:Class="OverWatchELD.Views.DispatchView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="#FF0B1220">
+
+    <UserControl.Resources>
+        <Style TargetType="TextBox">
+            <Setter Property="Background" Value="#FF0F172A"/>
+            <Setter Property="Foreground" Value="#E5E7EB"/>
+            <Setter Property="BorderBrush" Value="#FF334155"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CaretBrush" Value="#60A5FA"/>
+            <Setter Property="Padding" Value="8,4"/>
+        </Style>
+
+        <Style TargetType="ComboBox">
+            <Setter Property="Background" Value="#FF0F172A"/>
+            <Setter Property="Foreground" Value="#E5E7EB"/>
+            <Setter Property="BorderBrush" Value="#FF334155"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="6,3"/>
+        </Style>
+
+        <Style TargetType="ComboBoxItem">
+            <Setter Property="Background" Value="#FF0F172A"/>
+            <Setter Property="Foreground" Value="#E5E7EB"/>
+        </Style>
+
+        <Style TargetType="DataGrid">
+            <Setter Property="Background" Value="#FF111827"/>
+            <Setter Property="Foreground" Value="#E5E7EB"/>
+            <Setter Property="RowBackground" Value="#FF111827"/>
+            <Setter Property="AlternatingRowBackground" Value="#FF0F172A"/>
+            <Setter Property="GridLinesVisibility" Value="Horizontal"/>
+            <Setter Property="HorizontalGridLinesBrush" Value="#FF334155"/>
+            <Setter Property="VerticalGridLinesBrush" Value="#FF334155"/>
+            <Setter Property="BorderBrush" Value="#FF334155"/>
+        </Style>
+
+        <Style TargetType="DataGridColumnHeader">
+            <Setter Property="Background" Value="#FF182235"/>
+            <Setter Property="Foreground" Value="#E5E7EB"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="BorderBrush" Value="#FF334155"/>
+            <Setter Property="Padding" Value="8,6"/>
+        </Style>
+
+        <Style TargetType="DataGridCell">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#E5E7EB"/>
+            <Setter Property="BorderBrush" Value="#FF334155"/>
+            <Setter Property="Padding" Value="6,3"/>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid Margin="12">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Border Background="#FF182235" CornerRadius="10" Padding="12" Margin="0,0,0,10">
+            <DockPanel>
+                <StackPanel Orientation="Vertical" DockPanel.Dock="Left">
+                    <TextBlock Text="Dispatch Tracker" Foreground="#E5E7EB" FontSize="20" FontWeight="SemiBold"/>
+                    <TextBlock Text="Trucky-style dispatch board with real driver identity, history, and leaderboard."
+                               Foreground="#94A3B8" FontSize="12" Margin="0,4,0,0"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" VerticalAlignment="Center">
+                    <Button Content="Create Load" Margin="0,0,8,0" Padding="12,8" Click="CreateLoad_Click"/>
+                    <Button Content="Assign Driver" Margin="0,0,8,0" Padding="12,8" Click="AssignDriver_Click"/>
+                    <Button Content="Delete Load" Padding="12,8" Click="DeleteLoad_Click"/>
+                    <Button Content="Import Telemetry Load"
+        Margin="0,0,8,0"
+        Padding="12,8"
+        Click="ImportTelemetryLoad_Click"/>
+
+                    <Button Content="Sync All"
+                            Padding="12,8"
+                            Click="SyncOperations_Click"/>
+                </StackPanel>
+            </DockPanel>
+        </Border>
+
+        <UniformGrid Grid.Row="1" Columns="6" Margin="0,0,0,10">
+            <Border Background="#FF182235" CornerRadius="8" Margin="0,0,8,0" Padding="10">
+                <StackPanel>
+                    <TextBlock Text="Active Loads" Foreground="#94A3B8" FontSize="12"/>
+                    <TextBlock x:Name="ActiveLoadsText" Foreground="#E5E7EB" FontSize="22" FontWeight="Bold"/>
+                </StackPanel>
+            </Border>
+            <Border Background="#FF182235" CornerRadius="8" Margin="0,0,8,0" Padding="10">
+                <StackPanel>
+                    <TextBlock Text="In Transit" Foreground="#94A3B8" FontSize="12"/>
+                    <TextBlock x:Name="InTransitText" Foreground="#93C5FD" FontSize="22" FontWeight="Bold"/>
+                </StackPanel>
+            </Border>
+            <Border Background="#FF182235" CornerRadius="8" Margin="0,0,8,0" Padding="10">
+                <StackPanel>
+                    <TextBlock Text="Delivered Today" Foreground="#94A3B8" FontSize="12"/>
+                    <TextBlock x:Name="DeliveredTodayText" Foreground="#86EFAC" FontSize="22" FontWeight="Bold"/>
+                </StackPanel>
+            </Border>
+            <Border Background="#FF182235" CornerRadius="8" Margin="0,0,8,0" Padding="10">
+                <StackPanel>
+                    <TextBlock Text="Overdue" Foreground="#94A3B8" FontSize="12"/>
+                    <TextBlock x:Name="OverdueText" Foreground="#FCA5A5" FontSize="22" FontWeight="Bold"/>
+                </StackPanel>
+            </Border>
+            <Border Background="#FF182235" CornerRadius="8" Margin="0,0,8,0" Padding="10">
+                <StackPanel>
+                    <TextBlock Text="Unassigned" Foreground="#94A3B8" FontSize="12"/>
+                    <TextBlock x:Name="UnassignedText" Foreground="#FCD34D" FontSize="22" FontWeight="Bold"/>
+                </StackPanel>
+            </Border>
+            <Border Background="#FF182235" CornerRadius="8" Padding="10">
+                <StackPanel>
+                    <TextBlock Text="Active Drivers" Foreground="#94A3B8" FontSize="12"/>
+                    <TextBlock x:Name="ActiveDriversText" Foreground="#C4B5FD" FontSize="22" FontWeight="Bold"/>
+                </StackPanel>
+            </Border>
+        </UniformGrid>
+
+        <UniformGrid Grid.Row="2" Columns="6" Margin="0,0,0,10">
+            <Border Background="#FF111827" CornerRadius="8" Margin="0,0,8,0" Padding="10">
+                <StackPanel>
+                    <TextBlock Text="My Active" Foreground="#94A3B8" FontSize="12"/>
+                    <TextBlock x:Name="MyActiveLoadsText" Foreground="#E5E7EB" FontSize="18" FontWeight="Bold"/>
+                </StackPanel>
+            </Border>
+            <Border Background="#FF111827" CornerRadius="8" Margin="0,0,8,0" Padding="10">
+                <StackPanel>
+                    <TextBlock Text="My Completed" Foreground="#94A3B8" FontSize="12"/>
+                    <TextBlock x:Name="MyCompletedLoadsText" Foreground="#86EFAC" FontSize="18" FontWeight="Bold"/>
+                </StackPanel>
+            </Border>
+            <Border Background="#FF111827" CornerRadius="8" Margin="0,0,8,0" Padding="10">
+                <StackPanel>
+                    <TextBlock Text="My Overdue" Foreground="#94A3B8" FontSize="12"/>
+                    <TextBlock x:Name="MyOverdueLoadsText" Foreground="#FCA5A5" FontSize="18" FontWeight="Bold"/>
+                </StackPanel>
+            </Border>
+            <Border Background="#FF111827" CornerRadius="8" Margin="0,0,8,0" Padding="10">
+                <StackPanel>
+                    <TextBlock Text="My Miles" Foreground="#94A3B8" FontSize="12"/>
+                    <TextBlock x:Name="MyMilesText" Foreground="#93C5FD" FontSize="18" FontWeight="Bold"/>
+                </StackPanel>
+            </Border>
+            <Border Background="#FF111827" CornerRadius="8" Margin="0,0,8,0" Padding="10">
+                <StackPanel>
+                    <TextBlock Text="My Payout" Foreground="#94A3B8" FontSize="12"/>
+                    <TextBlock x:Name="MyPayoutText" Foreground="#FCD34D" FontSize="18" FontWeight="Bold"/>
+                </StackPanel>
+            </Border>
+            <Border Background="#FF111827" CornerRadius="8" Padding="10">
+                <StackPanel>
+                    <TextBlock Text="On-Time %" Foreground="#94A3B8" FontSize="12"/>
+                    <TextBlock x:Name="MyOnTimeText" Foreground="#C4B5FD" FontSize="18" FontWeight="Bold"/>
+                </StackPanel>
+            </Border>
+        </UniformGrid>
+
+        <Border Grid.Row="3" Background="#FF111827" CornerRadius="10" Padding="10" Margin="0,0,0,10">
+            <DockPanel>
+                <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
+                    <TextBlock Text="Top Driver:" Foreground="#94A3B8" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                    <TextBlock x:Name="TopDriverText" Foreground="#E5E7EB" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,16,0"/>
+                    <TextBlock Text="Top Revenue:" Foreground="#94A3B8" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                    <TextBlock x:Name="TopRevenueText" Foreground="#FCD34D" FontWeight="SemiBold" VerticalAlignment="Center" Margin="0,0,16,0"/>
+                    <TextBlock Text="Best On-Time:" Foreground="#94A3B8" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                    <TextBlock x:Name="BestOnTimeText" Foreground="#C4B5FD" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                </StackPanel>
+            </DockPanel>
+        </Border>
+
+        <Border Grid.Row="4" Background="#FF111827" CornerRadius="10" Padding="10" Margin="0,0,0,10">
+            <DockPanel LastChildFill="False">
+                <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
+                    <TextBox x:Name="SearchBox" Width="220" Height="32" Margin="0,0,8,0"
+                             VerticalContentAlignment="Center" TextChanged="SearchBox_TextChanged"/>
+
+                    <ComboBox x:Name="FilterBox" Width="160" Height="32" Margin="0,0,8,0"
+                              SelectionChanged="FilterBox_SelectionChanged">
+                        <ComboBoxItem Content="All"/>
+                        <ComboBoxItem Content="Open Board"/>
+                        <ComboBoxItem Content="My Loads"/>
+                        <ComboBoxItem Content="Available"/>
+                        <ComboBoxItem Content="Assigned"/>
+                        <ComboBoxItem Content="Accepted"/>
+                        <ComboBoxItem Content="Picked Up"/>
+                        <ComboBoxItem Content="In Transit"/>
+                        <ComboBoxItem Content="Delivered"/>
+                        <ComboBoxItem Content="History"/>
+                        <ComboBoxItem Content="Cancelled"/>
+                        <ComboBoxItem Content="Overdue"/>
+                        <ComboBoxItem Content="Unassigned"/>
+                        <ComboBoxItem Content="Claimed"/>
+                    </ComboBox>
+
+                    <Button Content="Refresh" Width="90" Height="32" Margin="0,0,8,0" Click="Refresh_Click"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
+                    <Button Content="Claim Load" Width="110" Height="32" Margin="0,0,8,0" Click="Claim_Click"/>
+                    <Button Content="Accept" Width="90" Height="32" Margin="0,0,8,0" Click="Accept_Click"/>
+                    <Button Content="Picked Up" Width="100" Height="32" Margin="0,0,8,0" Click="PickedUp_Click"/>
+                    <Button Content="In Transit" Width="100" Height="32" Margin="0,0,8,0" Click="InTransit_Click"/>
+                    <Button Content="Delivered" Width="95" Height="32" Margin="0,0,8,0" Click="Delivered_Click"/>
+                    <Button Content="Cancelled" Width="95" Height="32" Click="Cancelled_Click"/>
+                </StackPanel>
+            </DockPanel>
+        </Border>
+
+        <Grid Grid.Row="5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2.2*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0" Background="#FF111827" CornerRadius="10" Padding="10" Margin="0,0,10,0">
+                <DataGrid x:Name="JobsGrid" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True"
+                          HeadersVisibility="Column" GridLinesVisibility="Horizontal"
+                          MouseDoubleClick="JobsGrid_MouseDoubleClick" SelectionMode="Single">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Load #" Binding="{Binding LoadNumber}" Width="110"/>
+                        <DataGridTextColumn Header="Driver" Binding="{Binding AssignedDriver}" Width="120"/>
+                        <DataGridTextColumn Header="Claimed By" Binding="{Binding ClaimedBy}" Width="120"/>
+                        <DataGridTextColumn Header="Truck" Binding="{Binding TruckDisplay}" Width="110"/>
+                        <DataGridTextColumn Header="Origin" Binding="{Binding OriginDisplay}" Width="150"/>
+                        <DataGridTextColumn Header="Destination" Binding="{Binding DestinationDisplay}" Width="150"/>
+                        <DataGridTextColumn Header="Cargo" Binding="{Binding Cargo}" Width="120"/>
+                        <DataGridTextColumn Header="Mode" Binding="{Binding DispatchMode}" Width="90"/>
+                        <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="100"/>
+                        <DataGridTextColumn Header="Planned Miles" Binding="{Binding Miles}" Width="95"/>
+                        <DataGridTextColumn Header="Revenue" Binding="{Binding RevenueUsdDisplay}" Width="100"/>
+                        <DataGridTextColumn Header="RPM" Binding="{Binding RatePerMileDisplay}" Width="85"/>
+
+                        <DataGridTemplateColumn Header="BOL" Width="90">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Content="Open BOL"
+                    Padding="8,4"
+                    Click="OpenBolFromRow_Click"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Border>
+
+            <Border Grid.Column="1" Background="#FF111827" CornerRadius="10" Padding="10">
+                <DockPanel LastChildFill="True">
+                    <TextBlock Text="Leaderboard" Foreground="#E5E7EB" FontSize="16" FontWeight="SemiBold"
+                               Margin="0,0,0,10" DockPanel.Dock="Top"/>
+
+                    <DataGrid x:Name="LeaderboardGrid" AutoGenerateColumns="False" CanUserAddRows="False"
+                              IsReadOnly="True" HeadersVisibility="Column" GridLinesVisibility="Horizontal"
+                              SelectionMode="Single">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="#" Binding="{Binding Rank}" Width="35"/>
+                            <DataGridTextColumn Header="Driver" Binding="{Binding DriverName}" Width="120"/>
+                            <DataGridTextColumn Header="Loads" Binding="{Binding CompletedLoads}" Width="55"/>
+                            <DataGridTextColumn Header="Miles" Binding="{Binding TotalMiles}" Width="70"/>
+                            <DataGridTextColumn Header="Revenue" Binding="{Binding RevenueDisplay}" Width="90"/>
+                            <DataGridTextColumn Header="On-Time" Binding="{Binding OnTimeDisplay}" Width="65"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </DockPanel>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>

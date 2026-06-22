@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>OverWatch ELD Companion Connect</title>
+    <style>
+        :root {
+            color-scheme: dark;
+            --bg: #0b1220;
+            --card: #182235;
+            --line: #22314a;
+            --text: #e5e7eb;
+            --muted: #9ca3af;
+            --accent: #60a5fa;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Segoe UI, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: grid;
+            place-items: center;
+            padding: 20px;
+        }
+
+        .card {
+            width: 100%;
+            max-width: 520px;
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            padding: 22px;
+            box-shadow: 0 10px 30px rgba(0,0,0,.28);
+        }
+
+        h1 {
+            margin: 0 0 10px;
+            font-size: 24px;
+        }
+
+        p {
+            margin: 0 0 14px;
+            color: var(--muted);
+            line-height: 1.45;
+        }
+
+        .status {
+            margin: 12px 0 16px;
+            padding: 12px 14px;
+            border-radius: 12px;
+            background: rgba(255,255,255,.03);
+            border: 1px solid var(--line);
+            color: var(--text);
+            white-space: pre-wrap;
+        }
+
+        .row {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        input {
+            width: 100%;
+            margin-top: 10px;
+            padding: 12px 14px;
+            border-radius: 12px;
+            border: 1px solid var(--line);
+            background: #0f1826;
+            color: var(--text);
+            outline: none;
+            font-size: 15px;
+        }
+
+        button {
+            border: 1px solid var(--line);
+            background: #0f1826;
+            color: var(--text);
+            padding: 11px 14px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+            button.primary {
+                background: var(--accent);
+                border-color: var(--accent);
+                color: #08111f;
+                font-weight: 700;
+            }
+
+        .small {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>OverWatch ELD Companion</h1>
+        <p>This page reconnects your phone to the last working ELD companion automatically.</p>
+
+        <div id="status" class="status">Starting reconnect…</div>
+
+        <label for="serverUrl">Manual server URL</label>
+        <input id="serverUrl" type="text" placeholder="http://192.168.1.25:5234" />
+
+        <div class="row">
+            <button id="btnReconnect" class="primary">Reconnect</button>
+            <button id="btnClear">Forget Saved Server</button>
+            <button id="btnOpenSaved">Open Saved Server</button>
+        </div>
+
+        <div class="small">
+            First time on a new phone: scan the Companion QR from the desktop app once, then bookmark this page or add it to your home screen.
+        </div>
+    </div>
+
+    <script>
+        const KEY = "oweld_last_server";
+        const statusEl = document.getElementById("status");
+        const serverInput = document.getElementById("serverUrl");
+        const btnReconnect = document.getElementById("btnReconnect");
+        const btnClear = document.getElementById("btnClear");
+        const btnOpenSaved = document.getElementById("btnOpenSaved");
+
+        function setStatus(text) {
+        statusEl.textContent = text;
+        }
+
+        function normalizeUrl(url) {
+        url = (url || "").trim();
+        if (!url) return "";
+        url = url.replace(/\/+$/, "");
+        if (!/^https?:\/\//i.test(url)) url = "http://" + url;
+        return url;
+        }
+
+        function getSavedServer() {
+        return normalizeUrl(localStorage.getItem(KEY) || "");
+        }
+
+        function saveServer(url) {
+        url = normalizeUrl(url);
+        if (url) localStorage.setItem(KEY, url);
+        }
+
+        function clearServer() {
+        localStorage.removeItem(KEY);
+        }
+
+        async function checkServer(baseUrl) {
+        baseUrl = normalizeUrl(baseUrl);
+        if (!baseUrl) return null;
+
+        const healthUrl = baseUrl + "/health";
+        const discoveryUrl = baseUrl + "/api/companion/discovery";
+
+        try {
+        const health = await fetch(healthUrl, {
+        method: "GET",
+        cache: "no-store"
+        });
+
+        if (!health.ok) return null;
+
+        let info = null;
+
+        try {
+        const r = await fetch(discoveryUrl, {
+        method: "GET",
+        cache: "no-store"
+        });
+        if (r.ok) info = await r.json();
+        } catch {}
+
+        return {
+        baseUrl,
+        info
+        };
+        } catch {
+        return null;
+        }
+        }
+
+        async function reconnect() {
+        const manual = normalizeUrl(serverInput.value);
+        const saved = getSavedServer();
+        const candidate = manual || saved;
+
+        if (!candidate) {
+        setStatus("No saved server yet.\n\nFirst time setup: scan the Companion QR from the desktop app.");
+        return;
+        }
+
+        setStatus("Trying saved companion:\n" + candidate);
+
+        const result = await checkServer(candidate);
+        if (!result) {
+        setStatus(
+        "Saved companion did not respond.\n\n" +
+        "Open the desktop app, confirm Companion is online, then scan the QR again once."
+        );
+        return;
+        }
+
+        saveServer(result.baseUrl);
+
+        const label = result.info?.machine
+        ? `Connected to ${result.info.machine}`
+        : "Connected";
+
+        setStatus(label + "\nOpening companion…");
+
+        window.location.href = result.baseUrl + "/";
+        }
+
+        btnReconnect.addEventListener("click", reconnect);
+
+        btnClear.addEventListener("click", () => {
+        clearServer();
+        serverInput.value = "";
+        setStatus("Saved server cleared.");
+        });
+
+        btnOpenSaved.addEventListener("click", () => {
+        const saved = getSavedServer();
+        if (!saved) {
+        setStatus("No saved server found.");
+        return;
+        }
+        window.location.href = saved + "/";
+        });
+
+        (async function init() {
+        const params = new URLSearchParams(window.location.search);
+        const server = normalizeUrl(params.get("server") || "");
+        if (server) {
+        saveServer(server);
+        serverInput.value = server;
+        } else {
+        serverInput.value = getSavedServer();
+        }
+
+        await reconnect();
+        })();
+    </script>
+</body>
+</html>

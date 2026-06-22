@@ -1,0 +1,188 @@
+<Window x:Class="OverWatchELD.Views.Management.ManagementWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="VTC Management"
+        Width="1200"
+        Height="760"
+        Background="#0F1012"
+        Foreground="White"
+        WindowStartupLocation="CenterOwner">
+    <Grid Margin="14">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Margin="0,0,0,12">
+            <TextBlock Text="Management Window" FontSize="24" FontWeight="SemiBold"/>
+            <TextBlock Text="Finance, driver management, webhooks, Discord information, and related company controls."
+                       Foreground="#C5C9D3"
+                       Margin="0,4,0,0"/>
+        </StackPanel>
+
+        <TabControl Grid.Row="1" Background="#17191D" Foreground="White">
+            <TabItem Header="Finance">
+                <Grid Margin="12">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <UniformGrid Grid.Row="0" Columns="4" Margin="0,0,0,12">
+                        <Border Background="#1B1F26" CornerRadius="12" Padding="12" Margin="0,0,10,0"><StackPanel><TextBlock Text="Balance" Foreground="#95A1B6" FontSize="11"/><TextBlock x:Name="BalanceText" FontSize="20" FontWeight="SemiBold"/></StackPanel></Border>
+                        <Border Background="#1B1F26" CornerRadius="12" Padding="12" Margin="0,0,10,0"><StackPanel><TextBlock Text="Income" Foreground="#95A1B6" FontSize="11"/><TextBlock x:Name="IncomeText" FontSize="20" FontWeight="SemiBold"/></StackPanel></Border>
+                        <Border Background="#1B1F26" CornerRadius="12" Padding="12" Margin="0,0,10,0"><StackPanel><TextBlock Text="Expenses" Foreground="#95A1B6" FontSize="11"/><TextBlock x:Name="ExpenseText" FontSize="20" FontWeight="SemiBold"/></StackPanel></Border>
+                        <Border Background="#1B1F26" CornerRadius="12" Padding="12"><StackPanel><TextBlock Text="Entries" Foreground="#95A1B6" FontSize="11"/><TextBlock x:Name="EntryCountText" FontSize="20" FontWeight="SemiBold"/></StackPanel></Border>
+                    </UniformGrid>
+
+                    <DataGrid Grid.Row="1"
+                              x:Name="FinanceGrid"
+                              AutoGenerateColumns="False"
+                              HeadersVisibility="Column"
+                              IsReadOnly="True"
+                              Background="#14171C"
+                              Foreground="White"
+                              BorderBrush="#2E333C"
+                              RowBackground="#14171C"
+                              AlternatingRowBackground="#1A1E25"
+                              GridLinesVisibility="Horizontal">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Date UTC" Binding="{Binding DateUtc}" Width="1.3*"/>
+                            <DataGridTextColumn Header="Type" Binding="{Binding EntryType}" Width="0.8*"/>
+                            <DataGridTextColumn Header="Category" Binding="{Binding Category}" Width="1*"/>
+                            <DataGridTextColumn Header="Amount" Binding="{Binding Amount}" Width="0.8*"/>
+                            <DataGridTextColumn Header="Truck" Binding="{Binding TruckName}" Width="1*"/>
+                            <DataGridTextColumn Header="User" Binding="{Binding DiscordUsername}" Width="1.1*"/>
+                            <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="1.8*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="Driver Management">
+                <Grid Margin="12">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <Border Grid.Row="0" Background="#17191D" CornerRadius="12" Padding="12" Margin="0,0,0,12">
+                        <TextBlock Text="Driver management shows fleet assignments and linked Discord users from the saved fleet roster."
+                                   Foreground="#C5C9D3"/>
+                    </Border>
+
+                    <DataGrid Grid.Row="1"
+                              x:Name="DriverGrid"
+                              AutoGenerateColumns="False"
+                              HeadersVisibility="Column"
+                              IsReadOnly="True"
+                              Background="#14171C"
+                              Foreground="White"
+                              BorderBrush="#2E333C"
+                              RowBackground="#14171C"
+                              AlternatingRowBackground="#1A1E25"
+                              GridLinesVisibility="Horizontal">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Driver" Binding="{Binding DriverName}" Width="1.2*"/>
+                            <DataGridTextColumn Header="Discord Username" Binding="{Binding DiscordUsername}" Width="1.2*"/>
+                            <DataGridTextColumn Header="Discord User ID" Binding="{Binding DiscordUserId}" Width="1.3*"/>
+                            <DataGridTextColumn Header="Truck Name" Binding="{Binding TruckName}" Width="1.2*"/>
+                            <DataGridTextColumn Header="Model" Binding="{Binding Model}" Width="1.1*"/>
+                            <DataGridTextColumn Header="Mod Name" Binding="{Binding ModName}" Width="1.1*"/>
+                            <DataGridTextColumn Header="Plate" Binding="{Binding PlateNumber}" Width="0.9*"/>
+                            <DataGridCheckBoxColumn Header="Active" Binding="{Binding IsActive}" Width="0.7*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+
+            <TabItem Header="Discord / Webhooks">
+                <Grid Margin="12">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0" Margin="0,0,0,12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1.2*"/>
+                            <ColumnDefinition Width="1.2*"/>
+                            <ColumnDefinition Width="1.2*"/>
+                            <ColumnDefinition Width="1.2*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0" Margin="0,0,8,0">
+                            <TextBlock Foreground="#D6DAE3" Margin="0,0,0,5" Text="Submission Webhook"/>
+                            <TextBox x:Name="SubmissionWebhookTextBox" Height="38"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" Margin="0,0,8,0">
+                            <TextBlock Foreground="#D6DAE3" Margin="0,0,0,5" Text="Fleet Webhook"/>
+                            <TextBox x:Name="FleetWebhookTextBox" Height="38"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="2" Margin="0,0,8,0">
+                            <TextBlock Foreground="#D6DAE3" Margin="0,0,0,5" Text="Finance Webhook"/>
+                            <TextBox x:Name="FinanceWebhookTextBox" Height="38"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="3">
+                            <TextBlock Foreground="#D6DAE3" Margin="0,0,0,5" Text="Driver Management Webhook"/>
+                            <TextBox x:Name="DriverManagementWebhookTextBox" Height="38"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <Grid Grid.Row="1" Margin="0,0,0,12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="1.3*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0" Margin="0,0,8,0">
+                            <TextBlock Foreground="#D6DAE3" Margin="0,0,0,5" Text="Discord Guild ID"/>
+                            <TextBox x:Name="DiscordGuildIdTextBox" Height="38"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" Margin="0,0,8,0">
+                            <TextBlock Foreground="#D6DAE3" Margin="0,0,0,5" Text="Discord Bot Name"/>
+                            <TextBox x:Name="DiscordBotNameTextBox" Height="38"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="2" Margin="0,0,8,0">
+                            <TextBlock Foreground="#D6DAE3" Margin="0,0,0,5" Text="Dispatch Channel ID"/>
+                            <TextBox x:Name="DispatchChannelIdTextBox" Height="38"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="3" Margin="0,0,8,0">
+                            <TextBlock Foreground="#D6DAE3" Margin="0,0,0,5" Text="Notes"/>
+                            <TextBox x:Name="NotesTextBox" Height="38"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="4" VerticalAlignment="Bottom">
+                            <Button x:Name="SaveWebhookSettingsButton"
+                                    Content="Save Settings"
+                                    Padding="14,8"
+                                    Click="SaveWebhookSettingsButton_Click"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <Border Grid.Row="2" Background="#17191D" CornerRadius="12" Padding="12">
+                        <TextBlock Text="Use this section to store webhook URLs and Discord identifiers locally in discord_webhooks.json. Submission window webhook posting uses the Submission Webhook URL."
+                                   Foreground="#C5C9D3"
+                                   TextWrapping="Wrap"/>
+                    </Border>
+                </Grid>
+            </TabItem>
+        </TabControl>
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,12,0,0">
+            <Button Content="Refresh" Padding="14,8" Margin="0,0,8,0" Click="RefreshButton_Click"/>
+            <Button Content="Close" Padding="14,8" Click="CloseButton_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>

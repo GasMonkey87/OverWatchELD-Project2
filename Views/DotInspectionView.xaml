@@ -1,0 +1,46 @@
+﻿<UserControl x:Class="OverWatchELD.Views.DotInspectionView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d">
+
+    <Grid Margin="10">
+        <DataGrid x:Name="DotGrid"
+                  ItemsSource="{Binding Days}"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  PreviewMouseDoubleClick="DotGrid_PreviewMouseDoubleClick">
+
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow">
+                    <Setter Property="Background" Value="Transparent"/>
+                    <Setter Property="BorderThickness" Value="0"/>
+
+                    <Style.Triggers>
+                        <!-- 🔴 Any violation -->
+                        <DataTrigger Binding="{Binding HasViolation}" Value="True">
+                            <Setter Property="Background" Value="#33FF0000"/>
+                        </DataTrigger>
+
+                        <!-- 🟡 Optional warning state (only works if ViolationText == "WARNING") -->
+                        <DataTrigger Binding="{Binding ViolationText}" Value="WARNING">
+                            <Setter Property="Background" Value="#33FFC100"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.RowStyle>
+
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Day" Binding="{Binding DayLabel}" />
+                <DataGridTextColumn Header="OFF" Binding="{Binding OffText}" />
+                <DataGridTextColumn Header="SB" Binding="{Binding SbText}" />
+                <DataGridTextColumn Header="DRIVE" Binding="{Binding DriveText}" />
+                <DataGridTextColumn Header="ON" Binding="{Binding OnText}" />
+                <DataGridTextColumn Header="TOTAL" Binding="{Binding OnDutyTotalText}" />
+                <DataGridTextColumn Header="Violations" Binding="{Binding ViolationText}" />
+            </DataGrid.Columns>
+
+        </DataGrid>
+    </Grid>
+</UserControl>

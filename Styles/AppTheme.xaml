@@ -1,0 +1,60 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Motive colors -->
+    <Color x:Key="Bg">#0B1220</Color>
+    <Color x:Key="Surface">#0F1A2E</Color>
+    <Color x:Key="Surface2">#12213B</Color>
+    <Color x:Key="Stroke">#1E2F52</Color>
+    <Color x:Key="Text">#EAF1FF</Color>
+    <Color x:Key="Muted">#9FB0D2</Color>
+    <Color x:Key="Accent">#18D1C3</Color>
+    <Color x:Key="Warn">#F6C343</Color>
+    <Color x:Key="Danger">#FF4D4D</Color>
+
+    <SolidColorBrush x:Key="BgBrush" Color="{StaticResource Bg}" />
+    <SolidColorBrush x:Key="SurfaceBrush" Color="{StaticResource Surface}" />
+    <SolidColorBrush x:Key="Surface2Brush" Color="{StaticResource Surface2}" />
+    <SolidColorBrush x:Key="StrokeBrush" Color="{StaticResource Stroke}" />
+    <SolidColorBrush x:Key="TextBrush" Color="{StaticResource Text}" />
+    <SolidColorBrush x:Key="MutedBrush" Color="{StaticResource Muted}" />
+    <SolidColorBrush x:Key="AccentBrush" Color="{StaticResource Accent}" />
+    <SolidColorBrush x:Key="WarnBrush" Color="{StaticResource Warn}" />
+    <SolidColorBrush x:Key="DangerBrush" Color="{StaticResource Danger}" />
+
+    <Style TargetType="Window">
+        <Setter Property="Background" Value="{StaticResource BgBrush}" />
+        <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+    </Style>
+
+    <Style TargetType="TextBlock">
+        <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+    </Style>
+
+    <!-- Cards -->
+    <Style x:Key="CardStyle" TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource SurfaceBrush}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource StrokeBrush}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="CornerRadius" Value="18"/>
+        <Setter Property="Padding" Value="16"/>
+    </Style>
+
+    <!-- Buttons -->
+    <Style x:Key="NavButtonStyle" TargetType="Button">
+        <Setter Property="Background" Value="{StaticResource Surface2Brush}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource StrokeBrush}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
+        <Setter Property="Padding" Value="14,8"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Cursor" Value="Hand"/>
+    </Style>
+    <!-- Motive ring defaults (applies to existing CircularRing control) -->
+    <Style TargetType="controls:CircularRing"
+       xmlns:controls="clr-namespace:OverWatchELD.Controls">
+        <Setter Property="Foreground" Value="{StaticResource TextBrush}" />
+    </Style>
+
+
+</ResourceDictionary>

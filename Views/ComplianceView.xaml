@@ -1,0 +1,352 @@
+<UserControl x:Class="OverWatchELD.Views.ComplianceView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             d:DesignHeight="720" d:DesignWidth="1100">
+
+    <UserControl.Resources>
+
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+
+        <!-- Reuse existing app look; keep it simple and clock-free -->
+        <Style x:Key="Card" TargetType="Border">
+            <Setter Property="Background" Value="#161A23"/>
+            <Setter Property="BorderBrush" Value="#2A3142"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="12"/>
+            <Setter Property="Padding" Value="14"/>
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+        </Style>
+
+        <Style x:Key="FieldLabel" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#B7C2D6"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Margin" Value="0,0,0,4"/>
+        </Style>
+
+        <Style x:Key="SectionHeader" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Margin" Value="0,0,0,10"/>
+        </Style>
+
+        <Style x:Key="HintText" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#95A2BC"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+        </Style>
+
+        <Style x:Key="TextBoxDark" TargetType="TextBox">
+            <Setter Property="Background" Value="#0F131C"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="#2A3142"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="10,7"/>
+            <Setter Property="MinHeight" Value="32"/>
+        </Style>
+
+        <Style x:Key="ButtonPrimary" TargetType="Button">
+            <Setter Property="Background" Value="#2C6EFF"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="12,7"/>
+            <Setter Property="MinHeight" Value="32"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+
+        <Style x:Key="ButtonGhost" TargetType="Button">
+            <Setter Property="Background" Value="#1A2030"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="#2A3142"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="12,7"/>
+            <Setter Property="MinHeight" Value="32"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Status / Compliance banner -->
+        <Border Grid.Row="0" Style="{StaticResource Card}" Padding="12" Margin="0,0,0,12"
+                Background="{Binding BannerBrush}">
+            <DockPanel LastChildFill="True">
+                <TextBlock DockPanel.Dock="Left" Text="COMPLIANCE" Foreground="White" FontWeight="Bold"
+                           Margin="0,0,10,0"/>
+                <TextBlock Text="{Binding BannerText}" Foreground="White" FontWeight="SemiBold" TextWrapping="Wrap"/>
+            </DockPanel>
+        </Border>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="340"/>
+                <ColumnDefinition Width="12"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Left rail: day/load + saved logs -->
+            <Border Grid.Column="0" Style="{StaticResource Card}">
+                <StackPanel>
+                    <TextBlock Style="{StaticResource SectionHeader}" Text="{Binding Title}"/>
+
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                        <StackPanel Width="150">
+                            <TextBlock Style="{StaticResource FieldLabel}" Text="Date"/>
+                            <DatePicker x:Name="LogDatePicker"
+            SelectedDate="{Binding SelectedDate, Mode=TwoWay}"
+            Width="160"
+            Margin="12,0,0,0"/>
+                        </StackPanel>
+
+                        <StackPanel Width="160" Margin="10,0,0,0">
+                            <TextBlock Style="{StaticResource FieldLabel}" Text="Load ID"/>
+                            <TextBox Style="{StaticResource TextBoxDark}"
+                                     Text="{Binding LoadId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     ToolTip="Optional. Use this to keep separate logs per load."/>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                        <Button Style="{StaticResource ButtonPrimary}" Content="New / Today"
+                                Command="{Binding NewForTodayCommand}" Margin="0,0,8,0"/>
+                        <Button Style="{StaticResource ButtonGhost}" Content="Save"
+                                Command="{Binding SaveCommand}"/>
+                    </StackPanel>
+
+                    <TextBlock Style="{StaticResource FieldLabel}" Text="Saved logs for selected day"/>
+                    <ListBox ItemsSource="{Binding SavedLoadsForDay}"
+                             SelectedItem="{Binding SelectedSavedLoad, Mode=TwoWay}"
+                             Background="#0F131C" Foreground="White" BorderBrush="#2A3142" BorderThickness="1"
+                             Margin="0,0,0,10"/>
+
+                    <Button Style="{StaticResource ButtonGhost}" Content="Load selected"
+                            Command="{Binding LoadSelectedCommand}"/>
+
+                    <TextBlock Margin="0,12,0,0" Style="{StaticResource HintText}"
+                               Text="{Binding StatusText}"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Right: forms -->
+            <ScrollViewer Grid.Column="2" VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+
+                    <!-- Vehicle / load info -->
+                    <Border Style="{StaticResource Card}" Margin="0,0,0,12">
+                      <StackPanel>
+
+                        <TextBlock Style="{StaticResource SectionHeader}" Text="Vehicle &amp; Load Information"/>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="12"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Style="{StaticResource FieldLabel}" Text="Truck / Unit #"/>
+                                <TextBox Style="{StaticResource TextBoxDark}"
+                                         Text="{Binding TruckId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                <TextBlock Style="{StaticResource FieldLabel}" Text="Trailer # / VIN"/>
+                                <TextBox Style="{StaticResource TextBoxDark}"
+                                         Text="{Binding TrailerId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                         Margin="0,0,0,6"/>
+
+                                <TextBlock Style="{StaticResource FieldLabel}" Text="License Plate"/>
+                                <TextBox Style="{StaticResource TextBoxDark}"
+                                         Text="{Binding LicensePlate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="2">
+                                <TextBlock Style="{StaticResource FieldLabel}" Text="Odometer (mi)"/>
+                                <TextBox Style="{StaticResource TextBoxDark}"
+                                         Text="{Binding OdometerMilesText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                <TextBlock Style="{StaticResource FieldLabel}" Text="Engine Hours"/>
+                                <TextBox Style="{StaticResource TextBoxDark}"
+                                         Text="{Binding EngineHoursText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                         Margin="0,0,0,6"/>
+
+                                <Button Style="{StaticResource ButtonGhost}" Content="Autofill from Telemetry"
+                                        Command="{Binding TryAutofillFromTelemetryCommand}"/>
+                                <TextBlock Margin="0,8,0,0" Style="{StaticResource HintText}"
+                                           Text="If telemetry is available, this will populate truck/trailer fields automatically."/>
+                            </StackPanel>
+                        </Grid>
+
+                        <Separator Margin="0,12,0,12" Background="#2A3142"/>
+
+                        <TextBlock Style="{StaticResource FieldLabel}" Text="Load notes (dispatch / BOL / special instructions)"/>
+                        <TextBox Style="{StaticResource TextBoxDark}" AcceptsReturn="True" Height="90"
+                                 Text="{Binding LoadNotes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                        <TextBlock Style="{StaticResource FieldLabel}" Margin="0,10,0,4"
+                                   Text="DOT / compliance notes (permits, HazMat, placards, route restrictions, etc.)"/>
+                        <TextBox Style="{StaticResource TextBoxDark}" AcceptsReturn="True" Height="90"
+                                 Text="{Binding DotNotes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    
+                      </StackPanel>
+                    </Border>
+
+                    <!-- Pre-trip -->
+                    <Border Style="{StaticResource Card}" Margin="0,0,0,12">
+                      <StackPanel>
+
+                        <DockPanel LastChildFill="True">
+                            <TextBlock DockPanel.Dock="Left" Style="{StaticResource SectionHeader}" Text="Pre-Trip Inspection"/>
+                            <Border DockPanel.Dock="Right" CornerRadius="10" Padding="8,3" Margin="10,0,0,0"
+                                    Background="#2A3142">
+                                <TextBlock Foreground="White" FontSize="12" Text="Required at start of day"/>
+                            </Border>
+                        </DockPanel>
+
+                        <TextBlock Style="{StaticResource HintText}" Margin="0,0,0,10"
+                                   Text="Like Motive: a Pre-Trip must be completed before beginning your driving shift. If you start On Duty / Driving without it, you will be flagged as in violation." />
+
+                        <Border CornerRadius="10" Padding="10" Margin="0,0,0,10" Background="#241C1C"
+                                Visibility="{Binding IsPreTripViolation, Converter={StaticResource BoolToVis}}">
+                            <TextBlock Foreground="#FFB4B4" FontWeight="SemiBold"
+                                       Text="Pre-Trip REQUIRED: you started your day without completing a Pre-Trip. Complete it now to clear the violation flag for today."/>
+                        </Border>
+
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                            <CheckBox Content="Pre-Trip completed" Foreground="White"
+                                      IsChecked="{Binding PreTripCompleted, Mode=TwoWay}"/>
+                            <Button Margin="12,0,0,0" Style="{StaticResource ButtonPrimary}" Content="Mark Done"
+                                    Command="{Binding MarkPreTripDoneCommand}"/>
+                        </StackPanel>
+
+                        
+                <!-- Tractor + Trailer checklist (keep same card layout/format) -->
+                <Grid Margin="0,10,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="12"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Tractor -->
+                    <Border Grid.Column="0" Background="#0F131C" BorderBrush="#2A3142" BorderThickness="1" CornerRadius="10" Padding="10">
+                        <StackPanel>
+                            <TextBlock Text="Tractor checklist" Foreground="White" FontWeight="SemiBold" Margin="0,0,0,6"/>
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" Height="170">
+                                <ItemsControl ItemsSource="{Binding PreTripTractorChecklist}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <CheckBox Content="{Binding Name}" IsChecked="{Binding IsChecked, Mode=TwoWay}" Foreground="White" Margin="0,2"/>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Trailer -->
+                    <Border Grid.Column="2" Background="#0F131C" BorderBrush="#2A3142" BorderThickness="1" CornerRadius="10" Padding="10">
+                        <StackPanel>
+                            <TextBlock Text="Trailer checklist" Foreground="White" FontWeight="SemiBold" Margin="0,0,0,6"/>
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" Height="170">
+                                <ItemsControl ItemsSource="{Binding PreTripTrailerChecklist}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <CheckBox Content="{Binding Name}" IsChecked="{Binding IsChecked, Mode=TwoWay}" Foreground="White" Margin="0,2"/>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+
+<TextBlock Style="{StaticResource FieldLabel}" Text="Pre-Trip checklist notes / defects found"/>
+                        <TextBox Style="{StaticResource TextBoxDark}" AcceptsReturn="True" Height="110"
+                                 Text="{Binding PreTripNotes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                        <TextBlock Margin="0,10,0,0" Style="{StaticResource HintText}"
+                                   Text="Suggested items: brakes, lights, tires, coupling, fluids/leaks, mirrors, horn, wipers, load securement, placards, emergency equipment."/>
+                    
+                      </StackPanel>
+                    </Border>
+
+                    <!-- Post-trip -->
+                    <Border Style="{StaticResource Card}">
+                      <StackPanel>
+
+                        <TextBlock Style="{StaticResource SectionHeader}" Text="Post-Trip Inspection"/>
+
+                        <TextBlock Style="{StaticResource HintText}" Margin="0,0,0,10"
+                                   Text="Complete at the end of your shift (or after dropping a load) to record defects, maintenance needs, and trailer condition." />
+
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                            <CheckBox Content="Post-Trip completed" Foreground="White"
+                                      IsChecked="{Binding PostTripCompleted, Mode=TwoWay}"/>
+                            <Button Margin="12,0,0,0" Style="{StaticResource ButtonPrimary}" Content="Mark Done"
+                                    Command="{Binding MarkPostTripDoneCommand}"/>
+                        </StackPanel>
+
+                        
+                <!-- Tractor + Trailer checklist (keep same card layout/format) -->
+                <Grid Margin="0,10,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="12"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Tractor -->
+                    <Border Grid.Column="0" Background="#0F131C" BorderBrush="#2A3142" BorderThickness="1" CornerRadius="10" Padding="10">
+                        <StackPanel>
+                            <TextBlock Text="Tractor checklist" Foreground="White" FontWeight="SemiBold" Margin="0,0,0,6"/>
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" Height="170">
+                                <ItemsControl ItemsSource="{Binding PostTripTractorChecklist}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <CheckBox Content="{Binding Name}" IsChecked="{Binding IsChecked, Mode=TwoWay}" Foreground="White" Margin="0,2"/>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Trailer -->
+                    <Border Grid.Column="2" Background="#0F131C" BorderBrush="#2A3142" BorderThickness="1" CornerRadius="10" Padding="10">
+                        <StackPanel>
+                            <TextBlock Text="Trailer checklist" Foreground="White" FontWeight="SemiBold" Margin="0,0,0,6"/>
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" Height="170">
+                                <ItemsControl ItemsSource="{Binding PostTripTrailerChecklist}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <CheckBox Content="{Binding Name}" IsChecked="{Binding IsChecked, Mode=TwoWay}" Foreground="White" Margin="0,2"/>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+
+<TextBlock Style="{StaticResource FieldLabel}" Text="Post-Trip checklist notes / defects found"/>
+                        <TextBox Style="{StaticResource TextBoxDark}" AcceptsReturn="True" Height="110"
+                                 Text="{Binding PostTripNotes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+
+                        <TextBlock Margin="0,10,0,0" Style="{StaticResource HintText}"
+                                   Text="Suggested items: damage, tire wear, lights, leaks, load securement issues, trailer condition, report defects for maintenance."/>
+                    
+                      </StackPanel>
+                    </Border>
+
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+    </Grid>
+</UserControl>

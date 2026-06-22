@@ -1,0 +1,15 @@
+﻿{
+  "Owners": [
+    "GasMonkey",
+    "Robert Peters"
+  ],
+  "Admins": [],
+  "Managers": [],
+  "Management": [],
+  "AllowedRoles": [
+    "owner",
+    "admin",
+    "manager",
+    "management"
+  ]
+}

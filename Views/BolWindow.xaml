@@ -1,0 +1,278 @@
+﻿<!-- Views/BolWindow.xaml ✅ FULL COPY/REPLACE -->
+<Window x:Class="OverWatchELD.Views.BolWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Bill of Lading (BOL)"
+        Height="880"
+        Width="1180"
+        WindowStartupLocation="CenterOwner"
+        Loaded="BolWindow_Loaded"
+        Background="#0F172A"
+        Foreground="#F8FAFC">
+
+    <Window.Resources>
+
+        <SolidColorBrush x:Key="OwBg" Color="#0F172A"/>
+        <SolidColorBrush x:Key="OwCard" Color="#111827"/>
+        <SolidColorBrush x:Key="OwCard2" Color="#1E293B"/>
+        <SolidColorBrush x:Key="OwBorder" Color="#334155"/>
+        <SolidColorBrush x:Key="OwText" Color="#F8FAFC"/>
+        <SolidColorBrush x:Key="OwMuted" Color="#94A3B8"/>
+        <SolidColorBrush x:Key="OwAccent" Color="#2563EB"/>
+
+        <Style TargetType="TextBox">
+            <Setter Property="Background" Value="{StaticResource OwCard2}"/>
+            <Setter Property="Foreground" Value="{StaticResource OwText}"/>
+            <Setter Property="CaretBrush" Value="White"/>
+            <Setter Property="BorderBrush" Value="{StaticResource OwBorder}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="8,6"/>
+            <Setter Property="Margin" Value="0,4,0,0"/>
+        </Style>
+
+        <Style TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource OwText}"/>
+        </Style>
+
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource OwAccent}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="{StaticResource OwAccent}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="10,6"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+
+        <Style TargetType="ListBox">
+            <Setter Property="Background" Value="{StaticResource OwCard2}"/>
+            <Setter Property="Foreground" Value="{StaticResource OwText}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource OwBorder}"/>
+        </Style>
+
+    </Window.Resources>
+
+    <Grid Margin="16" Background="{StaticResource OwBg}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0"
+                Background="{StaticResource OwCard}"
+                BorderBrush="{StaticResource OwBorder}"
+                BorderThickness="1"
+                CornerRadius="10"
+                Padding="14"
+                Margin="0,0,0,12">
+            <StackPanel>
+                <TextBlock Text="Bill of Lading (BOL)" FontSize="22" FontWeight="SemiBold"/>
+                <TextBlock Text="Auto-saves drafts as you type. Search and load recent BOLs."
+                           Foreground="{StaticResource OwMuted}"
+                           Margin="0,2,0,0"/>
+                <TextBlock x:Name="WindowModeText"
+                           Text="BOL permissions loading..."
+                           Foreground="{StaticResource OwMuted}"
+                           Margin="0,6,0,0"/>
+            </StackPanel>
+        </Border>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2.2*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0"
+                    Background="{StaticResource OwCard}"
+                    BorderBrush="{StaticResource OwBorder}"
+                    BorderThickness="1"
+                    CornerRadius="10"
+                    Padding="14"
+                    Margin="0,0,12,0">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel>
+
+                        <Grid Margin="0,0,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                                <TextBlock Text="Load Number (yyyymmddxxxx)" FontWeight="SemiBold"/>
+                                <TextBox x:Name="LoadNumberBox" TextChanged="AnyField_Changed"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="1" Margin="0,0,10,0">
+                                <TextBlock Text="Date" FontWeight="SemiBold"/>
+                                <TextBox x:Name="DateBox" ToolTip="MM/DD/YYYY" TextChanged="AnyField_Changed"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="2">
+                                <TextBlock Text="Time" FontWeight="SemiBold"/>
+                                <TextBox x:Name="TimeBox" ToolTip="HH:MM (local)" TextChanged="AnyField_Changed"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <Grid Margin="0,0,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                                <TextBlock Text="Truck" FontWeight="SemiBold"/>
+                                <TextBox x:Name="TruckBox" TextChanged="AnyField_Changed"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="1" Margin="0,0,10,0">
+                                <TextBlock Text="License Plate" FontWeight="SemiBold"/>
+                                <TextBox x:Name="PlateBox" TextChanged="AnyField_Changed"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="2">
+                                <TextBlock Text="Weight (lbs)" FontWeight="SemiBold"/>
+                                <TextBox x:Name="WeightLbsBox" TextChanged="AnyField_Changed"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <Grid Margin="0,0,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                                <TextBlock Text="Commodity" FontWeight="SemiBold"/>
+                                <TextBox x:Name="CommodityBox" TextChanged="AnyField_Changed"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="1">
+                                <TextBlock Text="Mileage" FontWeight="SemiBold"/>
+                                <TextBox x:Name="MileageBox" TextChanged="AnyField_Changed"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <Grid Margin="0,0,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                                <TextBlock Text="City Origin" FontWeight="SemiBold"/>
+                                <TextBox x:Name="CityOriginBox" TextChanged="AnyField_Changed"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="1">
+                                <TextBlock Text="City Destination" FontWeight="SemiBold"/>
+                                <TextBox x:Name="CityDestinationBox" TextChanged="AnyField_Changed"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <Grid Margin="0,0,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                                <TextBlock Text="Company Pick Up" FontWeight="SemiBold"/>
+                                <TextBox x:Name="CompanyPickupBox" TextChanged="AnyField_Changed"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="1">
+                                <TextBlock Text="Company Drop Off" FontWeight="SemiBold"/>
+                                <TextBox x:Name="CompanyDropoffBox" TextChanged="AnyField_Changed"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <StackPanel Margin="0,6,0,0">
+                            <TextBlock Text="Notes" FontWeight="SemiBold"/>
+                            <TextBox x:Name="NotesBox"
+                                     AcceptsReturn="True"
+                                     TextWrapping="Wrap"
+                                     Height="200"
+                                     Background="{StaticResource OwCard2}"
+                                     Foreground="{StaticResource OwText}"
+                                     CaretBrush="White"
+                                     TextChanged="AnyField_Changed"/>
+                        </StackPanel>
+
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+
+            <Border Grid.Column="1"
+                    Background="{StaticResource OwCard}"
+                    BorderBrush="{StaticResource OwBorder}"
+                    BorderThickness="1"
+                    CornerRadius="10"
+                    Padding="14">
+                <StackPanel>
+                    <TextBlock Text="Search / Recent BOLs" FontSize="14" FontWeight="SemiBold"/>
+
+                    <TextBox x:Name="SearchBox"
+                             Margin="0,10,0,0"
+                             ToolTip="Search load #, truck, cities, companies..."
+                             TextChanged="SearchBox_Changed"/>
+
+                    <ListBox x:Name="RecentList"
+                             Margin="0,10,0,0"
+                             Height="520"
+                             DisplayMemberPath="Display"/>
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
+                        <Button Content="Refresh" Width="90" Margin="0,0,8,0" Click="RefreshRecent_Click"/>
+                        <Button Content="Load Selected" Width="120" Click="LoadSelected_Click"/>
+                    </StackPanel>
+
+                    <TextBlock x:Name="AutosaveStatusText"
+                               Margin="0,12,0,0"
+                               Foreground="{StaticResource OwMuted}"
+                               Text="Draft autosave: idle"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,12,0,0">
+            <Button Content="Import Telemetry"
+                    Width="150"
+                    Margin="0,0,8,0"
+                    Click="ImportTelemetry_Click"/>
+
+            <Button x:Name="SendDiscordButton" Content="Send to Discord"
+                    Width="150"
+                    Margin="0,0,8,0"
+                    Click="SendBolToDiscord_Click"/>
+
+            <Button Content="New Load #"
+                    Width="120"
+                    Margin="0,0,8,0"
+                    Click="NewLoad_Click"/>
+
+            <Button x:Name="PrintButton"
+                    Content="Print"
+                    Width="100"
+                    Margin="0,0,8,0"
+                    Click="PrintBol_Click"/>
+
+            <Button x:Name="SavePdfButton"
+                    Content="Save PDF"
+                    Width="130"
+                    Margin="0,0,8,0"
+                    Click="SavePdf_Click"/>
+
+            <Button Content="Close"
+                    Width="110"
+                    Click="Close_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>

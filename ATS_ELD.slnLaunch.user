@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "New Profile",
+    "Projects": [
+      {
+        "Path": "OverWatchELD.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "OverWatchELD.VtcBot\\OverWatchELD.VtcBot.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]

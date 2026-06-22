@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>OverWatch ELD FMCSA Guidebook</title>
+  <style>
+    :root { color-scheme: light dark; }
+    body { margin:0; font-family: system-ui, -apple-system, Segoe UI, sans-serif; background:#0b1220; color:#e5e7eb; }
+    .wrap { max-width: 1040px; margin: 0 auto; padding: 42px 18px; }
+    .hero { border:1px solid #22314a; border-radius:24px; padding:32px; background:linear-gradient(135deg,#111827,#172554); box-shadow:0 20px 50px rgba(0,0,0,.35); }
+    h1 { margin:0 0 12px 0; font-size: clamp(30px, 5vw, 52px); line-height:1.05; }
+    p { color:#cbd5e1; font-size:17px; line-height:1.6; }
+    .actions { display:flex; flex-wrap:wrap; gap:12px; margin-top:22px; }
+    a.button { display:inline-block; padding:12px 18px; border-radius:999px; text-decoration:none; font-weight:700; }
+    .primary { background:#38bdf8; color:#07111f; }
+    .secondary { border:1px solid #475569; color:#e5e7eb; }
+    .grid { display:grid; grid-template-columns: repeat(auto-fit,minmax(240px,1fr)); gap:16px; margin-top:24px; }
+    .card { border:1px solid #22314a; border-radius:18px; padding:18px; background:#111827; }
+    .card h3 { margin:0 0 8px 0; }
+    .muted { color:#94a3b8; font-size:14px; }
+    iframe { width:100%; height:780px; border:1px solid #22314a; border-radius:18px; margin-top:22px; background:#fff; }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="hero">
+      <div class="muted">Driver training • HOS reference • DOT inspection prep</div>
+      <h1>OverWatch ELD FMCSA Guidebook</h1>
+      <p>The in-depth Driver Compliance &amp; FMCSA Regulations Guidebook is bundled with OverWatch ELD for onboarding, self-study, roadside inspection preparation, and fleet safety coaching.</p>
+      <div class="actions">
+        <a class="button primary" href="docs/OverWatch_ELD_FMCSA_Guidebook.pdf" download>Download PDF</a>
+        <a class="button secondary" href="docs/OverWatch_ELD_FMCSA_Guidebook.pdf" target="_blank" rel="noopener">Open PDF</a>
+      </div>
+    </section>
+
+    <section class="grid">
+      <div class="card"><h3>Hours of Service</h3><p>11-hour, 14-hour, 30-minute break, 60/70-hour recap, sleeper berth, adverse conditions, and violation prevention.</p></div>
+      <div class="card"><h3>ELD Operations</h3><p>Duty statuses, log edits, certification, annotations, transfer procedures, malfunctions, diagnostics, and supporting documents.</p></div>
+      <div class="card"><h3>Inspection Ready</h3><p>Roadside inspection workflow, quick-reference checklist, driver behavior tips, and fleet-manager audit preparation.</p></div>
+    </section>
+
+    <p class="muted">Educational reference only. Always verify current requirements with FMCSA, eCFR, state rules, and carrier safety policy.</p>
+    <iframe src="docs/OverWatch_ELD_FMCSA_Guidebook.pdf" title="OverWatch ELD FMCSA Guidebook PDF preview"></iframe>
+  </main>
+</body>
+</html>

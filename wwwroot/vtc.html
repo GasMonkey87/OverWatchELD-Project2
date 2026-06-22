@@ -1,0 +1,252 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>VTC</title>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 0; padding: 16px; }
+    .card { border: 1px solid #ddd; border-radius: 12px; padding: 12px; margin-bottom: 12px; }
+    .row { display: flex; gap: 12px; flex-wrap: wrap; }
+    .stat { min-width: 160px; }
+    table { width:100%; border-collapse: collapse; }
+    th, td { border-bottom: 1px solid #eee; padding: 8px; text-align:left; }
+    .tabs button { margin-right: 8px; padding: 8px 10px; border-radius: 10px; border: 1px solid #ccc; background: #fff; }
+    .muted { opacity: .7; }
+  </style>
+</head>
+<body>
+  <h2 style="display:flex;align-items:center;gap:10px;">VTC <span id="vtcBadge" class="muted" style="font-size:12px;border:1px solid #ddd;border-radius:999px;padding:4px 10px;"></span></h2>
+
+  <div class="tabs card">
+    <button onclick="showTab('stats')">Stats</button>
+    <button onclick="showTab('employees')">Employees</button>
+    <button onclick="showTab('costs')">Costs</button>
+    <button onclick="showTab('maintenance')">Maintenance</button>
+    <button onclick="showTab('announcements')">Announcements</button>
+  </div>
+
+  <div id="stats" class="tab">
+    <div class="card">
+      <h3>Statistics</h3>
+      <div class="row" id="statsRow"></div>
+      <div class="muted" id="statsUpdated"></div>
+    </div>
+  </div>
+
+  <div id="employees" class="tab" style="display:none;">
+    <div class="card">
+      <h3>Employees</h3>
+      <table>
+        <thead><tr><th>Name</th><th>Role</th><th>ELD</th><th>Last Seen (UTC)</th></tr></thead>
+        <tbody id="empBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="costs" class="tab" style="display:none;">
+    <div class="card">
+      <h3>Costs (Last 30 days)</h3>
+      <table>
+        <thead><tr><th>Date (UTC)</th><th>Driver</th><th>Type</th><th>Amount</th><th>Note</th></tr></thead>
+        <tbody id="costBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="maintenance" class="tab" style="display:none;">
+    <div class="card">
+      <h3>Maintenance (Last 90 days)</h3>
+      <table>
+        <thead><tr><th>Date (UTC)</th><th>Truck</th><th>Type</th><th>Miles</th><th>Cost</th><th>Note</th></tr></thead>
+        <tbody id="maintBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+
+  <div id="announcements" class="tab" style="display:none;">
+    <div class="card">
+      <h3>Company Announcements</h3>
+
+      <div class="card" style="background:#fafafa;border-color:#eee;">
+        <div class="muted" style="margin-bottom:6px;">Post a new announcement (shown to all drivers on this dashboard)</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <input id="annTitle" placeholder="Title" style="flex:1;min-width:220px;padding:10px;border-radius:10px;border:1px solid #ddd;" />
+        </div>
+        <textarea id="annBody" placeholder="Message" rows="4" style="width:100%;margin-top:8px;padding:10px;border-radius:10px;border:1px solid #ddd;"></textarea>
+        <div style="margin-top:8px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+          <button onclick="postAnnouncement()">Post Announcement</button>
+          <span class="muted" id="annStatus"></span>
+        </div>
+      </div>
+
+      <div class="card">
+        <h4 style="margin:0 0 8px 0;">Recent</h4>
+        <div id="annList" class="muted">Loading...</div>
+      </div>
+    </div>
+  </div>
+<script>
+async function loadBadge(){
+  try{
+    const r=await fetch("/api/vtc/badge");
+    const j=await r.json();
+    const el=document.getElementById("vtcBadge");
+    if(el) el.textContent=(j && j.text) ? j.text : "Standalone";
+  }catch{ const el=document.getElementById("vtcBadge"); if(el) el.textContent="Standalone"; }
+}
+
+function showTab(id) {
+  for (const el of document.querySelectorAll('.tab')) el.style.display = 'none';
+  document.getElementById(id).style.display = 'block';
+}
+
+async function jget(url) {
+  const r = await fetch(url, { headers: { 'Accept': 'application/json' } });
+  if (!r.ok) throw new Error(await r.text());
+  return r.json();
+}
+
+function esc(s){ return (s ?? '').toString().replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+async function loadAll() {
+  const summary = await jget('/api/vtc/summary');
+  const employees = await jget('/api/vtc/employees');
+  const costs = await jget('/api/vtc/costs?range=30d');
+  const maint = await jget('/api/vtc/maintenance?range=90d');
+
+  const statsRow = document.getElementById('statsRow');
+  statsRow.innerHTML = '';
+
+  const stats = [
+    ['Active Drivers (24h)', summary.activeDrivers24h],
+    ['Costs (30d)', '$' + Number(summary.costs30d || 0).toFixed(2)],
+    ['Dispatch Sent (30d)', summary.dispatch30d],
+    ['Maintenance (90d)', summary.maint90d]
+  ];
+
+  for (const [k,v] of stats) {
+    const d = document.createElement('div');
+    d.className = 'stat card';
+    d.innerHTML = `<div class="muted">${esc(k)}</div><div style="font-size:22px;"><b>${esc(v)}</b></div>`;
+    statsRow.appendChild(d);
+  }
+  document.getElementById('statsUpdated').textContent = 'Updated: ' + new Date().toLocaleString();
+
+  const empBody = document.getElementById('empBody');
+  empBody.innerHTML = employees.map(e =>
+    `<tr>
+      <td>${esc(e.displayName || e.username || 'Unknown')}</td>
+      <td>${esc(e.role || 'Driver')}</td>
+      <td>${esc(e.eldDriverId ?? '')}</td>
+      <td>${esc(e.lastSeenUtc || '')}</td>
+    </tr>`
+  ).join('');
+
+  const costBody = document.getElementById('costBody');
+  costBody.innerHTML = costs.map(c =>
+    `<tr>
+      <td>${esc(c.dateUtc)}</td>
+      <td>${esc(c.driverName)}</td>
+      <td>${esc(c.type)}</td>
+      <td>$${esc(Number(c.amount).toFixed(2))}</td>
+      <td>${esc(c.note)}</td>
+    </tr>`
+  ).join('');
+
+  const maintBody = document.getElementById('maintBody');
+  maintBody.innerHTML = maint.map(m =>
+    `<tr>
+      <td>${esc(m.dateUtc)}</td>
+      <td>${esc(m.truck)}</td>
+      <td>${esc(m.type)}</td>
+      <td>${esc(m.miles ?? '')}</td>
+      <td>${m.cost != null ? ('$' + esc(Number(m.cost).toFixed(2))) : ''}</td>
+      <td>${esc(m.note)}</td>
+    </tr>`
+  ).join('');
+}
+
+loadBadge();
+
+loadAll().catch(err => {
+  document.body.insertAdjacentHTML('beforeend', `<div class="card" style="border-color:#f99;"><b>Error:</b> ${esc(err.message)}</div>`);
+});
+
+
+async function loadAnnouncements() {
+  try {
+    const res = await fetch('/api/vtc/announcements');
+    const j = await res.json();
+    const list = (j && j.announcements) ? j.announcements : [];
+    const host = document.getElementById('annList');
+    if (!host) return;
+
+    if (!list.length) {
+      host.innerHTML = '<div class="muted">No announcements yet.</div>';
+      return;
+    }
+
+    host.innerHTML = list.map(a => {
+      const when = a.createdUtc ? new Date(a.createdUtc).toLocaleString() : '';
+      const title = esc(a.title || 'Announcement');
+      const body = esc(a.body || '');
+      const author = esc(a.author || '');
+      return `<div class="card" style="border-color:#eee;">
+                <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;">
+                  <div><b>${title}</b> <span class="muted">${author ? '— ' + author : ''}</span></div>
+                  <div class="muted" style="font-size:12px;">${esc(when)}</div>
+                </div>
+                <div style="margin-top:6px;white-space:pre-wrap;">${body}</div>
+              </div>`;
+    }).join('');
+  } catch (e) {
+    const host = document.getElementById('annList');
+    if (host) host.textContent = 'Failed to load announcements.';
+  }
+}
+
+async function postAnnouncement() {
+  const titleEl = document.getElementById('annTitle');
+  const bodyEl = document.getElementById('annBody');
+  const statusEl = document.getElementById('annStatus');
+  if (!titleEl || !bodyEl) return;
+
+  const title = (titleEl.value || '').trim();
+  const body = (bodyEl.value || '').trim();
+
+  if (!title && !body) {
+    if (statusEl) statusEl.textContent = 'Enter a title or message.';
+    return;
+  }
+
+  if (statusEl) statusEl.textContent = 'Posting...';
+
+  try {
+    const res = await fetch('/api/vtc/announcements/post', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ title, body })
+    });
+    const j = await res.json();
+    if (j && j.ok) {
+      titleEl.value = '';
+      bodyEl.value = '';
+      if (statusEl) statusEl.textContent = 'Posted.';
+      await loadAnnouncements();
+      return;
+    }
+    if (statusEl) statusEl.textContent = 'Failed: ' + (j && j.error ? j.error : 'unknown error');
+  } catch (e) {
+    if (statusEl) statusEl.textContent = 'Failed to post.';
+  }
+}
+
+// Ensure announcements are loaded at startup
+window.addEventListener('load', () => {
+  loadAnnouncements();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,484 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\jmill\\OneDrive\\Desktop\\ELD\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\jmill\\OneDrive\\Desktop\\OverWatchELD-Bot\\Program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\jmill\\OneDrive\\Desktop\\OverWatchELD-Bot\\Routes\\BolUploadRoutes.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\jmill\\Downloads\\BolUploadRoutes_FULL_FIX.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\jmill\\AppData\\Local\\Temp\\69d71dcf-4601-4d0d-a3d5-0deb9a0fc4c1_ELD_BOL_pdf_discord_patch.zip.4c1\\Bot\\Routes\\BolUploadRoutes.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\jmill\\Downloads\\EldLogExportRoutes.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\jmill\\AppData\\Local\\Temp\\c36689af-73b3-42b0-bcae-2655e353f38e_OverWatchELD_bot_build_fix.zip.38e\\Routes\\EldLogExportRoutes.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8D734DD4-CA76-8497-BC33-220CAF4D7A63}|OverWatchELD.csproj|c:\\users\\jmill\\onedrive\\desktop\\eld\\services\\bolpdfservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8D734DD4-CA76-8497-BC33-220CAF4D7A63}|OverWatchELD.csproj|solutionrelative:services\\bolpdfservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8D734DD4-CA76-8497-BC33-220CAF4D7A63}|OverWatchELD.csproj|c:\\users\\jmill\\onedrive\\desktop\\eld\\views\\services\\dotlogpdfexportservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8D734DD4-CA76-8497-BC33-220CAF4D7A63}|OverWatchELD.csproj|solutionrelative:views\\services\\dotlogpdfexportservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8D734DD4-CA76-8497-BC33-220CAF4D7A63}|OverWatchELD.csproj|c:\\users\\jmill\\onedrive\\desktop\\eld\\services\\bolpdfexporter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8D734DD4-CA76-8497-BC33-220CAF4D7A63}|OverWatchELD.csproj|solutionrelative:services\\bolpdfexporter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8D734DD4-CA76-8497-BC33-220CAF4D7A63}|OverWatchELD.csproj|c:\\users\\jmill\\onedrive\\desktop\\eld\\questpdf\\drawing\\icanvas.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8D734DD4-CA76-8497-BC33-220CAF4D7A63}|OverWatchELD.csproj|solutionrelative:questpdf\\drawing\\icanvas.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8D734DD4-CA76-8497-BC33-220CAF4D7A63}|OverWatchELD.csproj|c:\\users\\jmill\\onedrive\\desktop\\eld\\views\\dailylogsexportview.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8D734DD4-CA76-8497-BC33-220CAF4D7A63}|OverWatchELD.csproj|solutionrelative:views\\dailylogsexportview.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8D734DD4-CA76-8497-BC33-220CAF4D7A63}|OverWatchELD.csproj|c:\\users\\jmill\\onedrive\\desktop\\eld\\services\\databaseservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8D734DD4-CA76-8497-BC33-220CAF4D7A63}|OverWatchELD.csproj|solutionrelative:services\\databaseservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8D734DD4-CA76-8497-BC33-220CAF4D7A63}|OverWatchELD.csproj|c:\\users\\jmill\\onedrive\\desktop\\eld\\hoscalculator2.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8D734DD4-CA76-8497-BC33-220CAF4D7A63}|OverWatchELD.csproj|solutionrelative:hoscalculator2.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8D734DD4-CA76-8497-BC33-220CAF4D7A63}|OverWatchELD.csproj|c:\\users\\jmill\\onedrive\\desktop\\eld\\viewmodels\\graphviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8D734DD4-CA76-8497-BC33-220CAF4D7A63}|OverWatchELD.csproj|solutionrelative:viewmodels\\graphviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8D734DD4-CA76-8497-BC33-220CAF4D7A63}|OverWatchELD.csproj|c:\\users\\jmill\\onedrive\\desktop\\eld\\models\\dutystatus.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8D734DD4-CA76-8497-BC33-220CAF4D7A63}|OverWatchELD.csproj|solutionrelative:models\\dutystatus.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8D734DD4-CA76-8497-BC33-220CAF4D7A63}|OverWatchELD.csproj|c:\\users\\jmill\\onedrive\\desktop\\eld\\models\\dutyevent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8D734DD4-CA76-8497-BC33-220CAF4D7A63}|OverWatchELD.csproj|solutionrelative:models\\dutyevent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8D734DD4-CA76-8497-BC33-220CAF4D7A63}|OverWatchELD.csproj|c:\\users\\jmill\\onedrive\\desktop\\eld\\overwatcheld.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{8D734DD4-CA76-8497-BC33-220CAF4D7A63}|OverWatchELD.csproj|solutionrelative:overwatcheld.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8D734DD4-CA76-8497-BC33-220CAF4D7A63}|OverWatchELD.csproj|c:\\users\\jmill\\onedrive\\desktop\\eld\\views\\dashboardview.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8D734DD4-CA76-8497-BC33-220CAF4D7A63}|OverWatchELD.csproj|solutionrelative:views\\dashboardview.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8D734DD4-CA76-8497-BC33-220CAF4D7A63}|OverWatchELD.csproj|c:\\users\\jmill\\onedrive\\desktop\\eld\\viewmodels\\dashboardviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8D734DD4-CA76-8497-BC33-220CAF4D7A63}|OverWatchELD.csproj|solutionrelative:viewmodels\\dashboardviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8D734DD4-CA76-8497-BC33-220CAF4D7A63}|OverWatchELD.csproj|c:\\users\\jmill\\onedrive\\desktop\\eld\\services\\telemetryservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8D734DD4-CA76-8497-BC33-220CAF4D7A63}|OverWatchELD.csproj|solutionrelative:services\\telemetryservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8D734DD4-CA76-8497-BC33-220CAF4D7A63}|OverWatchELD.csproj|c:\\users\\jmill\\onedrive\\desktop\\eld\\services\\eldclock.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8D734DD4-CA76-8497-BC33-220CAF4D7A63}|OverWatchELD.csproj|solutionrelative:services\\eldclock.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8D734DD4-CA76-8497-BC33-220CAF4D7A63}|OverWatchELD.csproj|c:\\users\\jmill\\onedrive\\desktop\\eld\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{8D734DD4-CA76-8497-BC33-220CAF4D7A63}|OverWatchELD.csproj|solutionrelative:mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8D734DD4-CA76-8497-BC33-220CAF4D7A63}|OverWatchELD.csproj|c:\\users\\jmill\\onedrive\\desktop\\eld\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8D734DD4-CA76-8497-BC33-220CAF4D7A63}|OverWatchELD.csproj|solutionrelative:mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8D734DD4-CA76-8497-BC33-220CAF4D7A63}|OverWatchELD.csproj|c:\\users\\jmill\\onedrive\\desktop\\eld\\services\\dashboardsnapshotprovider.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8D734DD4-CA76-8497-BC33-220CAF4D7A63}|OverWatchELD.csproj|solutionrelative:services\\dashboardsnapshotprovider.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8D734DD4-CA76-8497-BC33-220CAF4D7A63}|OverWatchELD.csproj|c:\\users\\jmill\\onedrive\\desktop\\eld\\viewmodels\\dashboardviewmodel.tick.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8D734DD4-CA76-8497-BC33-220CAF4D7A63}|OverWatchELD.csproj|solutionrelative:viewmodels\\dashboardviewmodel.tick.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8D734DD4-CA76-8497-BC33-220CAF4D7A63}|OverWatchELD.csproj|c:\\users\\jmill\\onedrive\\desktop\\eld\\views\\dashboardview.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{8D734DD4-CA76-8497-BC33-220CAF4D7A63}|OverWatchELD.csproj|solutionrelative:views\\dashboardview.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8D734DD4-CA76-8497-BC33-220CAF4D7A63}|OverWatchELD.csproj|c:\\users\\jmill\\onedrive\\desktop\\eld\\assemblyinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{8D734DD4-CA76-8497-BC33-220CAF4D7A63}|OverWatchELD.csproj|solutionrelative:assemblyinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{8D734DD4-CA76-8497-BC33-220CAF4D7A63}|OverWatchELD.csproj|c:\\users\\jmill\\onedrive\\desktop\\eld\\app.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{8D734DD4-CA76-8497-BC33-220CAF4D7A63}|OverWatchELD.csproj|solutionrelative:app.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            }
+          ]
+        },
+        {
+          "DockedWidth": 290,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\jmill\\OneDrive\\Desktop\\OverWatchELD-Bot\\Program.cs",
+              "RelativeDocumentMoniker": "..\\OverWatchELD-Bot\\Program.cs",
+              "ToolTip": "C:\\Users\\jmill\\OneDrive\\Desktop\\OverWatchELD-Bot\\Program.cs",
+              "RelativeToolTip": "..\\OverWatchELD-Bot\\Program.cs",
+              "ViewState": "AgIAAOYDAAAAAAAAAAAgwPwDAAAiAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-15T18:15:53.924Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "BolUploadRoutes.cs",
+              "DocumentMoniker": "C:\\Users\\jmill\\OneDrive\\Desktop\\OverWatchELD-Bot\\Routes\\BolUploadRoutes.cs",
+              "RelativeDocumentMoniker": "..\\OverWatchELD-Bot\\Routes\\BolUploadRoutes.cs",
+              "ToolTip": "C:\\Users\\jmill\\OneDrive\\Desktop\\OverWatchELD-Bot\\Routes\\BolUploadRoutes.cs",
+              "RelativeToolTip": "..\\OverWatchELD-Bot\\Routes\\BolUploadRoutes.cs",
+              "ViewState": "AgIAAHwBAAAAAAAAAAAwwKsBAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-15T14:07:50.233Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "BolUploadRoutes_FULL_FIX.cs",
+              "DocumentMoniker": "C:\\Users\\jmill\\Downloads\\BolUploadRoutes_FULL_FIX.cs",
+              "RelativeDocumentMoniker": "..\\..\\..\\Downloads\\BolUploadRoutes_FULL_FIX.cs",
+              "ToolTip": "C:\\Users\\jmill\\Downloads\\BolUploadRoutes_FULL_FIX.cs",
+              "RelativeToolTip": "..\\..\\..\\Downloads\\BolUploadRoutes_FULL_FIX.cs",
+              "ViewState": "AgIAAKgBAAAAAAAAAAAwwNYBAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-15T00:25:48.983Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "BolUploadRoutes.cs",
+              "DocumentMoniker": "C:\\Users\\jmill\\AppData\\Local\\Temp\\69d71dcf-4601-4d0d-a3d5-0deb9a0fc4c1_ELD_BOL_pdf_discord_patch.zip.4c1\\Bot\\Routes\\BolUploadRoutes.cs",
+              "RelativeDocumentMoniker": "..\\..\\..\\AppData\\Local\\Temp\\69d71dcf-4601-4d0d-a3d5-0deb9a0fc4c1_ELD_BOL_pdf_discord_patch.zip.4c1\\Bot\\Routes\\BolUploadRoutes.cs",
+              "ToolTip": "C:\\Users\\jmill\\AppData\\Local\\Temp\\69d71dcf-4601-4d0d-a3d5-0deb9a0fc4c1_ELD_BOL_pdf_discord_patch.zip.4c1\\Bot\\Routes\\BolUploadRoutes.cs [Read Only]",
+              "RelativeToolTip": "..\\..\\..\\AppData\\Local\\Temp\\69d71dcf-4601-4d0d-a3d5-0deb9a0fc4c1_ELD_BOL_pdf_discord_patch.zip.4c1\\Bot\\Routes\\BolUploadRoutes.cs [Read Only]",
+              "ViewState": "AgIAAEYBAAAAAAAAAAAwwHQBAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-14T22:54:17.404Z",
+              "EditorCaption": " [Read Only]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "EldLogExportRoutes.cs",
+              "DocumentMoniker": "C:\\Users\\jmill\\Downloads\\EldLogExportRoutes.cs",
+              "RelativeDocumentMoniker": "..\\..\\..\\Downloads\\EldLogExportRoutes.cs",
+              "ToolTip": "C:\\Users\\jmill\\Downloads\\EldLogExportRoutes.cs",
+              "RelativeToolTip": "..\\..\\..\\Downloads\\EldLogExportRoutes.cs",
+              "ViewState": "AgIAABcBAAAAAAAAAAAwwEUBAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-12T20:11:30.049Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "EldLogExportRoutes.cs",
+              "DocumentMoniker": "C:\\Users\\jmill\\AppData\\Local\\Temp\\c36689af-73b3-42b0-bcae-2655e353f38e_OverWatchELD_bot_build_fix.zip.38e\\Routes\\EldLogExportRoutes.cs",
+              "RelativeDocumentMoniker": "..\\..\\..\\AppData\\Local\\Temp\\c36689af-73b3-42b0-bcae-2655e353f38e_OverWatchELD_bot_build_fix.zip.38e\\Routes\\EldLogExportRoutes.cs",
+              "ToolTip": "C:\\Users\\jmill\\AppData\\Local\\Temp\\c36689af-73b3-42b0-bcae-2655e353f38e_OverWatchELD_bot_build_fix.zip.38e\\Routes\\EldLogExportRoutes.cs [Read Only]",
+              "RelativeToolTip": "..\\..\\..\\AppData\\Local\\Temp\\c36689af-73b3-42b0-bcae-2655e353f38e_OverWatchELD_bot_build_fix.zip.38e\\Routes\\EldLogExportRoutes.cs [Read Only]",
+              "ViewState": "AgIAABQBAAAAAAAAAAAwwEIBAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-12T19:48:24.386Z",
+              "EditorCaption": " [Read Only]"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "ICanvas.cs",
+              "DocumentMoniker": "C:\\Users\\jmill\\OneDrive\\Desktop\\ELD\\QuestPDF\\Drawing\\ICanvas.cs",
+              "RelativeDocumentMoniker": "QuestPDF\\Drawing\\ICanvas.cs",
+              "ToolTip": "C:\\Users\\jmill\\OneDrive\\Desktop\\ELD\\QuestPDF\\Drawing\\ICanvas.cs",
+              "RelativeToolTip": "QuestPDF\\Drawing\\ICanvas.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-10T21:02:47.974Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "BolPdfExporter.cs",
+              "DocumentMoniker": "C:\\Users\\jmill\\OneDrive\\Desktop\\ELD\\Services\\BolPdfExporter.cs",
+              "RelativeDocumentMoniker": "Services\\BolPdfExporter.cs",
+              "ToolTip": "C:\\Users\\jmill\\OneDrive\\Desktop\\ELD\\Services\\BolPdfExporter.cs",
+              "RelativeToolTip": "Services\\BolPdfExporter.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB4AAAAMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-10T21:02:37.908Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "BolPdfService.cs",
+              "DocumentMoniker": "C:\\Users\\jmill\\OneDrive\\Desktop\\ELD\\Services\\BolPdfService.cs",
+              "RelativeDocumentMoniker": "Services\\BolPdfService.cs",
+              "ToolTip": "C:\\Users\\jmill\\OneDrive\\Desktop\\ELD\\Services\\BolPdfService.cs",
+              "RelativeToolTip": "Services\\BolPdfService.cs",
+              "ViewState": "AgIAAHIAAAAAAAAAAAAwwKAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-10T21:02:31.211Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "DutyStatus.cs",
+              "DocumentMoniker": "C:\\Users\\jmill\\OneDrive\\Desktop\\ELD\\Models\\DutyStatus.cs",
+              "RelativeDocumentMoniker": "Models\\DutyStatus.cs",
+              "ToolTip": "C:\\Users\\jmill\\OneDrive\\Desktop\\ELD\\Models\\DutyStatus.cs",
+              "RelativeToolTip": "Models\\DutyStatus.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-10T18:30:15.77Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "DutyEvent.cs",
+              "DocumentMoniker": "C:\\Users\\jmill\\OneDrive\\Desktop\\ELD\\Models\\DutyEvent.cs",
+              "RelativeDocumentMoniker": "Models\\DutyEvent.cs",
+              "ToolTip": "C:\\Users\\jmill\\OneDrive\\Desktop\\ELD\\Models\\DutyEvent.cs",
+              "RelativeToolTip": "Models\\DutyEvent.cs",
+              "ViewState": "AgIAABEAAAAAAAAAAAAIwCYAAAAuAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-10T18:29:40.978Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "DotLogPdfExportService.cs",
+              "DocumentMoniker": "C:\\Users\\jmill\\OneDrive\\Desktop\\ELD\\Views\\Services\\DotLogPdfExportService.cs",
+              "RelativeDocumentMoniker": "Views\\Services\\DotLogPdfExportService.cs",
+              "ToolTip": "C:\\Users\\jmill\\OneDrive\\Desktop\\ELD\\Views\\Services\\DotLogPdfExportService.cs",
+              "RelativeToolTip": "Views\\Services\\DotLogPdfExportService.cs",
+              "ViewState": "AgIAAHIAAAAAAAAAAAAwwIoAAABAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-10T18:14:33.301Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "DailyLogsExportView.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\jmill\\OneDrive\\Desktop\\ELD\\Views\\DailyLogsExportView.xaml.cs",
+              "RelativeDocumentMoniker": "Views\\DailyLogsExportView.xaml.cs",
+              "ToolTip": "C:\\Users\\jmill\\OneDrive\\Desktop\\ELD\\Views\\DailyLogsExportView.xaml.cs",
+              "RelativeToolTip": "Views\\DailyLogsExportView.xaml.cs",
+              "ViewState": "AgIAAI8BAAAAAAAAAAAwwO0AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-10T17:36:07.874Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "HosCalculator2.cs",
+              "DocumentMoniker": "C:\\Users\\jmill\\OneDrive\\Desktop\\ELD\\HosCalculator2.cs",
+              "RelativeDocumentMoniker": "HosCalculator2.cs",
+              "ToolTip": "C:\\Users\\jmill\\OneDrive\\Desktop\\ELD\\HosCalculator2.cs",
+              "RelativeToolTip": "HosCalculator2.cs",
+              "ViewState": "AgIAAA0AAAAAAAAAAIAwwDUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-08T18:30:02.264Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "DatabaseService.cs",
+              "DocumentMoniker": "C:\\Users\\jmill\\OneDrive\\Desktop\\ELD\\Services\\DatabaseService.cs",
+              "RelativeDocumentMoniker": "Services\\DatabaseService.cs",
+              "ToolTip": "C:\\Users\\jmill\\OneDrive\\Desktop\\ELD\\Services\\DatabaseService.cs",
+              "RelativeToolTip": "Services\\DatabaseService.cs",
+              "ViewState": "AgIAAPcEAAAAAAAAAAAowCQFAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-08T17:48:48.129Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "GraphViewModel.cs",
+              "DocumentMoniker": "C:\\Users\\jmill\\OneDrive\\Desktop\\ELD\\ViewModels\\GraphViewModel.cs",
+              "RelativeDocumentMoniker": "ViewModels\\GraphViewModel.cs",
+              "ToolTip": "C:\\Users\\jmill\\OneDrive\\Desktop\\ELD\\ViewModels\\GraphViewModel.cs",
+              "RelativeToolTip": "ViewModels\\GraphViewModel.cs",
+              "ViewState": "AgIAAM4AAAAAAAAAAIAwwOYAAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-10T18:33:35.231Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "TelemetryService.cs",
+              "DocumentMoniker": "C:\\Users\\jmill\\OneDrive\\Desktop\\ELD\\Services\\TelemetryService.cs",
+              "RelativeDocumentMoniker": "Services\\TelemetryService.cs",
+              "ToolTip": "C:\\Users\\jmill\\OneDrive\\Desktop\\ELD\\Services\\TelemetryService.cs",
+              "RelativeToolTip": "Services\\TelemetryService.cs",
+              "ViewState": "AgIAAO8CAAAAAAAAAIAwwAgDAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-09T23:28:34.139Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "EldClock.cs",
+              "DocumentMoniker": "C:\\Users\\jmill\\OneDrive\\Desktop\\ELD\\Services\\EldClock.cs",
+              "RelativeDocumentMoniker": "Services\\EldClock.cs",
+              "ToolTip": "C:\\Users\\jmill\\OneDrive\\Desktop\\ELD\\Services\\EldClock.cs",
+              "RelativeToolTip": "Services\\EldClock.cs",
+              "ViewState": "AgIAAAsAAAAAAAAAAAAgwDcAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-09T23:27:45.881Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "DashboardViewModel.cs",
+              "DocumentMoniker": "C:\\Users\\jmill\\OneDrive\\Desktop\\ELD\\ViewModels\\DashboardViewModel.cs",
+              "RelativeDocumentMoniker": "ViewModels\\DashboardViewModel.cs",
+              "ToolTip": "C:\\Users\\jmill\\OneDrive\\Desktop\\ELD\\ViewModels\\DashboardViewModel.cs",
+              "RelativeToolTip": "ViewModels\\DashboardViewModel.cs",
+              "ViewState": "AgIAAJYAAAAAAAAAAAAQwLkAAAAxAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-08T03:12:27.676Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "OverWatchELD.csproj",
+              "DocumentMoniker": "C:\\Users\\jmill\\OneDrive\\Desktop\\ELD\\OverWatchELD.csproj",
+              "RelativeDocumentMoniker": "OverWatchELD.csproj",
+              "ToolTip": "C:\\Users\\jmill\\OneDrive\\Desktop\\ELD\\OverWatchELD.csproj",
+              "RelativeToolTip": "OverWatchELD.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABoAAAAdAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-06-08T01:23:38.569Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "MainWindow.xaml",
+              "DocumentMoniker": "C:\\Users\\jmill\\OneDrive\\Desktop\\ELD\\MainWindow.xaml",
+              "RelativeDocumentMoniker": "MainWindow.xaml",
+              "ToolTip": "C:\\Users\\jmill\\OneDrive\\Desktop\\ELD\\MainWindow.xaml",
+              "RelativeToolTip": "MainWindow.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-06-08T18:47:49.83Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "DashboardView.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\jmill\\OneDrive\\Desktop\\ELD\\Views\\DashboardView.xaml.cs",
+              "RelativeDocumentMoniker": "Views\\DashboardView.xaml.cs",
+              "ToolTip": "C:\\Users\\jmill\\OneDrive\\Desktop\\ELD\\Views\\DashboardView.xaml.cs",
+              "RelativeToolTip": "Views\\DashboardView.xaml.cs",
+              "ViewState": "AgIAAMUDAAAAAAAAAAAgwPEDAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-08T03:10:01.054Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
+              "Title": "MainWindow.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\jmill\\OneDrive\\Desktop\\ELD\\MainWindow.xaml.cs",
+              "RelativeDocumentMoniker": "MainWindow.xaml.cs",
+              "ToolTip": "C:\\Users\\jmill\\OneDrive\\Desktop\\ELD\\MainWindow.xaml.cs",
+              "RelativeToolTip": "MainWindow.xaml.cs",
+              "ViewState": "AgIAAGYJAAAAAAAAAAAgwJIJAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-08T18:48:01.325Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 23,
+              "Title": "DashboardSnapshotProvider.cs",
+              "DocumentMoniker": "C:\\Users\\jmill\\OneDrive\\Desktop\\ELD\\Services\\DashboardSnapshotProvider.cs",
+              "RelativeDocumentMoniker": "Services\\DashboardSnapshotProvider.cs",
+              "ToolTip": "C:\\Users\\jmill\\OneDrive\\Desktop\\ELD\\Services\\DashboardSnapshotProvider.cs",
+              "RelativeToolTip": "Services\\DashboardSnapshotProvider.cs",
+              "ViewState": "AgIAAMQAAAAAAAAAAAAgwNIAAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-08T16:51:33.707Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 24,
+              "Title": "DashboardViewModel.Tick.cs",
+              "DocumentMoniker": "C:\\Users\\jmill\\OneDrive\\Desktop\\ELD\\ViewModels\\DashboardViewModel.Tick.cs",
+              "RelativeDocumentMoniker": "ViewModels\\DashboardViewModel.Tick.cs",
+              "ToolTip": "C:\\Users\\jmill\\OneDrive\\Desktop\\ELD\\ViewModels\\DashboardViewModel.Tick.cs",
+              "RelativeToolTip": "ViewModels\\DashboardViewModel.Tick.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABoAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-08T16:51:02.866Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 25,
+              "Title": "DashboardView.xaml",
+              "DocumentMoniker": "C:\\Users\\jmill\\OneDrive\\Desktop\\ELD\\Views\\DashboardView.xaml",
+              "RelativeDocumentMoniker": "Views\\DashboardView.xaml",
+              "ToolTip": "C:\\Users\\jmill\\OneDrive\\Desktop\\ELD\\Views\\DashboardView.xaml",
+              "RelativeToolTip": "Views\\DashboardView.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-06-08T03:09:54.984Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 26,
+              "Title": "AssemblyInfo.cs",
+              "DocumentMoniker": "C:\\Users\\jmill\\OneDrive\\Desktop\\ELD\\AssemblyInfo.cs",
+              "RelativeDocumentMoniker": "AssemblyInfo.cs",
+              "ToolTip": "C:\\Users\\jmill\\OneDrive\\Desktop\\ELD\\AssemblyInfo.cs",
+              "RelativeToolTip": "AssemblyInfo.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAuAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-08T01:24:14.723Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 27,
+              "Title": "App.xaml",
+              "DocumentMoniker": "C:\\Users\\jmill\\OneDrive\\Desktop\\ELD\\App.xaml",
+              "RelativeDocumentMoniker": "App.xaml",
+              "ToolTip": "C:\\Users\\jmill\\OneDrive\\Desktop\\ELD\\App.xaml",
+              "RelativeToolTip": "App.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-06-08T01:23:57.056Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

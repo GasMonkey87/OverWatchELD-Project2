@@ -1,0 +1,58 @@
+{
+  "version": 8,
+  "name": "OverWatch ATS",
+  "glyphs": "https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf",
+  "sprite": "/maps/sprites",
+  "sources": {
+    "ats": {
+      "type": "vector",
+      "url": "pmtiles:///maps/ats.pmtiles"
+    }
+  },
+  "layers": [
+    {
+      "id": "background",
+      "type": "background",
+      "paint": {
+        "background-color": "#081018"
+      }
+    },
+    {
+      "id": "roads",
+      "type": "line",
+      "source": "ats",
+      "source-layer": "roads",
+      "paint": {
+        "line-color": "#4da3ff",
+        "line-width": 1.4
+      }
+    },
+    {
+      "id": "road-labels",
+      "type": "symbol",
+      "source": "ats",
+      "source-layer": "roads",
+      "layout": {
+        "text-field": ["get", "name"],
+        "text-size": 11
+      },
+      "paint": {
+        "text-color": "#dce8ff"
+      }
+    },
+    {
+      "id": "cities",
+      "type": "symbol",
+      "source": "ats",
+      "source-layer": "cities",
+      "layout": {
+        "text-field": ["get", "name"],
+        "text-size": 13,
+        "text-font": ["Open Sans Bold"]
+      },
+      "paint": {
+        "text-color": "#ffffff"
+      }
+    }
+  ]
+}

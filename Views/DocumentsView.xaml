@@ -1,0 +1,130 @@
+﻿<UserControl x:Class="OverWatchELD.Views.DocumentsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="#FF0B1220">
+
+    <Grid Margin="16">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="220"/>
+            <ColumnDefinition Width="12"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Left tabs -->
+        <Border Grid.Column="0"
+                Background="#FF111827"
+                BorderBrush="#22314A"
+                BorderThickness="1"
+                CornerRadius="14"
+                Padding="10">
+            <StackPanel>
+                <TextBlock Text="Documents"
+                           Foreground="#FFE5E7EB"
+                           FontSize="16"
+                           FontWeight="SemiBold"
+                           Margin="6,4,0,10"/>
+
+                <ListBox x:Name="NavList"
+                         SelectedIndex="0"
+                         SelectionChanged="NavList_SelectionChanged"
+                         Background="#00000000"
+                         BorderThickness="0"
+                         Foreground="#FFE5E7EB">
+                    <ListBoxItem Content="Documents"/>
+                    <ListBoxItem Content="BOL"/>
+                    <ListBoxItem Content="About"/>
+                    <ListBoxItem Content="Readme"/>
+                </ListBox>
+            </StackPanel>
+        </Border>
+
+        <!-- Right panel -->
+        <Border Grid.Column="2"
+                Background="#FF111827"
+                BorderBrush="#22314A"
+                BorderThickness="1"
+                CornerRadius="14"
+                Padding="16">
+            <Grid>
+
+                <!-- Documents Panel -->
+                <StackPanel x:Name="PanelDocuments" Visibility="Visible">
+                    <TextBlock Text="Documents"
+                               Foreground="#FFE5E7EB"
+                               FontSize="18"
+                               FontWeight="SemiBold"/>
+
+                    <TextBlock Text="Quick access to common paperwork and help pages."
+                               Foreground="#FF9CA3AF"
+                               Margin="0,8,0,14"
+                               TextWrapping="Wrap"/>
+
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="BOL"
+                                Width="140"
+                                Height="34"
+                                Margin="0,0,10,0"
+                                Click="OpenBol_Click"/>
+
+                        <Button Content="Readme"
+                                Width="140"
+                                Height="34"
+                                Click="OpenReadme_Click"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- BOL Panel -->
+                <StackPanel x:Name="PanelBol" Visibility="Collapsed">
+                    <TextBlock Text="Bill of Lading (BOL)"
+                               Foreground="#FFE5E7EB"
+                               FontSize="18"
+                               FontWeight="SemiBold"/>
+
+                    <TextBlock Text="Create, review, and export a Bill of Lading for your loads."
+                               Foreground="#FF9CA3AF"
+                               Margin="0,8,0,14"
+                               TextWrapping="Wrap"/>
+
+                    <Button Content="Open BOL Window"
+                            Width="180"
+                            Height="34"
+                            Click="Bol_Click"/>
+
+                    <TextBlock Text="Tip: You can later wire exports to PDF / Discord."
+                               Foreground="#FF9CA3AF"
+                               Margin="0,14,0,0"/>
+                </StackPanel>
+
+                <!-- About Panel (ONLY requested fields) -->
+                <StackPanel x:Name="PanelAbout" Visibility="Collapsed">
+                    <TextBlock Text="About"
+                               Foreground="#FFE5E7EB"
+                               FontSize="18"
+                               FontWeight="SemiBold"/>
+
+                    <TextBlock Text="{Binding AboutText}"
+                               Foreground="#FFE5E7EB"
+                               Margin="0,10,0,0"
+                               TextWrapping="Wrap"/>
+                </StackPanel>
+
+                <!-- Readme Panel -->
+                <StackPanel x:Name="PanelReadme" Visibility="Collapsed">
+                    <TextBlock Text="Readme"
+                               Foreground="#FFE5E7EB"
+                               FontSize="18"
+                               FontWeight="SemiBold"/>
+
+                    <ScrollViewer Margin="0,10,0,0"
+                                  VerticalScrollBarVisibility="Auto"
+                                  HorizontalScrollBarVisibility="Disabled">
+                        <TextBlock Text="{Binding ReadmeText}"
+                                   Foreground="#FFE5E7EB"
+                                   TextWrapping="Wrap"/>
+                    </ScrollViewer>
+                </StackPanel>
+
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

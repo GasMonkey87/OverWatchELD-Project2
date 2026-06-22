@@ -1,0 +1,15 @@
+{
+  "name": "OverWatch ELD Companion",
+  "short_name": "OW Companion",
+  "description": "Mobile companion for OverWatch ELD duty status, HOS clocks, logs, dispatch, inspection, load board, and live map.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#07111f",
+  "theme_color": "#07111f",
+  "orientation": "portrait-primary",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

@@ -1,0 +1,1 @@
+Fixed telemetry load import saving. LoadBoardBolWindow now saves immediately after telemetry import, syncs the imported load into DispatchService history, preserves ATS revenue, trailer, truck, commodity, shipper/receiver, and updates load_board.json plus dispatch_jobs.json.

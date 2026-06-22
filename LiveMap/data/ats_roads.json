@@ -1,0 +1,121 @@
+﻿{
+    "features":  [
+                     {
+                         "properties":  {
+                                            "name":  "I-55",
+                                            "roadType":  "highway"
+                                        },
+                         "type":  "Feature",
+                         "geometry":  {
+                                          "coordinates":  [
+                                                              [
+                                                                  -87.6298,
+                                                                  41.8781
+                                                              ],
+                                                              [
+                                                                  -88.0817,
+                                                                  41.525
+                                                              ],
+                                                              [
+                                                                  -88.9937,
+                                                                  40.4842
+                                                              ],
+                                                              [
+                                                                  -89.6501,
+                                                                  39.7817
+                                                              ],
+                                                              [
+                                                                  -90.1509,
+                                                                  38.6245
+                                                              ]
+                                                          ],
+                                          "type":  "LineString"
+                                      }
+                     },
+                     {
+                         "properties":  {
+                                            "name":  "I-57",
+                                            "roadType":  "highway"
+                                        },
+                         "type":  "Feature",
+                         "geometry":  {
+                                          "coordinates":  [
+                                                              [
+                                                                  -87.6298,
+                                                                  41.8781
+                                                              ],
+                                                              [
+                                                                  -88.2434,
+                                                                  40.1164
+                                                              ],
+                                                              [
+                                                                  -88.5434,
+                                                                  39.12
+                                                              ],
+                                                              [
+                                                                  -88.9331,
+                                                                  37.7306
+                                                              ]
+                                                          ],
+                                          "type":  "LineString"
+                                      }
+                     },
+                     {
+                         "properties":  {
+                                            "name":  "I-74",
+                                            "roadType":  "highway"
+                                        },
+                         "type":  "Feature",
+                         "geometry":  {
+                                          "coordinates":  [
+                                                              [
+                                                                  -90.5151,
+                                                                  41.5067
+                                                              ],
+                                                              [
+                                                                  -89.589,
+                                                                  40.6936
+                                                              ],
+                                                              [
+                                                                  -88.9937,
+                                                                  40.4842
+                                                              ],
+                                                              [
+                                                                  -88.2434,
+                                                                  40.1164
+                                                              ]
+                                                          ],
+                                          "type":  "LineString"
+                                      }
+                     },
+                     {
+                         "properties":  {
+                                            "name":  "I-72",
+                                            "roadType":  "highway"
+                                        },
+                         "type":  "Feature",
+                         "geometry":  {
+                                          "coordinates":  [
+                                                              [
+                                                                  -91.4099,
+                                                                  39.9356
+                                                              ],
+                                                              [
+                                                                  -89.6501,
+                                                                  39.7817
+                                                              ],
+                                                              [
+                                                                  -88.9548,
+                                                                  39.8403
+                                                              ],
+                                                              [
+                                                                  -88.2434,
+                                                                  40.1164
+                                                              ]
+                                                          ],
+                                          "type":  "LineString"
+                                      }
+                     }
+                 ],
+    "type":  "FeatureCollection"
+}

@@ -1,0 +1,32 @@
+{
+  "enabled": true,
+  "vtcName": "",
+  "vtcShort": "",
+  "badgeText": "",
+  "badgeColorHex": "#FF2563EB",
+  "botExePath": "",
+  "botArgs": "",
+  "BotApiBaseUrl": "https://overwatcheld.up.railway.app",
+  "botLinkSecret": "change_me",
+  "discord": {
+    "botToken": "",
+    "guildId": "",
+    "dispatchChannelId": "",
+    "announcementsChannelId": "",
+    "systemLogChannelId": "0",
+    "useThreadsPerDriver": true,
+    "driverThreadParentChannelId": "0",
+    "requiredRoleIds": [],
+    "allowStandaloneWithoutRole": true
+  },
+  "linking": {
+    "codeLength": 6,
+    "expiresMinutes": 10,
+    "singleUse": true
+  },
+  "autoPost": {
+    "enabled": true,
+    "intervalMinutes": 60,
+    "eldDbPath": ""
+  }
+}

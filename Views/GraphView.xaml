@@ -1,0 +1,24 @@
+<UserControl x:Class="OverWatchELD.Views.GraphView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             MinHeight="160"
+             Background="Transparent">
+    <Grid>
+        <Border CornerRadius="10" Background="#0B1422" BorderBrush="#24344C" BorderThickness="1" Padding="10">
+            <Grid>
+                <!-- Canvas for grid + segments -->
+                <Canvas x:Name="PART_Canvas" ClipToBounds="True"/>
+
+                <!-- No-data overlay -->
+                <TextBlock x:Name="PART_NoData"
+                           Text="No log data to display"
+                           Foreground="#C9D4E6"
+                           FontSize="14"
+                           FontWeight="SemiBold"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Visibility="Collapsed"/>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

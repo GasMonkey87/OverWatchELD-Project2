@@ -1,0 +1,81 @@
+﻿<Window x:Class="OverWatchELD.Views.EditDutyEventWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Edit duty event"
+        Width="520" Height="360"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize">
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Duty event" FontSize="18" FontWeight="Bold"/>
+
+        <Grid Grid.Row="1" Margin="0,14,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="130"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0" Text="Status" VerticalAlignment="Center"/>
+            <ComboBox Grid.Column="1" x:Name="StatusBox" Height="28" SelectedIndex="0">
+                <ComboBoxItem Content="OFF"/>
+                <ComboBoxItem Content="SB"/>
+                <ComboBoxItem Content="DRIVE"/>
+                <ComboBoxItem Content="ON"/>
+                <ComboBoxItem Content="PC"/>
+                <ComboBoxItem Content="YM"/>
+            </ComboBox>
+        </Grid>
+
+        <Grid Grid.Row="2" Margin="0,10,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="130"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0" Text="Start" VerticalAlignment="Center"/>
+            <StackPanel Orientation="Horizontal">
+                <ComboBox x:Name="StartHour" Width="48"/>
+                <TextBlock Text=":" Margin="4,0"/>
+                <ComboBox x:Name="StartMin" Width="48"/>
+                <TextBlock Text=":" Margin="4,0"/>
+                <ComboBox x:Name="StartSec" Width="48"/>
+            </StackPanel>
+
+
+            <TextBlock Grid.Column="0" Text="End" VerticalAlignment="Center" Margin="0,36,0,0"/>
+            <StackPanel Orientation="Horizontal">
+                <ComboBox x:Name="EndHour" Width="48"/>
+                <TextBlock Text=":" Margin="4,0"/>
+                <ComboBox x:Name="EndMin" Width="48"/>
+                <TextBlock Text=":" Margin="4,0"/>
+                <ComboBox x:Name="EndSec" Width="48"/>
+            </StackPanel>
+
+        </Grid>
+
+        <Grid Grid.Row="3" Margin="0,12,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <TextBlock Text="Location" />
+            <TextBox x:Name="LocationBox" Grid.Row="1" Height="28" Margin="0,6,0,0"/>
+
+            <TextBlock Text="Notes" Grid.Row="2" Margin="0,10,0,0"/>
+            <TextBox x:Name="NotesBox" Grid.Row="2" Margin="0,30,0,0" AcceptsReturn="True" TextWrapping="Wrap"/>
+        </Grid>
+
+        <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,14,0,0">
+            <Button Content="Cancel" Width="90" Height="30" Margin="0,0,10,0" Click="Cancel_Click"/>
+            <Button Content="Save" Width="90" Height="30" Click="Save_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>

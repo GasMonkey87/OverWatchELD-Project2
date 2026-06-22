@@ -1,0 +1,87 @@
+<UserControl x:Class="OverWatchELD.Views.InspectionsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="#FF0B1220">
+    <Grid Margin="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Vehicle Inspections"
+                   FontSize="26"
+                   FontWeight="SemiBold"
+                   Foreground="#FFE5E7EB"/>
+
+        <Border Grid.Row="1"
+                Margin="0,14,0,0"
+                Background="#FF111827"
+                BorderBrush="#22314A"
+                BorderThickness="1"
+                CornerRadius="14"
+                Padding="14">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Margin="0,0,12,0">
+                    <TextBlock Text="Start date" Foreground="#FF9CA3AF" Margin="0,0,0,6"/>
+                    <DatePicker x:Name="StartDate"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="1" Margin="0,0,12,0">
+                    <TextBlock Text="End date" Foreground="#FF9CA3AF" Margin="0,0,0,6"/>
+                    <DatePicker x:Name="EndDate"/>
+                </StackPanel>
+
+                <WrapPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Bottom">
+                    <Button Content="Preview"
+                            Width="110"
+                            Height="32"
+                            Margin="0,0,10,0"
+                            Click="Preview_Click"/>
+                    <Button Content="Export File"
+                            Width="120"
+                            Height="32"
+                            Margin="0,0,10,0"
+                            Click="ExportFile_Click"/>
+                    <Button Content="Send Discord"
+                            Width="130"
+                            Height="32"
+                            Click="SendDiscord_Click"/>
+                </WrapPanel>
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="2"
+                Margin="0,14,0,0"
+                Background="#FF111827"
+                BorderBrush="#22314A"
+                BorderThickness="1"
+                CornerRadius="14"
+                Padding="14">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock x:Name="StatusText"
+                           Text="Select a date range and Preview."
+                           Foreground="#FF9CA3AF"/>
+
+                <ListBox Grid.Row="1"
+                         x:Name="ResultsList"
+                         Margin="0,12,0,0"
+                         Background="#FF0B1220"
+                         BorderBrush="#22314A"
+                         BorderThickness="1"
+                         Foreground="#FFE5E7EB"/>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

@@ -1,0 +1,403 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using Microsoft.Data.Sqlite;
+using OverWatchELD.Models;
+
+namespace OverWatchELD.Services
+{
+    public static class DatabaseService
+    {
+        private static readonly object _lock = new();
+        private static string _dbPath = "";
+        private static bool _initialized;
+
+        private static string ConnectionString
+            => new SqliteConnectionStringBuilder { DataSource = _dbPath }.ToString();
+
+        public static void Initialize(string? dbPath = null)
+        {
+            lock (_lock)
+            {
+                if (_initialized) return;
+
+                _dbPath = string.IsNullOrWhiteSpace(dbPath)
+                    ? Path.Combine(
+                        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                        "ATS_ELD",
+                        "OverWatchELD.db")
+                    : dbPath;
+
+                Directory.CreateDirectory(Path.GetDirectoryName(_dbPath)!);
+
+                using var conn = new SqliteConnection(ConnectionString);
+                conn.Open();
+
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText =
+                        """
+                        CREATE TABLE IF NOT EXISTS duty_events (
+                            id INTEGER PRIMARY KEY AUTOINCREMENT,
+                            start_utc TEXT NOT NULL,
+                            end_utc TEXT,
+                            status INTEGER NOT NULL,
+                            location_text TEXT,
+                            notes TEXT,
+                            lat REAL,
+                            lon REAL,
+                            source TEXT,
+                            is_edited INTEGER DEFAULT 0,
+                            edited_at_utc TEXT,
+                            edit_reason TEXT
+                        );
+                        """;
+                    cmd.ExecuteNonQuery();
+                }
+
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText =
+                        """
+                        CREATE TABLE IF NOT EXISTS inspections (
+                            id INTEGER PRIMARY KEY AUTOINCREMENT,
+                            created_utc TEXT NOT NULL,
+                            type TEXT,
+                            vehicle_id TEXT,
+                            notes TEXT,
+                            signature TEXT
+                        );
+CREATE TABLE IF NOT EXISTS inspection_item_results (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    inspection_id INTEGER NOT NULL,
+    item_key TEXT NOT NULL,
+    item_name TEXT NOT NULL,
+    category TEXT NOT NULL,
+    status TEXT NOT NULL, -- 'ok' | 'defect'
+    note TEXT,
+    FOREIGN KEY (inspection_id) REFERENCES inspections(id) ON DELETE CASCADE
+);
+""";
+                    cmd.ExecuteNonQuery();
+                }
+
+                _initialized = true;
+            }
+        }
+
+        private static void EnsureInit()
+        {
+            if (!_initialized) Initialize();
+        }
+
+        public static List<DutyEvent> GetDutyEvents(DateTimeOffset startUtc, DateTimeOffset endUtc)
+        {
+            EnsureInit();
+            var list = new List<DutyEvent>();
+
+            var startIso = startUtc.UtcDateTime.ToString("o");
+            var endIso = endUtc.UtcDateTime.ToString("o");
+
+            using var conn = new SqliteConnection(ConnectionString);
+            conn.Open();
+
+            using var cmd = conn.CreateCommand();
+            cmd.CommandText = @"
+                SELECT id, start_utc, end_utc, status, location_text, notes, lat, lon, source, is_edited, edited_at_utc, edit_reason
+                FROM duty_events
+                WHERE start_utc < $end
+                  AND (end_utc IS NULL OR end_utc > $start)
+                ORDER BY start_utc ASC;";
+            cmd.Parameters.AddWithValue("$start", startIso);
+            cmd.Parameters.AddWithValue("$end", endIso);
+
+            using var reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                var start = DateTimeOffset.Parse(reader.GetString(1)).ToUniversalTime();
+                DateTimeOffset? end = null;
+                if (!reader.IsDBNull(2))
+                    end = DateTimeOffset.Parse(reader.GetString(2)).ToUniversalTime();
+
+                list.Add(new DutyEvent
+                {
+                    Id = reader.GetInt64(0),
+                    StartUtc = start,
+                    EndUtc = end,
+                    Status = (DutyStatus)reader.GetInt32(3),
+                    Location = reader.IsDBNull(4) ? null : reader.GetString(4),
+                    Notes = reader.IsDBNull(5) ? null : reader.GetString(5),
+                    Source = reader.IsDBNull(8) ? null : reader.GetString(8)
+                });
+            }
+
+            return list;
+        };
+
+                list.Add(ev);
+            }
+
+            return list;
+        }
+
+        public static long InsertDutyEvent(DutyEvent dutyEvent)
+        {
+            EnsureInit();
+
+            var startIso = dutyEvent.StartUtc.UtcDateTime.ToString("o");
+
+            using var conn = new SqliteConnection(ConnectionString);
+            conn.Open();
+
+            using var tx = conn.BeginTransaction();
+
+            // Close the most recent open event (end_utc IS NULL), so events form a proper timeline.
+            using (var closeCmd = conn.CreateCommand())
+            {
+                closeCmd.Transaction = tx;
+                closeCmd.CommandText = @"
+UPDATE duty_events
+SET end_utc = $endUtc
+WHERE id = (
+    SELECT id FROM duty_events
+    WHERE end_utc IS NULL
+    ORDER BY start_utc DESC
+    LIMIT 1
+)
+AND start_utc < $endUtc;";
+                closeCmd.Parameters.AddWithValue("$endUtc", startIso);
+                closeCmd.ExecuteNonQuery();
+            }
+
+            // Insert new open event
+            using var cmd = conn.CreateCommand();
+            cmd.Transaction = tx;
+            cmd.CommandText =
+                "INSERT INTO duty_events(start_utc, end_utc, status, location_text, notes, lat, lon, source, is_edited, edited_at_utc, edit_reason) " +
+                "VALUES($startUtc, NULL, $status, $locText, $notes, NULL, NULL, $source, 0, NULL, NULL); " +
+                "SELECT last_insert_rowid();";
+            cmd.Parameters.AddWithValue("$startUtc", startIso);
+            cmd.Parameters.AddWithValue("$status", (int)dutyEvent.Status);
+            cmd.Parameters.AddWithValue("$locText", (object?)dutyEvent.Location ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("$notes", (object?)dutyEvent.Notes ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("$source", (object?)dutyEvent.Source ?? "manual");
+
+            var id = (long)(cmd.ExecuteScalar() ?? 0L);
+            tx.Commit();
+            return id;
+        }
+
+        public static void UpdateDutyEvent(DutyEvent dutyEvent)
+        {
+            EnsureInit();
+
+            using var conn = new SqliteConnection(ConnectionString);
+            conn.Open();
+
+            using var cmd = conn.CreateCommand();
+            cmd.CommandText =
+                """
+                UPDATE duty_events
+                SET start_utc = $start,
+                    end_utc = $end,
+                    status = $status,
+                    location_text = $location,
+                    notes = $notes,
+                    lat = $lat,
+                    lon = $lon,
+                    source = $source,
+                    is_edited = $isEdited,
+                    edited_at_utc = $editedAt,
+                    edit_reason = $editReason
+                WHERE id = $id;
+                """;
+            cmd.Parameters.AddWithValue("$id", dutyEvent.Id);
+            cmd.Parameters.AddWithValue("$start", dutyEvent.StartUtc.UtcDateTime.ToString("o"));
+            cmd.Parameters.AddWithValue("$end", dutyEvent.EndUtc?.UtcDateTime.ToString("o"));
+            cmd.Parameters.AddWithValue("$status", (int)dutyEvent.Status);
+            cmd.Parameters.AddWithValue("$location", (object?)dutyEvent.LocationText ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("$notes", (object?)dutyEvent.Notes ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("$lat", (object?)dutyEvent.Lat ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("$lon", (object?)dutyEvent.Lon ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("$source", (object?)dutyEvent.Source ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("$isEdited", dutyEvent.IsEdited ? 1 : 0);
+            cmd.Parameters.AddWithValue("$editedAt", (object?)dutyEvent.EditedAtUtc?.UtcDateTime.ToString("o") ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("$editReason", (object?)dutyEvent.EditReason ?? DBNull.Value);
+
+            cmd.ExecuteNonQuery();
+        }
+
+        public static void DeleteDutyEvent(long id)
+        {
+            EnsureInit();
+
+            using var conn = new SqliteConnection(ConnectionString);
+            conn.Open();
+
+            using var cmd = conn.CreateCommand();
+            cmd.CommandText = "DELETE FROM duty_events WHERE id = $id;";
+            cmd.Parameters.AddWithValue("$id", id);
+            cmd.ExecuteNonQuery();
+        }
+
+        public static void CloseOpenDutyEvent(DateTimeOffset endUtc)
+        {
+            EnsureInit();
+
+            using var conn = new SqliteConnection(ConnectionString);
+            conn.Open();
+
+            using var cmd = conn.CreateCommand();
+            cmd.CommandText =
+                """
+                UPDATE duty_events
+                SET end_utc = $end
+                WHERE id = (
+                    SELECT id FROM duty_events
+                    WHERE end_utc IS NULL
+                    ORDER BY start_utc DESC
+                    LIMIT 1
+                );
+                """;
+            cmd.Parameters.AddWithValue("$end", endUtc.UtcDateTime.ToString("o"));
+            cmd.ExecuteNonQuery();
+        }
+
+        public static void DeleteAllDutyEvents()
+        {
+            EnsureInit();
+
+            using var conn = new SqliteConnection(ConnectionString);
+            conn.Open();
+
+            using var cmd = conn.CreateCommand();
+            cmd.CommandText = "DELETE FROM duty_events;";
+            cmd.ExecuteNonQuery();
+        }
+
+        public static void DeleteAllInspections()
+        {
+            EnsureInit();
+
+            using var conn = new SqliteConnection(ConnectionString);
+            conn.Open();
+
+            using var cmd = conn.CreateCommand();
+            cmd.CommandText = "DELETE FROM inspections;";
+            cmd.ExecuteNonQuery();
+        }
+
+        // Inspection insert (supports the UI named arguments)
+        public static long InsertInspection(string type, string vehicleId, string notes, string signature, DateTimeOffset dateUtc)
+        {
+            EnsureInit();
+
+            using var conn = new SqliteConnection(ConnectionString);
+            conn.Open();
+
+            using var cmd = conn.CreateCommand();
+            cmd.CommandText =
+                """
+                INSERT INTO inspections (created_utc, type, vehicle_id, notes, signature)
+                VALUES ($created, $type, $vehicle, $notes, $sig);
+                SELECT last_insert_rowid();
+                """;
+            cmd.Parameters.AddWithValue("$created", dateUtc.UtcDateTime.ToString("o"));
+            cmd.Parameters.AddWithValue("$type", type);
+            cmd.Parameters.AddWithValue("$vehicle", vehicleId);
+            cmd.Parameters.AddWithValue("$notes", notes);
+            cmd.Parameters.AddWithValue("$sig", signature);
+
+            return (long)cmd.ExecuteScalar()!;
+        }
+
+
+        public static void InsertInspectionItemResults(long inspectionId, IEnumerable<InspectionChecklistItem> items)
+        {
+            EnsureInit();
+
+            using var conn = new SqliteConnection(ConnectionString);
+            conn.Open();
+
+            using var tx = conn.BeginTransaction();
+
+            // Clear any previous results for this inspection (safe to re-save)
+            using (var del = conn.CreateCommand())
+            {
+                del.Transaction = tx;
+                del.CommandText = "DELETE FROM inspection_item_results WHERE inspection_id = $iid;";
+                del.Parameters.AddWithValue("$iid", inspectionId);
+                del.ExecuteNonQuery();
+            }
+
+            foreach (var item in items)
+            {
+                using var cmd = conn.CreateCommand();
+                cmd.Transaction = tx;
+                cmd.CommandText =
+                    @"INSERT INTO inspection_item_results (inspection_id, item_key, item_name, category, status, note)
+                      VALUES ($iid, $key, $name, $cat, $status, $note);";
+                cmd.Parameters.AddWithValue("$iid", inspectionId);
+                cmd.Parameters.AddWithValue("$key", item.Key);
+                cmd.Parameters.AddWithValue("$name", item.Name);
+                cmd.Parameters.AddWithValue("$cat", item.Category);
+                cmd.Parameters.AddWithValue("$status", item.IsDefect ? "defect" : "ok");
+                cmd.Parameters.AddWithValue("$note", string.IsNullOrWhiteSpace(item.Note) ? (object)DBNull.Value : item.Note);
+                cmd.ExecuteNonQuery();
+            }
+
+            tx.Commit();
+        }
+
+        public static (bool done, bool hasDefects) GetTodayInspectionStatus(string type)
+        {
+            EnsureInit();
+
+            // Determine today's UTC window
+            var nowUtc = DateTimeOffset.UtcNow;
+            var dayStartUtc = new DateTimeOffset(nowUtc.Year, nowUtc.Month, nowUtc.Day, 0, 0, 0, TimeSpan.Zero);
+            var dayEndUtc = dayStartUtc.AddDays(1);
+
+            using var conn = new SqliteConnection(ConnectionString);
+            conn.Open();
+
+            long? inspectionId = null;
+
+            using (var cmd = conn.CreateCommand())
+            {
+                cmd.CommandText =
+                    @"SELECT id
+                      FROM inspections
+                      WHERE type = $type
+                        AND created_utc >= $start
+                        AND created_utc <  $end
+                      ORDER BY created_utc DESC
+                      LIMIT 1;";
+                cmd.Parameters.AddWithValue("$type", type);
+                cmd.Parameters.AddWithValue("$start", dayStartUtc.UtcDateTime.ToString("o"));
+                cmd.Parameters.AddWithValue("$end", dayEndUtc.UtcDateTime.ToString("o"));
+
+                var result = cmd.ExecuteScalar();
+                if (result != null && result != DBNull.Value)
+                    inspectionId = Convert.ToInt64(result);
+            }
+
+            if (inspectionId is null)
+                return (false, false);
+
+            using (var cmd = conn.CreateCommand())
+            {
+                cmd.CommandText =
+                    @"SELECT COUNT(*)
+                      FROM inspection_item_results
+                      WHERE inspection_id = $iid
+                        AND status = 'defect';";
+                cmd.Parameters.AddWithValue("$iid", inspectionId.Value);
+
+                var count = Convert.ToInt64(cmd.ExecuteScalar() ?? 0);
+                return (true, count > 0);
+            }
+        }
+
+    }
+}

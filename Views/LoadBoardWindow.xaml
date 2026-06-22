@@ -1,0 +1,118 @@
+<Window x:Class="OverWatchELD.Views.LoadBoardWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Load Board"
+        Height="760"
+        Width="1180"
+        WindowStartupLocation="CenterOwner"
+        Background="#0B1220"
+        Loaded="LoadBoardWindow_Loaded">
+    <Window.Resources>
+        <Style TargetType="TextBox">
+            <Setter Property="Background" Value="#0F172A"/>
+            <Setter Property="Foreground" Value="#E5E7EB"/>
+            <Setter Property="BorderBrush" Value="#334155"/>
+            <Setter Property="Padding" Value="8,5"/>
+            <Setter Property="CaretBrush" Value="#E5E7EB"/>
+        </Style>
+        <Style TargetType="ComboBox">
+            <Setter Property="Background" Value="#0F172A"/>
+            <Setter Property="Foreground" Value="#E5E7EB"/>
+            <Setter Property="BorderBrush" Value="#334155"/>
+            <Setter Property="Padding" Value="8,5"/>
+        </Style>
+        <Style TargetType="DataGrid">
+            <Setter Property="Background" Value="#0B1220"/>
+            <Setter Property="Foreground" Value="#E5E7EB"/>
+            <Setter Property="RowBackground" Value="#0B1220"/>
+            <Setter Property="AlternatingRowBackground" Value="#111827"/>
+            <Setter Property="BorderBrush" Value="#334155"/>
+            <Setter Property="GridLinesVisibility" Value="Horizontal"/>
+            <Setter Property="HorizontalGridLinesBrush" Value="#334155"/>
+        </Style>
+        <Style TargetType="DataGridColumnHeader">
+            <Setter Property="Background" Value="#182235"/>
+            <Setter Property="Foreground" Value="#E5E7EB"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Padding" Value="8,6"/>
+        </Style>
+    </Window.Resources>
+    <Grid Margin="14">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="12"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="12"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Border Grid.Row="0" Background="#111827" BorderBrush="#22314A" BorderThickness="1" CornerRadius="10" Padding="14">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel>
+                    <TextBlock Text="Load Board" Foreground="#E5E7EB" FontSize="24" FontWeight="SemiBold"/>
+                    <TextBlock Text="Tracks shipper arrival, BOL complete, in transit, and delivered from telemetry." Foreground="#94A3B8" Margin="0,4,0,0"/>
+                </StackPanel>
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <Button Content="New Manual Load" Width="130" Height="34" Margin="0,0,10,0" Click="NewManualLoad_Click"/>
+                    <Button Content="Refresh" Width="90" Height="34" Margin="0,0,10,0" Click="Refresh_Click"/>
+                    <Button Content="Close" Width="90" Height="34" Click="Close_Click"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="14"/>
+                <ColumnDefinition Width="390"/>
+            </Grid.ColumnDefinitions>
+            <Border Grid.Column="0" Background="#111827" BorderBrush="#22314A" BorderThickness="1" CornerRadius="10" Padding="12">
+                <DataGrid x:Name="LoadGrid" AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False" SelectionChanged="LoadGrid_SelectionChanged">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Load #" Binding="{Binding LoadNumber}" Width="1*"/>
+                        <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="1*"/>
+                        <DataGridTextColumn Header="Driver" Binding="{Binding DriverName}" Width="1.1*"/>
+                        <DataGridTextColumn Header="Truck" Binding="{Binding TruckName}" Width="1.1*"/>
+                        <DataGridTextColumn Header="Trailer" Binding="{Binding TrailerName}" Width="1.1*"/>
+                        <DataGridTextColumn Header="Revenue" Binding="{Binding RevenueDisplay}" Width="0.9*"/>
+                        <DataGridTextColumn Header="Shipper" Binding="{Binding ShipperName}" Width="1.1*"/>
+                        <DataGridTextColumn Header="Receiver" Binding="{Binding ReceiverName}" Width="1.1*"/>
+                        <DataGridTextColumn Header="Location" Binding="{Binding CurrentLocation}" Width="1.2*"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Border>
+            <Border Grid.Column="2" Background="#111827" BorderBrush="#22314A" BorderThickness="1" CornerRadius="10" Padding="14">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel>
+                        <TextBlock Text="Selected Load" Foreground="#E5E7EB" FontSize="18" FontWeight="SemiBold"/>
+                        <TextBlock Text="Load #" Foreground="#94A3B8" Margin="0,12,0,0"/><TextBox x:Name="LoadNumberBox"/>
+                        <TextBlock Text="Status" Foreground="#94A3B8" Margin="0,10,0,0"/>
+                        <ComboBox x:Name="StatusBox" IsEditable="True">
+                            <ComboBoxItem Content="At Shipper"/>
+                            <ComboBoxItem Content="BOL Complete"/>
+                            <ComboBoxItem Content="In Transit"/>
+                            <ComboBoxItem Content="Delivered"/>
+                        </ComboBox>
+                        <TextBlock Text="Driver" Foreground="#94A3B8" Margin="0,10,0,0"/><ComboBox x:Name="DriverBox" IsEditable="False"/>
+                        <TextBlock Text="Truck" Foreground="#94A3B8" Margin="0,10,0,0"/><TextBox x:Name="TruckBox"/>
+                        <TextBlock Text="Trailer" Foreground="#94A3B8" Margin="0,10,0,0"/><TextBox x:Name="TrailerBox"/>
+                        <TextBlock Text="Commodity" Foreground="#94A3B8" Margin="0,10,0,0"/><TextBox x:Name="CommodityBox"/>
+                        <TextBlock Text="Weight LBS" Foreground="#94A3B8" Margin="0,10,0,0"/><TextBox x:Name="WeightBox"/>
+                        <TextBlock Text="Shipper" Foreground="#94A3B8" Margin="0,10,0,0"/><TextBox x:Name="ShipperBox"/>
+                        <TextBlock Text="Shipper City" Foreground="#94A3B8" Margin="0,10,0,0"/><TextBox x:Name="ShipperCityBox"/>
+                        <TextBlock Text="Receiver" Foreground="#94A3B8" Margin="0,10,0,0"/><TextBox x:Name="ReceiverBox"/>
+                        <TextBlock Text="Receiver City" Foreground="#94A3B8" Margin="0,10,0,0"/><TextBox x:Name="ReceiverCityBox"/>
+                        <Button Content="Save / Update Load" Height="36" Margin="0,14,0,0" Click="Save_Click"/>
+                        <Button Content="Open BOL" Height="36" Margin="0,8,0,0" Click="OpenBol_Click"/>
+                        <Button Content="Mark BOL Complete + Send to Discord" Height="36" Margin="0,8,0,0" Click="BolComplete_Click"/>
+                        <Button Content="Mark Delivered" Height="36" Margin="0,8,0,0" Click="Delivered_Click"/>
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+        </Grid>
+        <TextBlock Grid.Row="4" x:Name="StatusText" Foreground="#94A3B8" Text="Ready"/>
+    </Grid>
+</Window>

@@ -1,0 +1,61 @@
+<Window x:Class="OverWatchELD.Views.ReadMeWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="OverWatch ELD - Read-me" Height="640" Width="880"
+        WindowStartupLocation="CenterOwner"
+        Background="#101114"
+        Foreground="White">
+    <Grid Margin="18">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock FontSize="22" FontWeight="SemiBold" Text="Read-me / How to Use" />
+
+        <ScrollViewer Grid.Row="1" Margin="0,12,0,12" VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <TextBlock FontSize="14" TextWrapping="Wrap">
+OverWatch ELD is a driver-focused ELD-style companion for ATS with duty status, logs, DVIR, messaging, and VTC/Discord integration.
+                </TextBlock>
+
+                <Separator Margin="0,12,0,12"/>
+
+                <TextBlock FontSize="16" FontWeight="SemiBold" Text="Quick Start" />
+                <TextBlock Margin="0,6,0,0" FontSize="14" TextWrapping="Wrap">
+1) Launch OverWatch ELD and log in.
+2) Verify the dashboard clocks and duty buttons.
+3) Configure Companion / Telemetry if you want auto-duty and location.
+4) (Optional) Enable Discord Bot integration in Settings for Dispatch + Announcements.
+                </TextBlock>
+
+                <Separator Margin="0,12,0,12"/>
+
+                <TextBlock FontSize="16" FontWeight="SemiBold" Text="Discord / VTC" />
+                <TextBlock Margin="0,6,0,0" FontSize="14" TextWrapping="Wrap">
+• Dispatch messages: Dispatch channel → ELD inbox. ELD replies go back to the dispatch channel.
+• Linking: In ELD, generate a one-time code, then DM the bot: !link ABC123.
+• VTC roster: The VTC page can show roster pulled from the bot (https://overwatcheld-bot.up.railway.app/api/vtc/roster).
+                </TextBlock>
+
+                <Separator Margin="0,12,0,12"/>
+
+                <TextBlock FontSize="16" FontWeight="SemiBold" Text="BOL (Bill of Lading)" />
+                <TextBlock Margin="0,6,0,0" FontSize="14" TextWrapping="Wrap">
+Use BOL to capture load details (pickup/delivery, notes). Export sends a file attachment to your Discord webhook (if configured).
+                </TextBlock>
+
+                <Separator Margin="0,12,0,12"/>
+
+                <TextBlock FontSize="16" FontWeight="SemiBold" Text="Tips" />
+                <TextBlock Margin="0,6,0,0" FontSize="14" TextWrapping="Wrap">
+• If the Discord bot HTTP API says “conflicts with an existing registration”, change BotApiPort in vtc.config.json.
+• If roster doesn’t load, start the bot first, then refresh the VTC roster page.
+                </TextBlock>
+            </StackPanel>
+        </ScrollViewer>
+
+        <Button Grid.Row="2" Content="Close" Width="120" HorizontalAlignment="Right" Click="Close_Click"/>
+    </Grid>
+</Window>
