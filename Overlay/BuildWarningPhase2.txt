@@ -1,0 +1,1 @@
+If the build fails because OverlayStarter still calls ToggleClickThrough, replace that call with ToggleOverlayLock.
