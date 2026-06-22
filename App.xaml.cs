@@ -36,6 +36,8 @@ namespace OverWatchELD
                 MainWindow = login;
                 login.Show();
 
+                Overlay.OverlayStarter.Start();
+
                 StartLightBackgroundServicesAfterUi();
             }
             catch (Exception ex)
