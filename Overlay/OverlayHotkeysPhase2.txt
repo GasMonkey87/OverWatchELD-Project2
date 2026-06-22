@@ -1,0 +1,8 @@
+Phase 2 overlay controls:
+
+F9 = show or hide overlay
+F10 = lock or unlock overlay movement
+Mouse wheel while unlocked = adjust opacity
+Unlocked mode = drag the overlay and resize it
+
+The overlay now saves position, opacity, and lock state to AppData/OverWatchELD/overlay-settings.json.
