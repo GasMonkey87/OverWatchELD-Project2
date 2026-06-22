@@ -1,0 +1,18 @@
+Phase 2 overlay update applied.
+
+Features added:
+- Saved overlay position
+- Saved overlay opacity
+- Saved lock state
+- Resizable overlay while unlocked
+- Mouse wheel opacity while unlocked
+- OverlaySnapshot model for telemetry hookup
+- OverlaySettings persisted under AppData/OverWatchELD
+
+Important test:
+- Build solution
+- Open ELD
+- Press F10 while overlay is focused
+- Drag overlay
+- Use mouse wheel on overlay to change opacity
+- Close and reopen ELD to confirm position and opacity persist
