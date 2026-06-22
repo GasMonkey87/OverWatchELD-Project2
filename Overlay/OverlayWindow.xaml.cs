@@ -11,14 +11,16 @@ namespace OverWatchELD.Overlay
         private readonly DispatcherTimer _saveTimer;
         private readonly OverlaySettings _settings;
         private bool _loaded;
-        private bool _visible = true;
+        private bool _expanded = true;
+        private double _expandedWidth = 330;
+        private double _expandedHeight = 455;
 
         public OverlayWindow()
         {
             InitializeComponent();
 
             _settings = OverlaySettings.Load();
-            _visible = !_settings.StartHidden;
+            _expanded = !_settings.StartHidden;
 
             _refreshTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(1) };
             _refreshTimer.Tick += (_, _) => RefreshOverlayData();
@@ -36,9 +38,12 @@ namespace OverWatchELD.Overlay
         {
             RestorePosition();
             Opacity = _settings.ClampOpacity();
-            Visibility = _visible ? Visibility.Visible : Visibility.Hidden;
             _loaded = true;
             ApplyLockState();
+
+            if (!_expanded)
+                CollapseToTab();
+
             RefreshOverlayData();
         }
 
@@ -54,6 +59,12 @@ namespace OverWatchELD.Overlay
 
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
+            if (!_expanded)
+            {
+                ExpandFromTab();
+                return;
+            }
+
             if (!_settings.Locked && e.ButtonState == MouseButtonState.Pressed)
             {
                 try { DragMove(); } catch { }
@@ -63,7 +74,7 @@ namespace OverWatchELD.Overlay
 
         private void Window_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-            if (_settings.Locked)
+            if (_settings.Locked || !_expanded)
                 return;
 
             _settings.Opacity += e.Delta > 0 ? 0.04 : -0.04;
@@ -73,8 +84,10 @@ namespace OverWatchELD.Overlay
 
         public void ToggleVisible()
         {
-            _visible = !_visible;
-            Visibility = _visible ? Visibility.Visible : Visibility.Hidden;
+            if (_expanded)
+                CollapseToTab();
+            else
+                ExpandFromTab();
         }
 
         public void ToggleOverlayLock()
@@ -84,8 +97,50 @@ namespace OverWatchELD.Overlay
             QueueSave();
         }
 
+        private void CollapseToTab()
+        {
+            _expanded = false;
+            _expandedWidth = Math.Max(Width, 300);
+            _expandedHeight = Math.Max(Height, 390);
+            Width = 112;
+            Height = 44;
+            MinWidth = 112;
+            MinHeight = 44;
+            MaxWidth = 112;
+            MaxHeight = 44;
+            OverlayStateText.Text = "SHOW";
+            DutyStatusText.Text = "ELD";
+            HosText.Text = "F9";
+            DriverText.Text = "Click to open";
+            LoadText.Text = "";
+            RouteText.Text = "";
+            SpeedText.Text = "";
+            FuelText.Text = "";
+            MaintenanceText.Text = "";
+            StatusText.Text = "";
+            ResizeMode = ResizeMode.NoResize;
+        }
+
+        private void ExpandFromTab()
+        {
+            _expanded = true;
+            MaxWidth = double.PositiveInfinity;
+            MaxHeight = double.PositiveInfinity;
+            MinWidth = 300;
+            MinHeight = 390;
+            Width = _expandedWidth;
+            Height = _expandedHeight;
+            ApplyLockState();
+            RefreshOverlayData();
+            Activate();
+            Focus();
+        }
+
         private void ApplyLockState()
         {
+            if (!_expanded)
+                return;
+
             if (_settings.Locked)
             {
                 OverlayStateText.Text = "Locked Route Advisor Overlay";
@@ -111,7 +166,7 @@ namespace OverWatchELD.Overlay
                 return;
             }
 
-            Left = Math.Max(workArea.Left, Math.Min(_settings.Left, workArea.Right - 80));
+            Left = Math.Max(workArea.Left, Math.Min(_settings.Left, workArea.Right - 120));
             Top = Math.Max(workArea.Top, Math.Min(_settings.Top, workArea.Bottom - 80));
         }
 
@@ -126,7 +181,7 @@ namespace OverWatchELD.Overlay
 
         private void SaveCurrentSettings()
         {
-            if (!_loaded)
+            if (!_loaded || !_expanded)
                 return;
 
             _settings.Left = Left;
@@ -137,6 +192,9 @@ namespace OverWatchELD.Overlay
 
         private void RefreshOverlayData()
         {
+            if (!_expanded)
+                return;
+
             try
             {
                 var snapshot = BuildSnapshot();
@@ -162,7 +220,7 @@ namespace OverWatchELD.Overlay
                 Speed = "0 MPH",
                 Fuel = "--",
                 Maintenance = app?.Telemetry != null ? "READY" : "OFFLINE",
-                StatusLine = "Phase 2 ready: saved position, opacity, lock state, and data model are active.",
+                StatusLine = "F9 now collapses to a small SHOW tab so the overlay can always come back.",
                 UpdatedAt = DateTime.Now
             };
         }
