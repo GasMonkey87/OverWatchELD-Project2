@@ -2,6 +2,7 @@ using System;
 using System.Globalization;
 using System.Reflection;
 using System.Windows;
+using OverWatchELD.Services;
 
 namespace OverWatchELD.Overlay
 {
@@ -13,6 +14,7 @@ namespace OverWatchELD.Overlay
             var telemetry = app?.Telemetry;
             var live = ReadValue(telemetry, "LastSnapshot");
             var dutyMachine = app?.DutyMachine;
+            var hos = BuildHosSnapshot();
 
             var speed = FormatSpeed(live);
             var fuel = FormatFuel(live);
@@ -20,11 +22,12 @@ namespace OverWatchELD.Overlay
             var route = BuildRoute(live, telemetry, app?.Session, app?.SessionState);
             var loadName = FirstText(live, telemetry, app?.Session, app?.SessionState, "CargoName", "CurrentLoad", "ActiveLoad", "LoadName", "Cargo") ?? "No active load";
             var connected = ReadBool(live, "Connected");
+            var dutyText = FirstText(dutyMachine, "Current") ?? FirstText(dutyMachine, app?.Session, app?.SessionState, "CurrentDutyStatus", "DutyStatus", "Status", "CurrentStatus") ?? (connected == true ? "DRIVING" : "OFFLINE");
 
             var snapshot = new OverlaySnapshot
             {
-                DutyStatus = FirstText(dutyMachine, app?.Session, app?.SessionState, "CurrentDutyStatus", "DutyStatus", "Status", "CurrentStatus") ?? (connected == true ? "DRIVING" : "OFFLINE"),
-                HosRemaining = FirstTimeText(dutyMachine, "DriveRemaining", "DriveTimeRemaining", "RemainingDriveTime", "HosRemaining", "HoursRemaining") ?? "--:--",
+                DutyStatus = FormatDutyStatus(dutyText),
+                HosRemaining = hos != null ? FormatTimeSpan(ReadTimeSpan(hos, "DriveRemaining")) : "--:--",
                 DriverName = FirstText(live, app?.Session, app?.SessionState, "DriverName", "CurrentDriver", "Username", "Name") ?? "Unknown Driver",
                 LoadName = loadName,
                 Route = route,
@@ -34,14 +37,79 @@ namespace OverWatchELD.Overlay
                 UpdatedAt = DateTime.Now
             };
 
+            var clockLine = BuildClockLine(hos);
+
             if (live == null)
-                snapshot.StatusLine = "Waiting for Telemetry.LastSnapshot. Start ATS/telemetry service.";
+                snapshot.StatusLine = clockLine + " • Waiting for Telemetry.LastSnapshot.";
             else if (connected == false)
-                snapshot.StatusLine = "Telemetry service online, but ATS is not connected.";
+                snapshot.StatusLine = clockLine + " • Telemetry online, ATS not connected.";
             else
-                snapshot.StatusLine = "Live ATS telemetry connected.";
+                snapshot.StatusLine = clockLine + " • Live ATS telemetry connected.";
 
             return snapshot;
+        }
+
+        private static object? BuildHosSnapshot()
+        {
+            try
+            {
+                var now = EldClock.UtcNow;
+                var start = now.AddDays(-10);
+                var events = DatabaseService.GetDutyEvents(start, now.AddHours(1));
+                return HosCalculator.GetCurrentClocks(events, now);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        private static string BuildClockLine(object? hos)
+        {
+            if (hos == null)
+                return "HOS clocks unavailable";
+
+            var drive = FormatTimeSpan(ReadTimeSpan(hos, "DriveRemaining"));
+            var shift = FormatTimeSpan(ReadTimeSpan(hos, "ShiftRemaining"));
+            var cycle = FormatTimeSpan(ReadTimeSpan(hos, "CycleRemaining"));
+            var brk = FormatTimeSpan(ReadTimeSpan(hos, "BreakRemaining"));
+
+            return $"Drive {drive} • Shift {shift} • Cycle {cycle} • Break {brk}";
+        }
+
+        private static string FormatDutyStatus(string? value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+                return "OFFLINE";
+
+            return value.Replace("PersonalConveyance", "PC").Replace("YardMove", "YM").ToUpperInvariant();
+        }
+
+        private static string FormatTimeSpan(TimeSpan? value)
+        {
+            if (!value.HasValue)
+                return "--:--";
+
+            var time = value.Value;
+            if (time < TimeSpan.Zero)
+                time = TimeSpan.Zero;
+
+            return $"{(int)time.TotalHours:00}:{time.Minutes:00}";
+        }
+
+        private static TimeSpan? ReadTimeSpan(object? source, string name)
+        {
+            var value = ReadValue(source, name);
+            if (value is TimeSpan timeSpan)
+                return timeSpan;
+
+            if (value == null)
+                return null;
+
+            if (TimeSpan.TryParse(Convert.ToString(value, CultureInfo.InvariantCulture), out var parsed))
+                return parsed;
+
+            return null;
         }
 
         private static string FormatSpeed(object? live)
@@ -150,25 +218,6 @@ namespace OverWatchELD.Overlay
                     if (!string.IsNullOrWhiteSpace(text))
                         return text;
                 }
-            }
-
-            return null;
-        }
-
-        private static string? FirstTimeText(object? source, params string[] names)
-        {
-            foreach (var name in names)
-            {
-                var value = ReadValue(source, name);
-                if (value == null)
-                    continue;
-
-                if (value is TimeSpan timeSpan)
-                    return $"{(int)timeSpan.TotalHours:00}:{timeSpan.Minutes:00}";
-
-                var text = Convert.ToString(value, CultureInfo.InvariantCulture);
-                if (!string.IsNullOrWhiteSpace(text))
-                    return text;
             }
 
             return null;
