@@ -1,0 +1,106 @@
+<Window x:Class="OverWatchELD.Overlay.OverlayWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="OverWatch ELD Overlay"
+        Width="320"
+        Height="430"
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        AllowsTransparency="True"
+        Background="Transparent"
+        Topmost="True"
+        ShowInTaskbar="False"
+        Opacity="0.94"
+        Loaded="Window_Loaded"
+        MouseLeftButtonDown="Window_MouseLeftButtonDown">
+
+    <Border CornerRadius="18" Background="#E6111720" BorderBrush="#FF2AD4FF" BorderThickness="1.5" Padding="14">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <DockPanel Grid.Row="0" LastChildFill="True">
+                <Border DockPanel.Dock="Left" Width="42" Height="42" CornerRadius="10" Background="#FF142B3A" Margin="0,0,10,0">
+                    <TextBlock Text="OW" Foreground="#FF2AD4FF" FontSize="15" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Border>
+                <StackPanel>
+                    <TextBlock Text="OVERWATCH ELD" Foreground="White" FontSize="19" FontWeight="Bold" />
+                    <TextBlock Text="Route Advisor Overlay" Foreground="#FF8EA3B0" FontSize="12" />
+                </StackPanel>
+            </DockPanel>
+
+            <Border Grid.Row="1" Margin="0,14,0,0" Height="1" Background="#3346D9FF" />
+
+            <Grid Grid.Row="2" Margin="0,14,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+                <Border Grid.Column="0" CornerRadius="12" Background="#CC07111A" Padding="10" Margin="0,0,6,0">
+                    <StackPanel>
+                        <TextBlock Text="DUTY" Foreground="#FF8EA3B0" FontSize="11" FontWeight="Bold" />
+                        <TextBlock x:Name="DutyStatusText" Text="ON DUTY" Foreground="#FF2AFF8A" FontSize="21" FontWeight="Bold" />
+                        <TextBlock Text="Driver active" Foreground="#FFB9C7D1" FontSize="11" />
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Column="1" CornerRadius="12" Background="#CC07111A" Padding="10" Margin="6,0,0,0">
+                    <StackPanel>
+                        <TextBlock Text="HOS" Foreground="#FF8EA3B0" FontSize="11" FontWeight="Bold" />
+                        <TextBlock x:Name="HosText" Text="08:00" Foreground="White" FontSize="21" FontWeight="Bold" />
+                        <TextBlock Text="Drive remaining" Foreground="#FFB9C7D1" FontSize="11" />
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <Border Grid.Row="3" Margin="0,12,0,0" CornerRadius="14" Background="#CC07111A" Padding="12">
+                <StackPanel>
+                    <TextBlock Text="CURRENT LOAD" Foreground="#FF8EA3B0" FontSize="11" FontWeight="Bold" />
+                    <TextBlock x:Name="LoadText" Text="No active load selected" Foreground="White" FontSize="15" FontWeight="SemiBold" TextWrapping="Wrap" Margin="0,4,0,0" />
+                    <TextBlock x:Name="RouteText" Text="Pickup → Delivery" Foreground="#FFB9C7D1" FontSize="12" TextWrapping="Wrap" Margin="0,2,0,0" />
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Row="4" Margin="0,12,0,0" CornerRadius="14" Background="#CC07111A" Padding="12">
+                <StackPanel>
+                    <TextBlock Text="TRUCK DATA" Foreground="#FF8EA3B0" FontSize="11" FontWeight="Bold" />
+                    <Grid Margin="0,7,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Speed" Foreground="#FFB9C7D1" />
+                        <TextBlock x:Name="SpeedText" Grid.Column="1" Text="0 MPH" Foreground="White" FontWeight="Bold" />
+                    </Grid>
+                    <Grid Margin="0,5,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Fuel" Foreground="#FFB9C7D1" />
+                        <TextBlock x:Name="FuelText" Grid.Column="1" Text="--" Foreground="White" FontWeight="Bold" />
+                    </Grid>
+                    <Grid Margin="0,5,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Maintenance" Foreground="#FFB9C7D1" />
+                        <TextBlock x:Name="MaintenanceText" Grid.Column="1" Text="OK" Foreground="#FF2AFF8A" FontWeight="Bold" />
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <TextBlock Grid.Row="5" Margin="0,12,0,0"
+                       Text="F9 Hide/Show  •  F10 Lock/Unlock  •  Drag when unlocked"
+                       Foreground="#FF8EA3B0" FontSize="11" TextAlignment="Center" />
+        </Grid>
+    </Border>
+</Window>
