@@ -1,0 +1,23 @@
+Phase 3 overlay update applied.
+
+What changed:
+- Added OverlayDataBridge.cs
+- Overlay now reads live values through the bridge instead of hardcoded placeholders
+- Bridge safely checks common property/field/method names for:
+  - Driver name
+  - Duty status
+  - HOS remaining
+  - Active load/cargo
+  - Pickup/delivery route
+  - Speed
+  - Fuel
+  - Maintenance/truck status
+
+How to test:
+1. Pull latest repo changes.
+2. Clean and rebuild the solution.
+3. Start OverWatch ELD.
+4. Start ATS if telemetry is available.
+5. Watch the overlay fields.
+
+If any field still shows placeholder data, that means the existing telemetry service uses a different property name. Send the matching service file or build output and map the exact field names in OverlayDataBridge.cs.
