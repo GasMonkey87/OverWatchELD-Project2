@@ -7,8 +7,6 @@ namespace OverWatchELD.Services
 {
     public static class DashboardSnapshotProvider
     {
-        
-
         public sealed class DashboardSnapshot
         {
             public DateTimeOffset GeneratedUtc { get; init; }
@@ -51,7 +49,15 @@ namespace OverWatchELD.Services
             }
         }
 
-        
+        private sealed class DirectClockResult
+        {
+            public TimeSpan ShiftRemaining { get; set; } = TimeSpan.FromHours(14);
+            public TimeSpan DriveRemaining { get; set; } = TimeSpan.FromHours(11);
+            public TimeSpan BreakRemaining { get; set; } = TimeSpan.FromHours(8);
+            public TimeSpan CycleRemaining { get; set; } = TimeSpan.FromHours(70);
+            public DutyStatus CurrentStatus { get; set; } = DutyStatus.OffDuty;
+        }
+
         private static TimeSpan ClampNonNegative(TimeSpan t)
             => t < TimeSpan.Zero ? TimeSpan.Zero : t;
 
@@ -79,6 +85,72 @@ namespace OverWatchELD.Services
             DutyStatus.YardMove => "Yard Move",
             _ => "Unknown"
         };
+
+        private static bool IsDriving(DutyStatus status)
+            => status == DutyStatus.Driving;
+
+        private static bool IsOnDutyForHos(DutyStatus status)
+            => status == DutyStatus.Driving ||
+               status == DutyStatus.OnDuty ||
+               status == DutyStatus.YardMove;
+
+        private static DirectClockResult BuildDirectClockResult(DateTimeOffset nowUtc)
+        {
+            var cycleStart = nowUtc.AddDays(-8);
+            var shiftStart = nowUtc.AddHours(-14);
+            var events = DatabaseService.GetDutyEvents(cycleStart, nowUtc.AddSeconds(1));
+            var ordered = events.OrderBy(e => e.StartUtc).ToList();
+            var open = ordered.LastOrDefault(e => e.EndUtc == null) ?? ordered.LastOrDefault();
+
+            var result = new DirectClockResult();
+            if (open != null)
+                result.CurrentStatus = open.Status;
+
+            TimeSpan driveUsed = TimeSpan.Zero;
+            TimeSpan shiftUsed = TimeSpan.Zero;
+            TimeSpan cycleUsed = TimeSpan.Zero;
+            TimeSpan currentDrivingElapsed = TimeSpan.Zero;
+
+            foreach (var e in ordered)
+            {
+                var start = e.StartUtc < cycleStart ? cycleStart : e.StartUtc;
+                var end = e.EndUtc ?? nowUtc;
+
+                if (end > nowUtc)
+                    end = nowUtc;
+
+                if (end <= start)
+                    continue;
+
+                var span = end - start;
+
+                if (IsDriving(e.Status))
+                    driveUsed += span;
+
+                if (IsOnDutyForHos(e.Status))
+                    cycleUsed += span;
+
+                var shiftSpanStart = start < shiftStart ? shiftStart : start;
+                if (end > shiftSpanStart && IsOnDutyForHos(e.Status))
+                    shiftUsed += end - shiftSpanStart;
+            }
+
+            if (open != null && open.EndUtc == null && IsDriving(open.Status))
+            {
+                currentDrivingElapsed = nowUtc - open.StartUtc;
+                if (currentDrivingElapsed < TimeSpan.Zero)
+                    currentDrivingElapsed = TimeSpan.Zero;
+            }
+
+            result.DriveRemaining = ClampNonNegative(TimeSpan.FromHours(11) - driveUsed);
+            result.ShiftRemaining = ClampNonNegative(TimeSpan.FromHours(14) - shiftUsed);
+            result.CycleRemaining = ClampNonNegative(TimeSpan.FromHours(70) - cycleUsed);
+            result.BreakRemaining = IsDriving(result.CurrentStatus)
+                ? ClampNonNegative(TimeSpan.FromHours(8) - currentDrivingElapsed)
+                : TimeSpan.FromHours(8);
+
+            return result;
+        }
 
         private static string TryGetDriverFirstName(object? driverProfileObj)
         {
@@ -108,31 +180,12 @@ namespace OverWatchELD.Services
 
             try
             {
-                
+                var clock = BuildDirectClockResult(nowUtc);
 
-                var hos = HosCalculator2.ComputeSnapshot();
-
-                var breakV = hos.BreakRemaining < TimeSpan.Zero;
-                var driveV = hos.DriveRemaining < TimeSpan.Zero;
-                var shiftV = hos.ShiftRemaining < TimeSpan.Zero;
-                var cycleV = hos.CycleRemaining < TimeSpan.Zero;
-
-                var dutyLabel = "Unknown";
-
-                try
-                {
-                    var events = DatabaseService.GetDutyEvents(nowUtc.AddDays(-14), nowUtc.AddMinutes(1));
-                    var last = events?.OrderBy(e => e.StartUtc).LastOrDefault();
-
-                    if (last != null)
-                        dutyLabel = ToDutyLabel(last.Status);
-                }
-                catch { }
-
-                var breakRemNN = ClampNonNegative(hos.BreakRemaining);
-                var driveRemNN = ClampNonNegative(hos.DriveRemaining);
-                var shiftRemNN = ClampNonNegative(hos.ShiftRemaining);
-                var cycleRemNN = ClampNonNegative(hos.CycleRemaining);
+                var breakV = clock.BreakRemaining <= TimeSpan.Zero;
+                var driveV = clock.DriveRemaining <= TimeSpan.Zero;
+                var shiftV = clock.ShiftRemaining <= TimeSpan.Zero;
+                var cycleV = clock.CycleRemaining <= TimeSpan.Zero;
 
                 int unsignedCount = 0;
 
@@ -170,32 +223,32 @@ namespace OverWatchELD.Services
                     GeneratedUtc = nowUtc,
                     GeneratedLocal = nowLocal,
 
-                    BreakRemaining = breakRemNN,
-                    DriveRemaining = driveRemNN,
-                    ShiftRemaining = shiftRemNN,
-                    CycleRemaining = cycleRemNN,
+                    BreakRemaining = clock.BreakRemaining,
+                    DriveRemaining = clock.DriveRemaining,
+                    ShiftRemaining = clock.ShiftRemaining,
+                    CycleRemaining = clock.CycleRemaining,
 
                     BreakViolation = breakV,
                     DriveViolation = driveV,
                     ShiftViolation = shiftV,
                     CycleViolation = cycleV,
 
-                    BreakUsedPct = PctUsed(breakRemNN, hos.BreakLimit),
-                    DriveUsedPct = PctUsed(driveRemNN, hos.DriveLimit),
-                    ShiftUsedPct = PctUsed(shiftRemNN, hos.ShiftLimit),
-                    CycleUsedPct = PctUsed(cycleRemNN, hos.CycleLimit),
+                    BreakUsedPct = PctUsed(clock.BreakRemaining, TimeSpan.FromHours(8)),
+                    DriveUsedPct = PctUsed(clock.DriveRemaining, TimeSpan.FromHours(11)),
+                    ShiftUsedPct = PctUsed(clock.ShiftRemaining, TimeSpan.FromHours(14)),
+                    CycleUsedPct = PctUsed(clock.CycleRemaining, TimeSpan.FromHours(70)),
 
-                    DutyStatusLabel = dutyLabel,
+                    DutyStatusLabel = ToDutyLabel(clock.CurrentStatus),
 
                     ShouldPulse =
                         breakV ||
                         driveV ||
                         shiftV ||
                         cycleV ||
-                        driveRemNN <= TimeSpan.FromMinutes(15) ||
-                        shiftRemNN <= TimeSpan.FromMinutes(15) ||
-                        breakRemNN <= TimeSpan.FromMinutes(15) ||
-                        cycleRemNN <= TimeSpan.FromMinutes(30),
+                        clock.DriveRemaining <= TimeSpan.FromMinutes(15) ||
+                        clock.ShiftRemaining <= TimeSpan.FromMinutes(15) ||
+                        clock.BreakRemaining <= TimeSpan.FromMinutes(15) ||
+                        clock.CycleRemaining <= TimeSpan.FromMinutes(30),
 
                     Notes = "",
                     UnsignedLogsCount = unsignedCount,
@@ -207,8 +260,6 @@ namespace OverWatchELD.Services
                 return BuildFallbackSnapshot(nowUtc, nowLocal);
             }
         }
-
-        
 
         private static DashboardSnapshot BuildFallbackSnapshot(DateTimeOffset nowUtc, DateTimeOffset nowLocal)
         {
