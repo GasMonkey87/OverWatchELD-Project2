@@ -5,7 +5,9 @@ using System.ComponentModel;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Threading;
+using OverWatchELD.Models;
 using OverWatchELD.Services;
 
 namespace OverWatchELD.ViewModels
@@ -27,6 +29,43 @@ namespace OverWatchELD.ViewModels
             return $"{totalHours:00}:{t.Minutes:00}:{t.Seconds:00}";
         }
 
+        private static bool IsWorkStatus(DutyStatus status)
+        {
+            return status == DutyStatus.Driving ||
+                   status == DutyStatus.OnDuty ||
+                   status == DutyStatus.YardMove;
+        }
+
+        private static (TimeSpan drive, TimeSpan shift, TimeSpan brk, TimeSpan cycle, string duty) GetLiveClockValues(DashboardSnapshotProvider.DashboardSnapshot snapshot)
+        {
+            try
+            {
+                var machine = (Application.Current as App)?.DutyMachine;
+                if (machine == null)
+                    return (snapshot.DriveRemaining, snapshot.ShiftRemaining, snapshot.BreakRemaining, snapshot.CycleRemaining, snapshot.DutyStatusLabel ?? "Unknown");
+
+                var elapsed = EldClock.UtcNow - machine.CurrentStartedUtc;
+                if (elapsed < TimeSpan.Zero)
+                    elapsed = TimeSpan.Zero;
+
+                var status = machine.Current;
+                var driveUsed = status == DutyStatus.Driving ? elapsed : TimeSpan.Zero;
+                var workUsed = IsWorkStatus(status) ? elapsed : TimeSpan.Zero;
+
+                return (
+                    TimeSpan.FromHours(11) - driveUsed,
+                    TimeSpan.FromHours(14) - workUsed,
+                    status == DutyStatus.Driving ? TimeSpan.FromHours(8) - elapsed : TimeSpan.FromHours(8),
+                    TimeSpan.FromHours(70) - workUsed,
+                    status.ToString()
+                );
+            }
+            catch
+            {
+                return (snapshot.DriveRemaining, snapshot.ShiftRemaining, snapshot.BreakRemaining, snapshot.CycleRemaining, snapshot.DutyStatusLabel ?? "Unknown");
+            }
+        }
+
         private DashboardSnapshotProvider.DashboardSnapshot _snapshot = new DashboardSnapshotProvider.DashboardSnapshot();
 
         public DashboardSnapshotProvider.DashboardSnapshot Snapshot
@@ -39,12 +78,12 @@ namespace OverWatchELD.ViewModels
             }
         }
 
-        public string DriveTime => F(Snapshot.DriveRemaining);
-        public string ShiftTime => F(Snapshot.ShiftRemaining);
-        public string BreakTime => F(Snapshot.BreakRemaining);
-        public string CycleTime => F(Snapshot.CycleRemaining);
+        public string DriveTime => F(GetLiveClockValues(Snapshot).drive);
+        public string ShiftTime => F(GetLiveClockValues(Snapshot).shift);
+        public string BreakTime => F(GetLiveClockValues(Snapshot).brk);
+        public string CycleTime => F(GetLiveClockValues(Snapshot).cycle);
 
-        public string DutyStatusLabel => Snapshot.DutyStatusLabel ?? "Unknown";
+        public string DutyStatusLabel => GetLiveClockValues(Snapshot).duty;
         public bool ShouldPulse => Snapshot.ShouldPulse;
 
         public int UnsignedLogsCount => Snapshot.UnsignedLogsCount;
