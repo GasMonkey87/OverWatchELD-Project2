@@ -133,15 +133,38 @@ namespace OverWatchELD.ViewModels
         {
             try
             {
+                // Always force a real duty event so the HOS clocks have an open segment to count from.
+                // TrySet can return false when the selected status matches the current status, which left
+                // the dashboard with full/frozen clocks and no fresh open duty event.
                 if (_machine != null)
                 {
-                    _machine.TrySet(newStatus);
+                    _machine.ForceSet(newStatus);
                     CurrentStatus = _machine.Current;
-                    return;
+                }
+                else
+                {
+                    DatabaseService.CloseOpenDutyEvent(EldClock.UtcNow);
+                    DatabaseService.InsertDutyEvent(new DutyEvent
+                    {
+                        Status = newStatus,
+                        StartUtc = EldClock.UtcNow,
+                        EndUtc = null,
+                        Notes = "",
+                        Source = "dashboard",
+                        LocationText = "",
+                        Lat = null,
+                        Lon = null,
+                        IsEdited = false,
+                        EditedAtUtc = null,
+                        EditReason = ""
+                    });
+
+                    ELDStateService.SetCurrentStatus(newStatus);
+                    CurrentStatus = newStatus;
                 }
 
-                ELDStateService.SetCurrentStatus(newStatus);
-                CurrentStatus = ELDStateService.CurrentStatus;
+                try { DashboardClocksLiveViewModel.Shared.RefreshNow(); } catch { }
+                try { (Application.Current as App)?.DutyMachine?.ForceSet(newStatus); } catch { }
             }
             catch (Exception ex)
             {
