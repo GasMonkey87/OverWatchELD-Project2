@@ -1,8 +1,8 @@
 using OverWatchELD.Services;
 using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Threading;
 
@@ -26,9 +26,7 @@ namespace OverWatchELD.Views
                 _visibleClockPatchTimer.Tick += (_, _) => ForceVisibleClockRefresh();
                 _visibleClockPatchTimer.Start();
             }
-            catch
-            {
-            }
+            catch { }
         }
 
         private void ForceVisibleClockRefresh()
@@ -36,35 +34,34 @@ namespace OverWatchELD.Views
             try
             {
                 var snapshot = DashboardSnapshotProvider.BuildSnapshot();
-
-                SetBoundClockText("DriveTime", FormatClock(snapshot.DriveRemaining));
-                SetBoundClockText("ShiftTime", FormatClock(snapshot.ShiftRemaining));
-                SetBoundClockText("BreakTime", FormatClock(snapshot.BreakRemaining));
-                SetBoundClockText("CycleTime", FormatClock(snapshot.CycleRemaining));
+                SetClockCards(
+                    FormatClock(snapshot.DriveRemaining),
+                    FormatClock(snapshot.ShiftRemaining),
+                    FormatClock(snapshot.BreakRemaining),
+                    FormatClock(snapshot.CycleRemaining));
             }
-            catch
-            {
-            }
+            catch { }
         }
 
-        private void SetBoundClockText(string bindingPath, string value)
+        private void SetClockCards(string drive, string shift, string brk, string cycle)
         {
             try
             {
-                foreach (var textBlock in FindVisualChildren<TextBlock>(this))
-                {
-                    var binding = BindingOperations.GetBinding(textBlock, TextBlock.TextProperty);
-                    var path = binding?.Path?.Path;
+                var clockBlocks = FindVisualChildren<TextBlock>(this)
+                    .Where(t => t.FontSize >= 24 && t.FontSize <= 27)
+                    .Where(t => !string.IsNullOrWhiteSpace(t.Text))
+                    .Take(4)
+                    .ToList();
 
-                    if (string.Equals(path, bindingPath, StringComparison.OrdinalIgnoreCase))
-                    {
-                        textBlock.Text = value;
-                    }
+                if (clockBlocks.Count >= 4)
+                {
+                    clockBlocks[0].Text = drive;
+                    clockBlocks[1].Text = shift;
+                    clockBlocks[2].Text = brk;
+                    clockBlocks[3].Text = cycle;
                 }
             }
-            catch
-            {
-            }
+            catch { }
         }
 
         private static string FormatClock(TimeSpan value)
@@ -83,26 +80,14 @@ namespace OverWatchELD.Views
                 yield break;
 
             int count;
-            try
-            {
-                count = VisualTreeHelper.GetChildrenCount(parent);
-            }
-            catch
-            {
-                yield break;
-            }
+            try { count = VisualTreeHelper.GetChildrenCount(parent); }
+            catch { yield break; }
 
             for (var i = 0; i < count; i++)
             {
                 DependencyObject child;
-                try
-                {
-                    child = VisualTreeHelper.GetChild(parent, i);
-                }
-                catch
-                {
-                    continue;
-                }
+                try { child = VisualTreeHelper.GetChild(parent, i); }
+                catch { continue; }
 
                 if (child is T typed)
                     yield return typed;
