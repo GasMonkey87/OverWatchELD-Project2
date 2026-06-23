@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using OverWatchELD.Models;
 using OverWatchELD.ViewModels;
 using DutyStatus = OverWatchELD.Models.DutyStatus;
@@ -9,10 +9,12 @@ namespace OverWatchELD.Services
     {
         private DutyStatus _current = DutyStatus.OffDuty;
 
+        public DateTimeOffset CurrentStartedUtc { get; private set; } = EldClock.UtcNow;
+
         public DutyStatus Current
         {
             get => _current;
-            set => SetInternal(value, "direct");
+            set => SetInternal(value, "direct", force: false);
         }
 
         public event Action<DutyStatus>? DutyChanged;
@@ -35,7 +37,7 @@ namespace OverWatchELD.Services
 
         public void ForceSet(DutyStatus next)
         {
-            SetInternal(next, "force");
+            SetInternal(next, "force", force: true);
         }
 
         public bool TrySet(DutyStatus next)
@@ -43,17 +45,18 @@ namespace OverWatchELD.Services
             if (!CanSet(next))
                 return false;
 
-            SetInternal(next, "auto");
+            SetInternal(next, "auto", force: false);
             return true;
         }
 
-        private void SetInternal(DutyStatus next, string source)
+        private void SetInternal(DutyStatus next, string source, bool force)
         {
-            if (_current == next)
+            if (_current == next && !force)
                 return;
 
             var previous = _current;
             var nowUtc = EldClock.UtcNow;
+            CurrentStartedUtc = nowUtc;
 
             try
             {
