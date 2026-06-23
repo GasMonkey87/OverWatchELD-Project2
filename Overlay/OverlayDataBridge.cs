@@ -1,5 +1,6 @@
 using System;
 using System.Globalization;
+using System.Linq;
 using System.Reflection;
 using System.Windows;
 using OverWatchELD.Services;
@@ -8,13 +9,22 @@ namespace OverWatchELD.Overlay
 {
     public static class OverlayDataBridge
     {
+        private sealed class OverlayHosClock
+        {
+            public TimeSpan DriveRemaining { get; set; } = TimeSpan.FromHours(11);
+            public TimeSpan ShiftRemaining { get; set; } = TimeSpan.FromHours(14);
+            public TimeSpan CycleRemaining { get; set; } = TimeSpan.FromHours(70);
+            public TimeSpan BreakRemaining { get; set; } = TimeSpan.FromHours(8);
+            public string Source { get; set; } = "fallback";
+        }
+
         public static OverlaySnapshot Build()
         {
             var app = Application.Current as App;
             var telemetry = app?.Telemetry;
             var live = ReadValue(telemetry, "LastSnapshot");
             var dutyMachine = app?.DutyMachine;
-            var hos = BuildHosSnapshot();
+            var hos = BuildHosClock(dutyMachine);
 
             var speed = FormatSpeed(live);
             var fuel = FormatFuel(live);
@@ -27,7 +37,7 @@ namespace OverWatchELD.Overlay
             var snapshot = new OverlaySnapshot
             {
                 DutyStatus = FormatDutyStatus(dutyText),
-                HosRemaining = hos != null ? FormatTimeSpan(ReadTimeSpan(hos, "DriveRemaining")) : "--:--",
+                HosRemaining = FormatTimeSpan(hos.DriveRemaining),
                 DriverName = FirstText(live, app?.Session, app?.SessionState, "DriverName", "CurrentDriver", "Username", "Name") ?? "Unknown Driver",
                 LoadName = loadName,
                 Route = route,
@@ -49,31 +59,119 @@ namespace OverWatchELD.Overlay
             return snapshot;
         }
 
-        private static object? BuildHosSnapshot()
+        private static OverlayHosClock BuildHosClock(object? dutyMachine)
         {
+            var now = EldClock.UtcNow;
+
             try
             {
-                var now = EldClock.UtcNow;
                 var start = now.AddDays(-10);
                 var events = DatabaseService.GetDutyEvents(start, now.AddHours(1));
-                return HosCalculator.GetCurrentClocks(events, now);
+                var hos = HosCalculator.GetCurrentClocks(events, now);
+
+                var calculated = new OverlayHosClock
+                {
+                    DriveRemaining = ReadTimeSpan(hos, "DriveRemaining") ?? TimeSpan.FromHours(11),
+                    ShiftRemaining = ReadTimeSpan(hos, "ShiftRemaining") ?? TimeSpan.FromHours(14),
+                    CycleRemaining = ReadTimeSpan(hos, "CycleRemaining") ?? TimeSpan.FromHours(70),
+                    BreakRemaining = ReadTimeSpan(hos, "BreakRemaining") ?? TimeSpan.FromHours(8),
+                    Source = "calculator"
+                };
+
+                if (calculated.DriveRemaining != TimeSpan.Zero || calculated.ShiftRemaining != TimeSpan.Zero)
+                    return calculated;
             }
             catch
             {
-                return null;
+                // Use direct fallback below.
+            }
+
+            try
+            {
+                return BuildDirectDutyFallback(now, dutyMachine);
+            }
+            catch
+            {
+                return new OverlayHosClock { Source = "default" };
             }
         }
 
-        private static string BuildClockLine(object? hos)
+        private static OverlayHosClock BuildDirectDutyFallback(DateTimeOffset now, object? dutyMachine)
         {
-            if (hos == null)
-                return "HOS clocks unavailable";
+            var dutyText = FirstText(dutyMachine, "Current") ?? "OffDuty";
+            var dayStart = now.AddHours(-24);
+            var cycleStart = now.AddDays(-8);
+            var events = DatabaseService.GetDutyEvents(cycleStart, now.AddHours(1));
+            var open = events.LastOrDefault(e => e.EndUtc == null) ?? events.LastOrDefault();
+            var currentStart = open?.StartUtc ?? now;
+            if (currentStart > now) currentStart = now;
 
-            var drive = FormatTimeSpan(ReadTimeSpan(hos, "DriveRemaining"));
-            var shift = FormatTimeSpan(ReadTimeSpan(hos, "ShiftRemaining"));
-            var cycle = FormatTimeSpan(ReadTimeSpan(hos, "CycleRemaining"));
-            var brk = FormatTimeSpan(ReadTimeSpan(hos, "BreakRemaining"));
+            var currentElapsed = now - currentStart;
+            if (currentElapsed < TimeSpan.Zero) currentElapsed = TimeSpan.Zero;
 
+            TimeSpan driveUsed = TimeSpan.Zero;
+            TimeSpan onDutyUsed = TimeSpan.Zero;
+            TimeSpan cycleUsed = TimeSpan.Zero;
+
+            foreach (var e in events)
+            {
+                var status = e.Status.ToString();
+                var start = e.StartUtc < cycleStart ? cycleStart : e.StartUtc;
+                var end = e.EndUtc ?? now;
+                if (end > now) end = now;
+                if (end <= start) continue;
+
+                var span = end - start;
+                if (IsDriving(status)) driveUsed += span;
+                if (IsOnDuty(status)) cycleUsed += span;
+                if (start >= dayStart && IsOnDuty(status)) onDutyUsed += span;
+            }
+
+            if (events.Count == 0)
+            {
+                if (IsDriving(dutyText))
+                {
+                    driveUsed = currentElapsed;
+                    onDutyUsed = currentElapsed;
+                    cycleUsed = currentElapsed;
+                }
+                else if (IsOnDuty(dutyText))
+                {
+                    onDutyUsed = currentElapsed;
+                    cycleUsed = currentElapsed;
+                }
+            }
+
+            return new OverlayHosClock
+            {
+                DriveRemaining = ClampRemaining(TimeSpan.FromHours(11) - driveUsed),
+                ShiftRemaining = ClampRemaining(TimeSpan.FromHours(14) - onDutyUsed),
+                CycleRemaining = ClampRemaining(TimeSpan.FromHours(70) - cycleUsed),
+                BreakRemaining = IsDriving(dutyText) ? ClampRemaining(TimeSpan.FromHours(8) - currentElapsed) : TimeSpan.FromHours(8),
+                Source = "direct"
+            };
+        }
+
+        private static bool IsDriving(string? status)
+            => (status ?? "").IndexOf("Driving", StringComparison.OrdinalIgnoreCase) >= 0;
+
+        private static bool IsOnDuty(string? status)
+        {
+            var s = status ?? "";
+            return s.IndexOf("Driving", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                   s.IndexOf("OnDuty", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                   s.IndexOf("YardMove", StringComparison.OrdinalIgnoreCase) >= 0;
+        }
+
+        private static TimeSpan ClampRemaining(TimeSpan value)
+            => value < TimeSpan.Zero ? TimeSpan.Zero : value;
+
+        private static string BuildClockLine(OverlayHosClock hos)
+        {
+            var drive = FormatTimeSpan(hos.DriveRemaining);
+            var shift = FormatTimeSpan(hos.ShiftRemaining);
+            var cycle = FormatTimeSpan(hos.CycleRemaining);
+            var brk = FormatTimeSpan(hos.BreakRemaining);
             return $"Drive {drive} • Shift {shift} • Cycle {cycle} • Break {brk}";
         }
 
