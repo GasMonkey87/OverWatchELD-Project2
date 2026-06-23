@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using System.Windows.Threading;
 using OverWatchELD.Services;
 
 namespace OverWatchELD.ViewModels
@@ -12,6 +13,8 @@ namespace OverWatchELD.ViewModels
     public partial class DashboardViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
+
+        private readonly DispatcherTimer _clockRefreshTimer;
 
         private void OnPropertyChanged([CallerMemberName] string? name = null)
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
@@ -72,15 +75,36 @@ namespace OverWatchELD.ViewModels
         {
             try { Snapshot = DashboardSnapshotProvider.BuildSnapshot(); }
             catch { Snapshot = CreateFreshResetSnapshot(); }
+
+            _clockRefreshTimer = new DispatcherTimer
+            {
+                Interval = TimeSpan.FromSeconds(1)
+            };
+            _clockRefreshTimer.Tick += (_, _) => RefreshDashboardClockSnapshot();
+            _clockRefreshTimer.Start();
         }
 
-
+        private void RefreshDashboardClockSnapshot()
+        {
+            try
+            {
+                Snapshot = DashboardSnapshotProvider.BuildSnapshot();
+            }
+            catch
+            {
+                OnPropertyChanged(nameof(DriveTime));
+                OnPropertyChanged(nameof(ShiftTime));
+                OnPropertyChanged(nameof(BreakTime));
+                OnPropertyChanged(nameof(CycleTime));
+                OnPropertyChanged(nameof(DutyStatusLabel));
+            }
+        }
 
         public async Task RefreshAsync()
         {
             await Task.Yield();
 
-            try { Tick(); }
+            try { RefreshDashboardClockSnapshot(); }
             catch { }
         }
 
@@ -176,7 +200,6 @@ namespace OverWatchELD.ViewModels
             }
             catch { }
         }
-
 
         private void NotifyAll()
         {
